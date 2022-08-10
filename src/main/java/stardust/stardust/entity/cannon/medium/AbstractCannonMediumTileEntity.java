@@ -1,4 +1,4 @@
-package stardust.stardust.entity;
+package stardust.stardust.entity.cannon.medium;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
@@ -20,16 +20,14 @@ import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 import stardust.stardust.Stardust;
-import stardust.stardust.entity.projectile.AbstractStardustProjectileEntity;
 import stardust.stardust.entity.projectile.HEProjectileEntity;
-import stardust.stardust.entity.projectile.RailGunProjectileEntity;
 import stardust.stardust.registry.TileEntityTypeRegistry;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.HashMap;
 
-public class AbstractCannonMediumTileEntity extends TileEntity implements IAnimatable, ITickableTileEntity {
+public abstract class AbstractCannonMediumTileEntity extends TileEntity implements IAnimatable, ITickableTileEntity {
     public static final Logger LOGGER = LogManager.getLogger();
     private final AnimationFactory factory = new AnimationFactory(this);
     private final AnimationController<AbstractCannonMediumTileEntity> controller = new AnimationController<>(this, "controller", 0, this::predicate);
@@ -50,6 +48,8 @@ public class AbstractCannonMediumTileEntity extends TileEntity implements IAnima
     //    public Vector3d targetPos;
     public double goalRotationX = 0;
     public double goalRotationY = 0;
+
+    public long energy = 1000;
     private Vector3d barrelRootOffset = new Vector3d(0.0d, 0.2d, 4.0d);
     public PlayerEntity playerHooked;
     public static HashMap<PlayerEntity, AbstractCannonMediumTileEntity> TURRETS_ON_PLAYER_CONTROLLED = new HashMap<>();
@@ -129,6 +129,9 @@ public class AbstractCannonMediumTileEntity extends TileEntity implements IAnima
         return vec1.x * vec2.z - vec1.z * vec2.x > 0 ? -difference : difference;
     }
 
+    public long getEnergy() {
+        return this.energy;
+    }
 
     private <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
         event.getController().setAnimation(new AnimationBuilder().addAnimation("railgun4_shooting", true));
@@ -152,27 +155,8 @@ public class AbstractCannonMediumTileEntity extends TileEntity implements IAnima
     }
 
     public void shoot() {
-        World world = this.getWorld();
-        assert world != null;
         if (this.isInCD()) return;
         resetCD();
-        if (!world.isRemote()) {
-            Vector3d barrelRootPos = getBarrelEndPos();
-            double x0 = barrelRootPos.getX();
-            double y0 = barrelRootPos.getY();
-            double z0 = barrelRootPos.getZ();
-
-            Vector3d barrelDirection = this.getBarrelDirection();
-
-            double x1 = barrelDirection.getX();
-            double y1 = barrelDirection.getY();
-            double z1 = barrelDirection.getZ();
-
-//            RailGunProjectileEntity projectile = new HEProjectileEntity(this.world, 1000, 10.0f, this, x0, y0, z0, x1, y1, z1);
-            RailGunProjectileEntity projectile = new HEProjectileEntity(, this.world);
-            projectile.setRawPosition(x0, y0, z0);
-            world.addEntity(projectile);
-        }
     }
 
     public void resetRotation() {

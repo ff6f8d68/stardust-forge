@@ -12,8 +12,8 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import stardust.stardust.block.cannon.medium.AbstractCannonMedium;
-import stardust.stardust.entity.AbstractCannonMediumTileEntity;
+import stardust.stardust.entity.cannon.medium.AbstractCannonMediumTileEntity;
+import stardust.stardust.entity.cannon.medium.RailGun4MediumTileEntity;
 
 import javax.annotation.Nullable;
 
@@ -29,7 +29,7 @@ public class RailGun4Medium extends AbstractCannonMedium {
     @Nullable
     @Override
     public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-        return new AbstractCannonMediumTileEntity();
+        return new RailGun4MediumTileEntity();
     }
 
 

@@ -35,7 +35,7 @@ public class EntityTypeRegistry {
     public static RegistryObject<EntityType<HEProjectileEntity>> HE_PROJECTILE_ENTITY = ENTITY_TYPE_DEFERRED_REGISTER.register(
             "he_projectile_entity",
             () -> EntityType.Builder.create(
-                    HEProjectileEntity::new,
+                    (EntityType<HEProjectileEntity> entityType, World world) -> new HEProjectileEntity(entityType, world),
                     EntityClassification.MISC
             ).build("he_projectile_entity")
     );

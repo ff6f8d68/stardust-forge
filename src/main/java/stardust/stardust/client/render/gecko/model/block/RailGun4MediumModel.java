@@ -2,7 +2,7 @@ package stardust.stardust.client.render.gecko.model.block;
 
 import net.minecraft.util.ResourceLocation;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
-import stardust.stardust.entity.AbstractCannonMediumTileEntity;
+import stardust.stardust.entity.cannon.medium.AbstractCannonMediumTileEntity;
 
 import static stardust.stardust.Stardust.MODID;
 

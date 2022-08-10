@@ -20,7 +20,7 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import stardust.stardust.entity.CannonBaseMediumTileEntity;
+import stardust.stardust.entity.base.CannonBaseMediumTileEntity;
 
 import javax.annotation.Nullable;
 import java.util.List;

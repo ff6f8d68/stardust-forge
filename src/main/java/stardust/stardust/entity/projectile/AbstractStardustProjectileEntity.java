@@ -23,19 +23,19 @@ import javax.annotation.Nonnull;
 
 public abstract class AbstractStardustProjectileEntity extends DamagingProjectileEntity {
 
-    enum ProjectileType {
+    public enum ProjectileType {
         ENERGY_LASER, ENERGY_PLASMA, ENERGY_SUBSTANCE_DECOMPOSER, KINETIC_ARMOR_PIERCING, KINETIC_HIGHLY_EXPLOSIVE, KINETIC_BULLET
     }
 
-    private double accelerationX = 0.0d;
-    private double accelerationY = 0.0d;
-    private double accelerationZ = 0.0d;
+    public double accelerationX = 0.0d;
+    public double accelerationY = 0.0d;
+    public double accelerationZ = 0.0d;
 
-    private BlockPos shooterPos;
+    public BlockPos shooterPos;
 
-    private long shieldDamage;
-    private long energy;
-    private float attribute;
+    public long shieldDamage;
+    public long energy;
+    public float attribute;
     public ProjectileType projectileType;
 
 
@@ -54,33 +54,34 @@ public abstract class AbstractStardustProjectileEntity extends DamagingProjectil
 
     @Override
     protected void onImpact(RayTraceResult result) {
-        RayTraceResult.Type type = result.getType();
-        if (type == RayTraceResult.Type.ENTITY) {
-            if (((EntityRayTraceResult) result).getEntity().equals(this)) return;
-            this.onEntityHit((EntityRayTraceResult) result);
-        } else if (type == RayTraceResult.Type.BLOCK) {
-            this.func_230299_a_((BlockRayTraceResult) result);
-        }
-
-        if (!world.isRemote()) {
-            if (projectileType == ProjectileType.KINETIC_HIGHLY_EXPLOSIVE) {
-                Explosion.Mode explosion$mode = net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.world, this.getShooter()) ? Explosion.Mode.DESTROY : Explosion.Mode.NONE;
-                this.world.createExplosion(this, this.getPosX(), this.getPosY(), this.getPosZ(), attribute, false, explosion$mode);
-            }
-
-            if (projectileType != ProjectileType.KINETIC_ARMOR_PIERCING && projectileType != ProjectileType.ENERGY_SUBSTANCE_DECOMPOSER) {
-                this.remove();
-            }
-        }
-
+//        RayTraceResult.Type type = result.getType();
+//        if (type == RayTraceResult.Type.ENTITY) {
+//            if (((EntityRayTraceResult) result).getEntity().equals(this)) return;
+//            this.onEntityHit((EntityRayTraceResult) result);
+//        } else if (type == RayTraceResult.Type.BLOCK) {
+//            this.func_230299_a_((BlockRayTraceResult) result);
+//        }
+//
+//        if (!world.isRemote()) {
+//            if (projectileType == ProjectileType.KINETIC_HIGHLY_EXPLOSIVE) {
+//                Explosion.Mode explosion$mode = net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.world, this.getShooter()) ? Explosion.Mode.DESTROY : Explosion.Mode.NONE;
+//                this.world.createExplosion(this, this.getPosX(), this.getPosY(), this.getPosZ(), attribute, false, explosion$mode);
+//            }
+//
+//            if (projectileType != ProjectileType.KINETIC_ARMOR_PIERCING && projectileType != ProjectileType.ENERGY_SUBSTANCE_DECOMPOSER) {
+//                this.remove();
+//            }
+//        }
+        super.onImpact(result);
     }
 
     @Override
     protected void onEntityHit(@Nonnull EntityRayTraceResult result) {
+//        super.onEntityHit(result);
+//        if (!this.world.isRemote()) {
+//            if (this.projectileType == ProjectileType.KINETIC_HIGHLY_EXPLOSIVE) this.remove();
+//        }
         super.onEntityHit(result);
-        if (!this.world.isRemote()) {
-            if (this.projectileType == ProjectileType.KINETIC_HIGHLY_EXPLOSIVE) this.remove();
-        }
     }
 
     /**
@@ -88,12 +89,13 @@ public abstract class AbstractStardustProjectileEntity extends DamagingProjectil
      */
     @Override
     protected void func_230299_a_(@Nonnull BlockRayTraceResult result) {
+//        super.func_230299_a_(result);
+//        if (!this.world.isRemote) {
+//            if (this.projectileType == ProjectileType.ENERGY_SUBSTANCE_DECOMPOSER) {
+//                new SubstanceDecomposing(this.world, result.getPos(), (long) this.attribute);
+//            }
+//        }
         super.func_230299_a_(result);
-        if (!this.world.isRemote) {
-            if (this.projectileType == ProjectileType.ENERGY_SUBSTANCE_DECOMPOSER) {
-                new SubstanceDecomposing(this.world, result.getPos(), (long) this.attribute);
-            }
-        }
     }
 
     public TileEntity getShooterTile() {
@@ -103,6 +105,14 @@ public abstract class AbstractStardustProjectileEntity extends DamagingProjectil
     @Override
     public boolean isBurning() {
         return false;
+    }
+
+    public long getEnergy() {
+        return energy;
+    }
+
+    public float getAttribute() {
+        return attribute;
     }
 
     @Override

@@ -12,7 +12,7 @@ import net.minecraftforge.client.settings.KeyModifier;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.lwjgl.glfw.GLFW;
-import stardust.stardust.entity.AbstractCannonMediumTileEntity;
+import stardust.stardust.entity.cannon.medium.AbstractCannonMediumTileEntity;
 
 @Mod.EventBusSubscriber()
 public class TurretCamera {

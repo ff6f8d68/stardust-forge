@@ -1,4 +1,4 @@
-package stardust.stardust.entity;
+package stardust.stardust.entity.base;
 
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.Block;
