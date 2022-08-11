@@ -14,10 +14,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
-import stardust.stardust.damage.SubstanceDecomposing;
 
 import javax.annotation.Nonnull;
 
@@ -126,27 +124,27 @@ public abstract class AbstractStardustProjectileEntity extends DamagingProjectil
 
     @Override
     public void readAdditional(CompoundNBT compound) {
-        this.accelerationX = compound.getDouble("accelerationX");
-        this.accelerationY = compound.getDouble("accelerationY");
-        this.accelerationZ = compound.getDouble("accelerationZ");
-        this.shieldDamage = compound.getLong("shieldDamage");
-        this.energy = compound.getLong("energy");
-        this.shooterPos = new BlockPos(compound.getInt("shootPosX"), compound.getInt("shootPosY"), compound.getInt("shootPosZ"));
-        this.attribute = compound.getFloat("attribute");
+//        this.accelerationX = compound.getDouble("accelerationX");
+//        this.accelerationY = compound.getDouble("accelerationY");
+//        this.accelerationZ = compound.getDouble("accelerationZ");
+//        this.shieldDamage = compound.getLong("shieldDamage");
+//        this.energy = compound.getLong("energy");
+//        this.shooterPos = new BlockPos(compound.getInt("shootPosX"), compound.getInt("shootPosY"), compound.getInt("shootPosZ"));
+//        this.attribute = compound.getFloat("attribute");
 //        this.projectileType = ProjectileType.valueOf(compound.getString("projectileType"));
     }
 
     @Override
     public void writeAdditional(CompoundNBT compound) {
-        compound.putDouble("accelerationX", this.accelerationX);
-        compound.putDouble("accelerationY", this.accelerationY);
-        compound.putDouble("accelerationZ", this.accelerationZ);
-        compound.putLong("shieldDamage", this.shieldDamage);
-        compound.putFloat("energy", this.energy);
-        compound.putInt("shooterPosX", this.shooterPos.getX());
-        compound.putInt("shooterPosY", this.shooterPos.getY());
-        compound.putInt("shooterPosZ", this.shooterPos.getZ());
-        compound.putFloat("attribute", this.attribute);
+//        compound.putDouble("accelerationX", this.accelerationX);
+//        compound.putDouble("accelerationY", this.accelerationY);
+//        compound.putDouble("accelerationZ", this.accelerationZ);
+//        compound.putLong("shieldDamage", this.shieldDamage);
+//        compound.putFloat("energy", this.energy);
+//        compound.putInt("shooterPosX", this.shooterPos.getX());
+//        compound.putInt("shooterPosY", this.shooterPos.getY());
+//        compound.putInt("shooterPosZ", this.shooterPos.getZ());
+//        compound.putFloat("attribute", this.attribute);
 //        compound.putString("projectileType", String.valueOf(this.projectileType));
     }
 

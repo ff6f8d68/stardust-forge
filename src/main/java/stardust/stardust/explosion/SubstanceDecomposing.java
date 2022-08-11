@@ -1,6 +1,5 @@
-package stardust.stardust.damage;
+package stardust.stardust.explosion;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
