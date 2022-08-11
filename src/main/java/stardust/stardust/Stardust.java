@@ -55,6 +55,7 @@ public class Stardust {
         EntityTypeRegistry.registry();
 
         MinecraftForge.EVENT_BUS.register(new CannonBaseBreakEventHandler());
+        
     }
 
     private void setup(final FMLCommonSetupEvent event) {

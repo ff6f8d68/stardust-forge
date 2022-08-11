@@ -24,7 +24,7 @@ import javax.annotation.Nonnull;
 public abstract class AbstractStardustProjectileEntity extends DamagingProjectileEntity {
 
     public enum ProjectileType {
-        ENERGY_LASER, ENERGY_PLASMA, ENERGY_SUBSTANCE_DECOMPOSER, KINETIC_ARMOR_PIERCING, KINETIC_HIGHLY_EXPLOSIVE, KINETIC_BULLET
+        ENERGY_LASER, ENERGY_PLASMA, ENERGY_SUBSTANCE_DECOMPOSER, KINETIC_ARMOR_PIERCING, KINETIC_HIGHLY_EXPLOSIVE, KINETIC_BULLET, KINETIC_ORDNANCE_PENETRATOR
     }
 
     public double accelerationX = 0.0d;

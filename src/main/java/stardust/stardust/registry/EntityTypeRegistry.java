@@ -9,6 +9,7 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import stardust.stardust.entity.CarrierDemoEntity;
 import stardust.stardust.entity.projectile.HEProjectileEntity;
+import stardust.stardust.entity.projectile.OPProjectileEntity;
 import stardust.stardust.entity.projectile.RailGunProjectileEntity;
 
 import static stardust.stardust.Stardust.MODID;
@@ -38,6 +39,14 @@ public class EntityTypeRegistry {
                     (EntityType<HEProjectileEntity> entityType, World world) -> new HEProjectileEntity(entityType, world),
                     EntityClassification.MISC
             ).build("he_projectile_entity")
+    );
+
+    public static RegistryObject<EntityType<OPProjectileEntity>> OP_PROJECTILE_ENTITY = ENTITY_TYPE_DEFERRED_REGISTER.register(
+            "op_projectile_entity",
+            () -> EntityType.Builder.create(
+                    (EntityType<OPProjectileEntity> entityType, World world) -> new OPProjectileEntity(entityType, world),
+                    EntityClassification.MISC
+            ).build("op_projectile_entity")
     );
 
     public static void registry() {
