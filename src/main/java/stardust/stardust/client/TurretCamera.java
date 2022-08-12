@@ -4,17 +4,21 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.client.util.InputMappings;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.client.event.InputEvent;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.settings.KeyConflictContext;
 import net.minecraftforge.client.settings.KeyModifier;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.lwjgl.glfw.GLFW;
 import stardust.stardust.entity.cannon.medium.AbstractCannonMediumTileEntity;
+import stardust.stardust.gui.CannonHUD;
 
-@Mod.EventBusSubscriber()
+@Mod.EventBusSubscriber(value = Dist.CLIENT)
 public class TurretCamera {
 
     public static final KeyBinding RELEASE_KEY = new KeyBinding("key.stardust",
@@ -34,7 +38,8 @@ public class TurretCamera {
         AbstractCannonMediumTileEntity turret = AbstractCannonMediumTileEntity.TURRETS_ON_PLAYER_CONTROLLED.get(player);
         if (turret != null) {
 //            event.getInfo().setPosition(turret.getBarrelEndPos());
-            event.getInfo().setPosition(turret.getBlockCenter().add(0, 1.5, 0));
+            Vector3d inverseBarrelDirection = turret.getBarrelDirection().inverse();
+            event.getInfo().setPosition(turret.getBlockCenter().add(inverseBarrelDirection.x * 6, 3, inverseBarrelDirection.z * 6));
         }
     }
 
@@ -62,5 +67,14 @@ public class TurretCamera {
             player.sendStatusMessage(new TranslationTextComponent("message.stardust.release"), true);
             turret.releasePlayer();
         }
+    }
+
+    @SubscribeEvent
+    public static void onOverlayRender(RenderGameOverlayEvent event) {
+        if (event.getType() != RenderGameOverlayEvent.ElementType.ALL) {
+            return;
+        }
+        event.getWindow().getGuiScaleFactor();
+        new CannonHUD(event.getMatrixStack()).render();
     }
 }
