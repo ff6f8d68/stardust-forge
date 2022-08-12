@@ -26,7 +26,7 @@ public class OPProjectileEntity extends AbstractStardustProjectileEntity impleme
     }
 
     public OPProjectileEntity(World worldIn, long energy, float attribute, TileEntity shootTile, double startX, double startY, double startZ, double accelerationX, double accelerationY, double accelerationZ) {
-        super(EntityTypeRegistry.HE_PROJECTILE_ENTITY.get(), worldIn, ProjectileType.KINETIC_HIGHLY_EXPLOSIVE, energy, attribute, shootTile, startX, startY, startZ, accelerationX, accelerationY, accelerationZ);
+        super(EntityTypeRegistry.OP_PROJECTILE_ENTITY.get(), worldIn, ProjectileType.KINETIC_HIGHLY_EXPLOSIVE, energy, attribute, shootTile, startX, startY, startZ, accelerationX, accelerationY, accelerationZ);
         this.projectileType = ProjectileType.KINETIC_HIGHLY_EXPLOSIVE;
     }
 

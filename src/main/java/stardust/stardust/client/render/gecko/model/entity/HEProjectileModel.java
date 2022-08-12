@@ -3,7 +3,6 @@ package stardust.stardust.client.render.gecko.model.entity;
 import net.minecraft.util.ResourceLocation;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 import stardust.stardust.entity.projectile.HEProjectileEntity;
-import stardust.stardust.entity.projectile.RailGunProjectileEntity;
 
 import static stardust.stardust.Stardust.MODID;
 

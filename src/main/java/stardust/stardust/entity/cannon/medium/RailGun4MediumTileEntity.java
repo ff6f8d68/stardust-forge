@@ -3,6 +3,7 @@ package stardust.stardust.entity.cannon.medium;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import stardust.stardust.entity.projectile.HEProjectileEntity;
+import stardust.stardust.entity.projectile.SDProjectileEntity;
 
 public class RailGun4MediumTileEntity extends AbstractCannonMediumTileEntity {
     @Override
@@ -24,7 +25,8 @@ public class RailGun4MediumTileEntity extends AbstractCannonMediumTileEntity {
             double z1 = barrelDirection.getZ();
 
 //            RailGunProjectileEntity projectile = new HEProjectileEntity(this.world, 1000, 10.0f, this, x0, y0, z0, x1, y1, z1);
-            HEProjectileEntity projectile = new HEProjectileEntity(this.world, this.getEnergy(), 10.0f, this, x0, y0, z0, x1, y1, z1);
+//            HEProjectileEntity projectile = new HEProjectileEntity(this.world, this.getEnergy(), 10.0f, this, x0, y0, z0, x1, y1, z1);
+            SDProjectileEntity projectile = new SDProjectileEntity(this.world, this.getEnergy(), 100.0f, this, x0, y0, z0, x1, y1, z1);
             projectile.setRawPosition(x0, y0, z0);
             world.addEntity(projectile);
         }

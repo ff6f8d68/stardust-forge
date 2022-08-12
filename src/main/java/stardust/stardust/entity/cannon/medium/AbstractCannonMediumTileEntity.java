@@ -49,7 +49,7 @@ public abstract class AbstractCannonMediumTileEntity extends TileEntity implemen
     public double goalRotationX = 0;
     public double goalRotationY = 0;
 
-    public long energy = 1000;
+    public long energy = 10000;
     private Vector3d barrelRootOffset = new Vector3d(0.0d, 0.2d, 4.0d);
     public PlayerEntity playerHooked;
     public static HashMap<PlayerEntity, AbstractCannonMediumTileEntity> TURRETS_ON_PLAYER_CONTROLLED = new HashMap<>();
@@ -134,7 +134,7 @@ public abstract class AbstractCannonMediumTileEntity extends TileEntity implemen
     }
 
     private <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
-        event.getController().setAnimation(new AnimationBuilder().addAnimation("railgun4_shooting", true));
+//        event.getController().setAnimation(new AnimationBuilder().addAnimation("railgun4_shooting", true));
         return PlayState.CONTINUE;
     }
 
