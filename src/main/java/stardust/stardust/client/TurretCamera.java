@@ -22,6 +22,7 @@ import stardust.stardust.mixin.GameRendererAccessor;
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
 public class TurretCamera {
 
+
     public static final KeyBinding RELEASE_KEY = new KeyBinding("key.stardust",
             KeyConflictContext.IN_GAME,
             KeyModifier.NONE,
@@ -74,9 +75,13 @@ public class TurretCamera {
 
     @SubscribeEvent
     public static void onOverlayRender(RenderGameOverlayEvent event) {
-        if (event.getType() != RenderGameOverlayEvent.ElementType.ALL) {
-            return;
+        AbstractCannonMediumTileEntity turret = AbstractCannonMediumTileEntity.TURRETS_ON_PLAYER_CONTROLLED.get(Minecraft.getInstance().player);
+
+        if (turret != null) {
+            if (event.getType() != RenderGameOverlayEvent.ElementType.ALL) {
+                return;
+            }
+            new CannonHUD(event.getMatrixStack()).render();
         }
-        new CannonHUD(event.getMatrixStack()).render();
     }
 }
