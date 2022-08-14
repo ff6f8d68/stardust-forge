@@ -28,7 +28,7 @@ import javax.annotation.Nullable;
 import java.util.HashMap;
 
 public abstract class AbstractCannonMediumTileEntity extends TileEntity implements IAnimatable, ITickableTileEntity {
-    public static final Logger LOGGER = LogManager.getLogger();
+
     private final AnimationFactory factory = new AnimationFactory(this);
     private final AnimationController<AbstractCannonMediumTileEntity> controller = new AnimationController<>(this, "controller", 0, this::predicate);
 
@@ -181,6 +181,10 @@ public abstract class AbstractCannonMediumTileEntity extends TileEntity implemen
         return this.playerHooked;
     }
 
+    public Boolean isPlayerHooked() {
+        return this.playerHooked != null;
+    }
+
     public void releasePlayer() {
         TURRETS_ON_PLAYER_CONTROLLED.put(this.playerHooked, null);
         this.playerHooked = null;
@@ -259,6 +263,7 @@ public abstract class AbstractCannonMediumTileEntity extends TileEntity implemen
         this.goalRotationX = compoundNBT.getDouble("goalRotationX");
         this.nowRotationY = compoundNBT.getDouble("goalRotationY");
         this.barrelRootOffset = new Vector3d(compoundNBT.getDouble("barrelRootOffsetX"), compoundNBT.getDouble("barrelRootOffsetY"), compoundNBT.getDouble("barrelRootOffsetZ"));
+        assert this.world != null;
         this.playerHooked = this.world.getPlayerByUuid(compoundNBT.getUniqueId("playerHooked"));
     }
 
@@ -268,15 +273,16 @@ public abstract class AbstractCannonMediumTileEntity extends TileEntity implemen
         if (this.playerHooked != null) {
             setRotationGoal(-Math.toRadians(this.playerHooked.getRotationYawHead()));
         }
-//        goalRotationY = Math.PI;
+        assert this.world != null;
 
         if (this.rotationState == RotationState.FREE) {
-//            resetRotation();
+            resetRotation();
         } else if (this.rotationState == RotationState.READY) {
-            shoot();
+                shoot();
         } else if (this.rotationState == RotationState.ROTATING) {
             rotateTick();
         }
+
 
         if (!this.world.isRemote) {
             world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);

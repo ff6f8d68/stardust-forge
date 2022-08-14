@@ -17,6 +17,7 @@ import net.minecraftforge.fml.common.Mod;
 import org.lwjgl.glfw.GLFW;
 import stardust.stardust.entity.cannon.medium.AbstractCannonMediumTileEntity;
 import stardust.stardust.gui.CannonHUD;
+import stardust.stardust.mixin.GameRendererAccessor;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
 public class TurretCamera {
@@ -31,21 +32,23 @@ public class TurretCamera {
 
     /**
      * Change the player's camera position to the turret's position
-     * */
+     */
     @SubscribeEvent
     public static void onCameraSetup(EntityViewRenderEvent event) {
         PlayerEntity player = (PlayerEntity) event.getInfo().getRenderViewEntity();
         AbstractCannonMediumTileEntity turret = AbstractCannonMediumTileEntity.TURRETS_ON_PLAYER_CONTROLLED.get(player);
         if (turret != null) {
-//            event.getInfo().setPosition(turret.getBarrelEndPos());
+            event.getRenderer().renderHand = false;
             Vector3d inverseBarrelDirection = turret.getBarrelDirection().inverse();
-            event.getInfo().setPosition(turret.getBlockCenter().add(inverseBarrelDirection.x * 6, 3, inverseBarrelDirection.z * 6));
+            event.getInfo().setPosition(turret.getBlockCenter().add(inverseBarrelDirection.x * 4, 4, inverseBarrelDirection.z * 4));
+        } else {
+            event.getRenderer().renderHand = true;
         }
     }
 
     /**
-    * Listen to player's left click to shoot. Meanwhile, cancel this event in case of player destroy things around his real position.
-    * */
+     * Listen to player's left click to shoot. Meanwhile, cancel this event in case of player destroy things around his real position.
+     */
     @SubscribeEvent
     public static void onPlayerShoot(InputEvent.ClickInputEvent event) {
         AbstractCannonMediumTileEntity turret = AbstractCannonMediumTileEntity.TURRETS_ON_PLAYER_CONTROLLED.get(Minecraft.getInstance().player);
@@ -74,7 +77,6 @@ public class TurretCamera {
         if (event.getType() != RenderGameOverlayEvent.ElementType.ALL) {
             return;
         }
-        event.getWindow().getGuiScaleFactor();
         new CannonHUD(event.getMatrixStack()).render();
     }
 }

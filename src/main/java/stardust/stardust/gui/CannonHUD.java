@@ -17,8 +17,8 @@ public class CannonHUD extends AbstractGui {
     private MatrixStack matrixStack;
 
     public CannonHUD(MatrixStack matrixStack) {
-        this.width = Minecraft.getInstance().getMainWindow().getScaledWidth();
-        this.height = Minecraft.getInstance().getMainWindow().getScaledHeight();
+        this.width = Minecraft.getInstance().getMainWindow().getWidth();
+        this.height = Minecraft.getInstance().getMainWindow().getHeight();
         this.scaleFactor = Minecraft.getInstance().getMainWindow().getGuiScaleFactor();
         this.minecraft = Minecraft.getInstance();
         this.matrixStack = matrixStack;
@@ -32,7 +32,11 @@ public class CannonHUD extends AbstractGui {
     public void render() {
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         this.minecraft.getTextureManager().bindTexture(HUD);
-        blit(matrixStack, 0, 0, 0, 0, width, height, (int) (1920 / this.scaleFactor), (int) (1080 / this.scaleFactor));
+        Stardust.LOGGER.debug(this.height);
+        Stardust.LOGGER.debug(this.width);
+        Stardust.LOGGER.debug(this.scaleFactor);
+        blit(matrixStack, 0, 0, 0, 0, (int) (width / this.scaleFactor), (int) (height / this.scaleFactor), (int) (1920 / this.scaleFactor), (int) (1080 / this.scaleFactor));
+//        setMatrixStack(matrixStack);
     }
 
 }
