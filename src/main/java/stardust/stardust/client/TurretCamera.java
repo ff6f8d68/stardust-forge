@@ -17,7 +17,6 @@ import net.minecraftforge.fml.common.Mod;
 import org.lwjgl.glfw.GLFW;
 import stardust.stardust.entity.cannon.medium.AbstractCannonMediumTileEntity;
 import stardust.stardust.gui.CannonHUD;
-import stardust.stardust.mixin.GameRendererAccessor;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
 public class TurretCamera {
