@@ -1,4 +1,4 @@
-package stardust.stardust.block.cannon.medium;
+package stardust.stardust.block.base;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
@@ -44,8 +44,12 @@ public class CannonBaseMedium extends Block {
         return state.get(CannonBaseMedium.OFFSET_Z) - 1;
     }
 
+    public static boolean isCenterBlock(BlockState blockState) {
+        return getRealOffsetX(blockState) == 0 && getRealOffsetZ(blockState) == 0;
+    }
+
     public static BlockPos getCenterBlockPos(BlockState blockState, BlockPos pos) {
-        return pos.add(getRealOffsetX(blockState),0,getRealOffsetZ(blockState));
+        return pos.add(getRealOffsetX(blockState), 0, getRealOffsetZ(blockState));
     }
 
 
@@ -55,14 +59,14 @@ public class CannonBaseMedium extends Block {
 
     public static List<BlockPos> getAllBlockPos(BlockState blockState, BlockPos pos) {
         List<BlockPos> allPos = new java.util.ArrayList<>(List.of(getCenterBlockPos(blockState, pos)));
-        allPos.add(allPos.get(0).add(1,0,0));
-        allPos.add(allPos.get(0).add(1,0,1));
-        allPos.add(allPos.get(0).add(1,0,-1));
-        allPos.add(allPos.get(0).add(-1,0,0));
-        allPos.add(allPos.get(0).add(-1,0,1));
-        allPos.add(allPos.get(0).add(-1,0,-1));
-        allPos.add(allPos.get(0).add(0,0,1));
-        allPos.add(allPos.get(0).add(0,0,-1));
+        allPos.add(allPos.get(0).add(1, 0, 0));
+        allPos.add(allPos.get(0).add(1, 0, 1));
+        allPos.add(allPos.get(0).add(1, 0, -1));
+        allPos.add(allPos.get(0).add(-1, 0, 0));
+        allPos.add(allPos.get(0).add(-1, 0, 1));
+        allPos.add(allPos.get(0).add(-1, 0, -1));
+        allPos.add(allPos.get(0).add(0, 0, 1));
+        allPos.add(allPos.get(0).add(0, 0, -1));
         return allPos;
     }
 
@@ -94,14 +98,9 @@ public class CannonBaseMedium extends Block {
 
     @Override
     public BlockRenderType getRenderType(BlockState state) {
-        return BlockRenderType.MODEL;
+        if (this.isCenterBlock(state)) return BlockRenderType.ENTITYBLOCK_ANIMATED;
+        else return BlockRenderType.INVISIBLE;
     }
-
-//    @Override
-//    public int getLightValue(BlockState state, IBlockReader world, BlockPos pos) {
-//        return 15;
-//    }
-
 
 
     @Override
@@ -117,7 +116,8 @@ public class CannonBaseMedium extends Block {
     @Override
     @OnlyIn(Dist.CLIENT)
     public float getAmbientOcclusionLightValue(BlockState state, IBlockReader worldIn, BlockPos pos) {
-        if (state.get(CannonBaseMedium.OFFSET_X) != 1 || state.getBlockState().get(CannonBaseMedium.OFFSET_Z) != 1) return 0.0F;
+        if (state.get(CannonBaseMedium.OFFSET_X) != 1 || state.getBlockState().get(CannonBaseMedium.OFFSET_Z) != 1)
+            return 0.0F;
         else return 1.0F;
     }
 
@@ -126,7 +126,4 @@ public class CannonBaseMedium extends Block {
         return 10;
     }
 
-    //    public static class XProperties extends Properties {
-//
-//    }
 }

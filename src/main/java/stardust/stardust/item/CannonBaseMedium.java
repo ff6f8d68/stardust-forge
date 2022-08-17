@@ -50,21 +50,21 @@ public class CannonBaseMedium extends BlockItem {
 
     @Override
     protected boolean placeBlock(BlockItemUseContext context, BlockState state) {
-        context.getWorld().setBlockState(context.getPos().add(1, 0, 0), this.getBlock().getDefaultState().with(stardust.stardust.block.cannon.medium.CannonBaseMedium.OFFSET_X, 0), 11);
+        context.getWorld().setBlockState(context.getPos().add(1, 0, 0), this.getBlock().getDefaultState().with(stardust.stardust.block.base.CannonBaseMedium.OFFSET_X, 0), 11);
         super.placeBlock(context, state);
-        context.getWorld().setBlockState(context.getPos().add(-1, 0, 0), this.getBlock().getDefaultState().with(stardust.stardust.block.cannon.medium.CannonBaseMedium.OFFSET_X, 2), 11);
+        context.getWorld().setBlockState(context.getPos().add(-1, 0, 0), this.getBlock().getDefaultState().with(stardust.stardust.block.base.CannonBaseMedium.OFFSET_X, 2), 11);
         super.placeBlock(context, state);
-        context.getWorld().setBlockState(context.getPos().add(0, 0, 1), this.getBlock().getDefaultState().with(stardust.stardust.block.cannon.medium.CannonBaseMedium.OFFSET_Z, 0), 11);
+        context.getWorld().setBlockState(context.getPos().add(0, 0, 1), this.getBlock().getDefaultState().with(stardust.stardust.block.base.CannonBaseMedium.OFFSET_Z, 0), 11);
         super.placeBlock(context, state);
-        context.getWorld().setBlockState(context.getPos().add(0, 0, -1), this.getBlock().getDefaultState().with(stardust.stardust.block.cannon.medium.CannonBaseMedium.OFFSET_Z, 2), 11);
+        context.getWorld().setBlockState(context.getPos().add(0, 0, -1), this.getBlock().getDefaultState().with(stardust.stardust.block.base.CannonBaseMedium.OFFSET_Z, 2), 11);
         super.placeBlock(context, state);
-        context.getWorld().setBlockState(context.getPos().add(1, 0, 1), this.getBlock().getDefaultState().with(stardust.stardust.block.cannon.medium.CannonBaseMedium.OFFSET_X, 0).with(stardust.stardust.block.cannon.medium.CannonBaseMedium.OFFSET_Z, 0), 11);
+        context.getWorld().setBlockState(context.getPos().add(1, 0, 1), this.getBlock().getDefaultState().with(stardust.stardust.block.base.CannonBaseMedium.OFFSET_X, 0).with(stardust.stardust.block.base.CannonBaseMedium.OFFSET_Z, 0), 11);
         super.placeBlock(context, state);
-        context.getWorld().setBlockState(context.getPos().add(1, 0, -1), this.getBlock().getDefaultState().with(stardust.stardust.block.cannon.medium.CannonBaseMedium.OFFSET_X, 0).with(stardust.stardust.block.cannon.medium.CannonBaseMedium.OFFSET_Z, 2), 11);
+        context.getWorld().setBlockState(context.getPos().add(1, 0, -1), this.getBlock().getDefaultState().with(stardust.stardust.block.base.CannonBaseMedium.OFFSET_X, 0).with(stardust.stardust.block.base.CannonBaseMedium.OFFSET_Z, 2), 11);
         super.placeBlock(context, state);
-        context.getWorld().setBlockState(context.getPos().add(-1, 0, 1), this.getBlock().getDefaultState().with(stardust.stardust.block.cannon.medium.CannonBaseMedium.OFFSET_X, 2).with(stardust.stardust.block.cannon.medium.CannonBaseMedium.OFFSET_Z, 0), 11);
+        context.getWorld().setBlockState(context.getPos().add(-1, 0, 1), this.getBlock().getDefaultState().with(stardust.stardust.block.base.CannonBaseMedium.OFFSET_X, 2).with(stardust.stardust.block.base.CannonBaseMedium.OFFSET_Z, 0), 11);
         super.placeBlock(context, state);
-        context.getWorld().setBlockState(context.getPos().add(-1, 0, -1), this.getBlock().getDefaultState().with(stardust.stardust.block.cannon.medium.CannonBaseMedium.OFFSET_X, 2).with(stardust.stardust.block.cannon.medium.CannonBaseMedium.OFFSET_Z, 2), 11);
+        context.getWorld().setBlockState(context.getPos().add(-1, 0, -1), this.getBlock().getDefaultState().with(stardust.stardust.block.base.CannonBaseMedium.OFFSET_X, 2).with(stardust.stardust.block.base.CannonBaseMedium.OFFSET_Z, 2), 11);
         super.placeBlock(context, state);
         return super.placeBlock(context, state);
     }

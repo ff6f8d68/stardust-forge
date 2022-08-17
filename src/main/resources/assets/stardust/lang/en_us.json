@@ -2,5 +2,7 @@
   "message.stardust.debug": "debug",
   "message.stardust.release": "You have left the turret",
   "key.stardust": "Stardust",
-  "key.stardust.release": "Leave turret"
+  "key.stardust.release": "Leave turret",
+  "message.stardust.to3rd": "Switch to 3rd camera mode",
+  "message.stardust.to1st": "Switch to 1st camera mode"
 }

@@ -21,7 +21,7 @@ import stardust.stardust.gui.CannonHUD;
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
 public class TurretCamera {
 
-    public static Boolean IS_PLAYER_HOLDING_RIGHT_BUTTON = false;
+    public static Boolean IS_PLAYER_AIMING = false;
 
     public static final KeyBinding RELEASE_KEY = new KeyBinding("key.stardust",
             KeyConflictContext.IN_GAME,
@@ -41,7 +41,7 @@ public class TurretCamera {
         if (turret != null) {
             event.getRenderer().renderHand = false;
 
-            if (IS_PLAYER_HOLDING_RIGHT_BUTTON) {
+            if (IS_PLAYER_AIMING) {
                 //1st person camera when holding right button
                 event.getInfo().setPosition(turret.getBarrelEndPos());
             } else {
@@ -72,9 +72,16 @@ public class TurretCamera {
     public static void onPlayerAim(InputEvent.ClickInputEvent event) {
         AbstractCannonMediumTileEntity turret = AbstractCannonMediumTileEntity.TURRETS_ON_PLAYER_CONTROLLED.get(Minecraft.getInstance().player);
         if (turret == null) return;
+        PlayerEntity player = Minecraft.getInstance().player;
+        assert player != null;
         if (event.getKeyBinding().getKey().getKeyCode() == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+            if (IS_PLAYER_AIMING) {
+                player.sendStatusMessage(new TranslationTextComponent("message.stardust.to3rd"), true);
+            } else {
+                player.sendStatusMessage(new TranslationTextComponent("message.stardust.to1st"), true);
+            }
+            TurretCamera.IS_PLAYER_AIMING = !IS_PLAYER_AIMING;
             event.setCanceled(true);
-            TurretCamera.IS_PLAYER_HOLDING_RIGHT_BUTTON = !IS_PLAYER_HOLDING_RIGHT_BUTTON;
         }
     }
 

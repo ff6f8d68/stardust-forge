@@ -2,5 +2,7 @@
   "message.stardust.debug": "调试",
   "message.stardust.release": "你已经离开炮塔",
   "key.stardust": "万星归尘",
-  "key.stardust.release": "离开炮塔"
+  "key.stardust.release": "离开炮塔",
+  "message.stardust.to3rd": "切换到第三人称视角模式",
+  "message.stardust.to1st": "切换到第一人称视角模式"
 }

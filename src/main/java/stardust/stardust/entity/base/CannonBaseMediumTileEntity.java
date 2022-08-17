@@ -7,13 +7,18 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import software.bernie.geckolib3.core.IAnimatable;
+import software.bernie.geckolib3.core.manager.AnimationData;
+import software.bernie.geckolib3.core.manager.AnimationFactory;
 import stardust.stardust.registry.TileEntityTypeRegistry;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.print.DocFlavor;
 import java.util.Objects;
 
-public class CannonBaseMediumTileEntity extends TileEntity {
+public class CannonBaseMediumTileEntity extends TileEntity implements IAnimatable {
+
+    private final AnimationFactory factory = new AnimationFactory(this);
     public CannonBaseMediumTileEntity() {
         super(TileEntityTypeRegistry.CANNON_BASE_MEDIUM_TILE_ENTITY.get());
     }
@@ -28,29 +33,14 @@ public class CannonBaseMediumTileEntity extends TileEntity {
     public @ParametersAreNonnullByDefault CompoundNBT write(CompoundNBT compound) {
         return super.write(compound);
     }
-//
-//    public BlockPos getCenterPos() {
-//        return this.getPos().add(-this.offsetX, 0, -this.offsetZ);
-//    }
-//
-//    public BlockState getCenterBlockState() {
-//        World world = this.getWorld();
-//        assert world != null;
-//        return world.getBlockState(getCenterPos());
-//    }
-//
-//    public TileEntity getCenterTileEntity() {
-//        World world = this.getWorld();
-//        assert world != null;
-//        return world.getTileEntity(getCenterPos());
-//    }
-//
-//    public int getOffsetX() {
-//        return offsetX;
-//    }
-//
-//    public int getOffsetZ() {
-//        return offsetZ;
-//    }
 
+    @Override
+    public void registerControllers(AnimationData data) {
+
+    }
+
+    @Override
+    public AnimationFactory getFactory() {
+        return this.factory;
+    }
 }
