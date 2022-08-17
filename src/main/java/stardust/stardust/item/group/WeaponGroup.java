@@ -8,7 +8,6 @@ import stardust.stardust.registry.ItemRegistry;
 import javax.annotation.Nonnull;
 
 public class WeaponGroup extends ItemGroup {
-    public static ItemGroup itemGroup;
 
     public WeaponGroup() {
         super("weapon_group");
