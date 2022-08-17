@@ -23,11 +23,11 @@ java {
 }
 
 
-//mixin {
-//    add sourceSets.main, "stardust.refmap.json"
-//
-//    config "stardust.mixins.json"
-//}
+mixin {
+    add sourceSets.main, "stardust.refmap.json"
+
+    config "stardust.mixins.json"
+}
 
 minecraft {
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')

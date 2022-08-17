@@ -17,7 +17,7 @@ import java.util.Objects;
 public class BlockMixin {
 
     @Inject(at = @At("HEAD"), method = "Lnet/minecraft/block/Block;shouldSideBeRendered(Lnet/minecraft/block/BlockState;Lnet/minecraft/world/IBlockReader;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/util/Direction;)Z", cancellable = true)
-    private static void sheouldSideBeRendered(BlockState adjacentState, IBlockReader blockState, BlockPos blockAccess, Direction pos, CallbackInfoReturnable<Boolean> cir) {
+    private static void shouldSideBeRendered(BlockState adjacentState, IBlockReader blockState, BlockPos blockAccess, Direction pos, CallbackInfoReturnable<Boolean> cir) {
         BlockPos blockpos = blockAccess.offset(pos);
         BlockState blockstate = blockState.getBlockState(blockpos);
         if (Objects.requireNonNull(blockstate.getBlock().getRegistryName()).getNamespace().equals("stardust"))

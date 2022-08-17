@@ -16,6 +16,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
@@ -51,11 +52,6 @@ public class CannonBaseMedium extends Block {
     public static BlockPos getCenterBlockPos(BlockState blockState, BlockPos pos) {
         return pos.add(getRealOffsetX(blockState), 0, getRealOffsetZ(blockState));
     }
-
-
-//    public static BlockState getCenterBlockState(BlockState blockState, BlockPos pos) {
-//        return blockState.
-//    }
 
     public static List<BlockPos> getAllBlockPos(BlockState blockState, BlockPos pos) {
         List<BlockPos> allPos = new java.util.ArrayList<>(List.of(getCenterBlockPos(blockState, pos)));
