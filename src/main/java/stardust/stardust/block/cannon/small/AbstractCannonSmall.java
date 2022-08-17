@@ -7,4 +7,7 @@ public class AbstractCannonSmall extends Block {
     public AbstractCannonSmall(Properties p_i48440_1_) {
         super(p_i48440_1_);
     }
+
+
+
 }

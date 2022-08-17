@@ -21,5 +21,4 @@ public class BlockRegistry {
     public static void register() {
         BLOCKS.register(FMLJavaModLoadingContext.get().getModEventBus());
     }
-
 }

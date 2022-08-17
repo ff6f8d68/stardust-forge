@@ -32,11 +32,7 @@ public class CannonHUD extends AbstractGui {
     public void render() {
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         this.minecraft.getTextureManager().bindTexture(HUD);
-        Stardust.LOGGER.debug(this.height);
-        Stardust.LOGGER.debug(this.width);
-        Stardust.LOGGER.debug(this.scaleFactor);
         blit(matrixStack, 0, 0, 0, 0, (int) (width / this.scaleFactor), (int) (height / this.scaleFactor), (int) (1920 / this.scaleFactor), (int) (1080 / this.scaleFactor));
-//        setMatrixStack(matrixStack);
     }
 
 }

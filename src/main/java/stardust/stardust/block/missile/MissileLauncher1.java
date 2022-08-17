@@ -11,3 +11,4 @@ public class MissileLauncher1 extends Block {
         super(Properties.create(Material.ROCK).hardnessAndResistance(5));
     }
 }
+

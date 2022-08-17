@@ -21,6 +21,7 @@ import stardust.stardust.gui.CannonHUD;
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
 public class TurretCamera {
 
+    public static Boolean IS_PLAYER_HOLDING_RIGHT_BUTTON = false;
 
     public static final KeyBinding RELEASE_KEY = new KeyBinding("key.stardust",
             KeyConflictContext.IN_GAME,
@@ -39,8 +40,15 @@ public class TurretCamera {
         AbstractCannonMediumTileEntity turret = AbstractCannonMediumTileEntity.TURRETS_ON_PLAYER_CONTROLLED.get(player);
         if (turret != null) {
             event.getRenderer().renderHand = false;
-            Vector3d inverseBarrelDirection = turret.getBarrelDirection().inverse();
-            event.getInfo().setPosition(turret.getBlockCenter().add(inverseBarrelDirection.x * 4, 4, inverseBarrelDirection.z * 4));
+
+            if (IS_PLAYER_HOLDING_RIGHT_BUTTON) {
+                //1st person camera when holding right button
+                event.getInfo().setPosition(turret.getBarrelEndPos());
+            } else {
+                //3rd person camera for default
+                Vector3d inverseBarrelDirection = turret.getBarrelDirection().inverse();
+                event.getInfo().setPosition(turret.getBlockCenter().add(inverseBarrelDirection.x * 4, 4, inverseBarrelDirection.z * 4));
+            }
         } else {
             event.getRenderer().renderHand = true;
         }
@@ -57,6 +65,16 @@ public class TurretCamera {
         if (event.getKeyBinding().getKey().getKeyCode() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
             event.setCanceled(true);
             turret.shoot();
+        }
+    }
+
+    @SubscribeEvent
+    public static void onPlayerAim(InputEvent.ClickInputEvent event) {
+        AbstractCannonMediumTileEntity turret = AbstractCannonMediumTileEntity.TURRETS_ON_PLAYER_CONTROLLED.get(Minecraft.getInstance().player);
+        if (turret == null) return;
+        if (event.getKeyBinding().getKey().getKeyCode() == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+            event.setCanceled(true);
+            TurretCamera.IS_PLAYER_HOLDING_RIGHT_BUTTON = !IS_PLAYER_HOLDING_RIGHT_BUTTON;
         }
     }
 
