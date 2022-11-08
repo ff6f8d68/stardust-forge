@@ -4,7 +4,6 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import stardust.stardust.event.CannonBaseBreakEventHandler;
 
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod("stardust")
@@ -18,16 +17,6 @@ public class Stardust {
     public Stardust() {
 
         MinecraftForge.EVENT_BUS.register(this);
-
-        BlockRegistry.register();
-
-        ItemRegistry.register();
-
-        TileEntityTypeRegistry.registry();
-
-        EntityTypeRegistry.registry();
-
-        MinecraftForge.EVENT_BUS.register(new CannonBaseBreakEventHandler());
         
     }
 

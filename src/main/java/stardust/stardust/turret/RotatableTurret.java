@@ -10,6 +10,16 @@ import software.bernie.geckolib3.model.AnimatedGeoModel;
 import software.bernie.geckolib3.renderers.geo.GeoBlockRenderer;
 
 abstract public class RotatableTurret {
+    public static String registerName;
+
+    enum REGISTRY_TYPE {
+        BLOCK, TILE, MODEL
+    }
+
+    static String getRegisterName(REGISTRY_TYPE type) {
+        return null;
+    }
+
     abstract public class Block extends net.minecraft.block.Block {
 
         public Block(Properties properties) {
@@ -17,7 +27,7 @@ abstract public class RotatableTurret {
         }
     }
 
-    abstract public class Model extends AnimatedGeoModel <Tile>{
+    abstract public class Model extends AnimatedGeoModel<Tile> {
 
     }
 
@@ -39,6 +49,16 @@ abstract public class RotatableTurret {
 
         public Item(Properties properties) {
             super(properties);
+        }
+    }
+
+    abstract public class Events {
+        abstract public class ClientEvents {
+
+        }
+
+        abstract public class ServerEvents {
+
         }
     }
 }
