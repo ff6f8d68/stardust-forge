@@ -14,6 +14,7 @@ import net.minecraftforge.fml.network.NetworkHooks;
 import stardust.stardust.projectile.explosion.AbstractExplosion;
 
 import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 abstract public class AbstractProjectile {
 
@@ -52,6 +53,7 @@ abstract public class AbstractProjectile {
         }
 
         @Override
+        @ParametersAreNonnullByDefault
         protected void onImpact(RayTraceResult result) {
             super.onImpact(result);
         }
@@ -96,21 +98,13 @@ abstract public class AbstractProjectile {
         }
 
         @Override
+        @ParametersAreNonnullByDefault
         public void readAdditional(CompoundNBT compound) {
         }
 
         @Override
+        @ParametersAreNonnullByDefault
         public void writeAdditional(CompoundNBT compound) {
-//        compound.putDouble("accelerationX", this.accelerationX);
-//        compound.putDouble("accelerationY", this.accelerationY);
-//        compound.putDouble("accelerationZ", this.accelerationZ);
-//        compound.putLong("shieldDamage", this.shieldDamage);
-//        compound.putFloat("energy", this.energy);
-//        compound.putInt("shooterPosX", this.shooterPos.getX());
-//        compound.putInt("shooterPosY", this.shooterPos.getY());
-//        compound.putInt("shooterPosZ", this.shooterPos.getZ());
-//        compound.putFloat("attribute", this.attribute);
-//        compound.putString("projectileType", String.valueOf(this.projectileType));
         }
 
 

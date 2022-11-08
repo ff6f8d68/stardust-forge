@@ -9,13 +9,19 @@ import software.bernie.geckolib3.renderers.geo.GeoBlockRenderer;
 
 abstract public class AbstractTurret {
     public static String registerName;
+    public static boolean isRegistered = selfRegistry();
+
+    public static boolean selfRegistry() {
+        //DO ALL REG STUFF HERE
+        return false;
+    }
 
     enum REGISTRY_TYPE {
         BLOCK, TILE, MODEL
     }
 
     static String getRegisterName(REGISTRY_TYPE type) {
-        return null;
+        return registerName + "_" + (type.toString()).toLowerCase();
     }
 
     abstract public class Block extends net.minecraft.block.Block {
