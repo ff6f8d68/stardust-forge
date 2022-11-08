@@ -11,10 +11,15 @@ import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
+import stardust.stardust.projectile.explosion.AbstractExplosion;
 
 import javax.annotation.Nonnull;
 
 abstract public class AbstractProjectile {
+
+    @Nonnull
+    abstract AbstractExplosion getExplosion();
+
     public abstract class Entity extends DamagingProjectileEntity {
 
         public enum ProjectileType {
@@ -48,33 +53,11 @@ abstract public class AbstractProjectile {
 
         @Override
         protected void onImpact(RayTraceResult result) {
-//        RayTraceResult.Type type = result.getType();
-//        if (type == RayTraceResult.Type.ENTITY) {
-//            if (((EntityRayTraceResult) result).getEntity().equals(this)) return;
-//            this.onEntityHit((EntityRayTraceResult) result);
-//        } else if (type == RayTraceResult.Type.BLOCK) {
-//            this.func_230299_a_((BlockRayTraceResult) result);
-//        }
-//
-//        if (!world.isRemote()) {
-//            if (projectileType == ProjectileType.KINETIC_HIGHLY_EXPLOSIVE) {
-//                Explosion.Mode explosion$mode = net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.world, this.getShooter()) ? Explosion.Mode.DESTROY : Explosion.Mode.NONE;
-//                this.world.createExplosion(this, this.getPosX(), this.getPosY(), this.getPosZ(), attribute, false, explosion$mode);
-//            }
-//
-//            if (projectileType != ProjectileType.KINETIC_ARMOR_PIERCING && projectileType != ProjectileType.ENERGY_SUBSTANCE_DECOMPOSER) {
-//                this.remove();
-//            }
-//        }
             super.onImpact(result);
         }
 
         @Override
         protected void onEntityHit(@Nonnull EntityRayTraceResult result) {
-//        super.onEntityHit(result);
-//        if (!this.world.isRemote()) {
-//            if (this.projectileType == ProjectileType.KINETIC_HIGHLY_EXPLOSIVE) this.remove();
-//        }
             super.onEntityHit(result);
         }
 
@@ -83,12 +66,6 @@ abstract public class AbstractProjectile {
          */
         @Override
         protected void func_230299_a_(@Nonnull BlockRayTraceResult result) {
-//        super.func_230299_a_(result);
-//        if (!this.world.isRemote) {
-//            if (this.projectileType == ProjectileType.ENERGY_SUBSTANCE_DECOMPOSER) {
-//                new SubstanceDecomposing(this.world, result.getPos(), (long) this.attribute);
-//            }
-//        }
             super.func_230299_a_(result);
         }
 
@@ -120,14 +97,6 @@ abstract public class AbstractProjectile {
 
         @Override
         public void readAdditional(CompoundNBT compound) {
-//        this.accelerationX = compound.getDouble("accelerationX");
-//        this.accelerationY = compound.getDouble("accelerationY");
-//        this.accelerationZ = compound.getDouble("accelerationZ");
-//        this.shieldDamage = compound.getLong("shieldDamage");
-//        this.energy = compound.getLong("energy");
-//        this.shooterPos = new BlockPos(compound.getInt("shootPosX"), compound.getInt("shootPosY"), compound.getInt("shootPosZ"));
-//        this.attribute = compound.getFloat("attribute");
-//        this.projectileType = ProjectileType.valueOf(compound.getString("projectileType"));
         }
 
         @Override
