@@ -16,7 +16,7 @@ import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib3.core.manager.AnimationData;
 
-public class KineticCannon extends AbstractTurret {
+public class RailGun extends AbstractTurret {
 
 
     public static class Block extends AbstractTurret.Block {
@@ -33,7 +33,7 @@ public class KineticCannon extends AbstractTurret {
     public static class Tile extends AbstractTurret.Tile {
 
         public Tile(BlockPos p_155229_, BlockState p_155230_) {
-            super(TileRegistry.KINETIC_CANNON_TILE.get(), p_155229_, p_155230_);
+            super(TileRegistry.RAIL_GUN_TILE.get(), p_155229_, p_155230_);
         }
 
         @Override
@@ -72,13 +72,13 @@ public class KineticCannon extends AbstractTurret {
         public abstract static class ClientListener extends AbstractTurret.Listener.ClientListener {
             @SubscribeEvent
             public static void registerRenderers(final EntityRenderersEvent.RegisterRenderers event) {
-                event.registerBlockEntityRenderer(TileRegistry.KINETIC_CANNON_TILE.get(), KineticCannon.Renderer::new);
+                event.registerBlockEntityRenderer(TileRegistry.RAIL_GUN_TILE.get(), RailGun.Renderer::new);
             }
         }
     }
 
     @Override
     public String getRegisterName() {
-        return "kinetic_cannon_1_medium";
+        return "rail_gun_1_medium";
     }
 }
