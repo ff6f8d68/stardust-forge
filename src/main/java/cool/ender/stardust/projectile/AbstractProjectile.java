@@ -12,15 +12,11 @@ import software.bernie.geckolib3.renderers.geo.GeoProjectilesRenderer;
 
 abstract public class AbstractProjectile {
 
-    public AbstractExplosion getExplosion() {
-        return null;
-    }
-
-    ;
+    abstract AbstractExplosion getExplosion();
 
     public abstract static class Entity extends AbstractHurtingProjectile implements IAnimatable {
 
-        protected Entity(EntityType<? extends AbstractHurtingProjectile> p_36833_, Level p_36834_) {
+        public Entity(EntityType<? extends AbstractHurtingProjectile> p_36833_, Level p_36834_) {
             super(p_36833_, p_36834_);
 
         }
