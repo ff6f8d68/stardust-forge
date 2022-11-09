@@ -7,7 +7,6 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
-import software.bernie.example.block.tile.HabitatTileEntity;
 
 public class TileRegistry {
 

@@ -1,5 +1,6 @@
 package cool.ender.stardust.turret;
 
+import cool.ender.stardust.Stardust;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.BaseEntityBlock;
@@ -7,8 +8,9 @@ import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
@@ -67,19 +69,20 @@ abstract public class AbstractTurret{
         }
     }
 
-    public abstract class Item extends net.minecraft.world.item.Item {
+    public abstract static class Item extends net.minecraft.world.item.Item {
 
         public Item(Properties properties) {
             super(properties);
         }
     }
 
-    public abstract class Events {
-        public abstract class ClientEvents {
+    public abstract static class Listener {
+        @Mod.EventBusSubscriber(modid = Stardust.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+        public abstract static class ClientListener {
 
         }
 
-        public abstract class ServerEvents {
+        public abstract static class ServerListener {
 
         }
     }
