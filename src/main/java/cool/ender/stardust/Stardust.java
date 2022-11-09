@@ -1,6 +1,7 @@
 package cool.ender.stardust;
 
 import cool.ender.stardust.registry.BlockRegistry;
+import cool.ender.stardust.registry.EntityRegistry;
 import cool.ender.stardust.registry.TileRegistry;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -24,6 +25,7 @@ public class Stardust {
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
         BlockRegistry.BLOCKS.register(bus);
         TileRegistry.TILES.register(bus);
+        EntityRegistry.ENTITIES.register(bus);
     }
 
 }

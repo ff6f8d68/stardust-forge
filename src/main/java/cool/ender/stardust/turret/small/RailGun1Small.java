@@ -20,6 +20,11 @@ import software.bernie.geckolib3.core.manager.AnimationData;
 
 public class RailGun1Small extends AbstractTurret {
 
+    @Override
+    public String getRegisterName() {
+        return "rail_gun_1_small";
+    }
+
     public static class Block extends AbstractTurret.Block {
 
         public Block() {
