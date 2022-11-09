@@ -13,6 +13,7 @@ public class Stardust {
     public static String MOD_ID = "stardust";
 
     public Stardust() {
+        LOGGER.info("Stardust Loaded");
 
         MinecraftForge.EVENT_BUS.register(this);
         
