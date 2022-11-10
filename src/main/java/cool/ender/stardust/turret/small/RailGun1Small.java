@@ -3,7 +3,6 @@ package cool.ender.stardust.turret.small;
 import cool.ender.stardust.Stardust;
 import cool.ender.stardust.registry.TileRegistry;
 import cool.ender.stardust.turret.AbstractTurret;
-import cool.ender.stardust.turret.medium.RailGun1Medium;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -14,7 +13,7 @@ import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.DoorHingeSide;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -27,6 +26,8 @@ import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 
+import static cool.ender.stardust.turret.small.RailGun1Small.Block.CANNON_FACING;
+
 public class RailGun1Small extends AbstractTurret {
 
     @Override
@@ -34,11 +35,13 @@ public class RailGun1Small extends AbstractTurret {
         return "rail_gun_1_small";
     }
 
-    public static class Block extends DirectionalBlock implements EntityBlock {
+    public static class Block extends AbstractTurret.Block implements EntityBlock {
+
+        public static final DirectionProperty CANNON_FACING = DirectionProperty.create("cannon_facing", Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST, Direction.UP, Direction.DOWN);
 
         public Block() {
             super(Properties.of(Material.METAL).noOcclusion());
-//            this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
+            this.registerDefaultState(this.stateDefinition.any().setValue(CANNON_FACING, Direction.SOUTH));
         }
 
         @Nullable
@@ -53,19 +56,14 @@ public class RailGun1Small extends AbstractTurret {
         }
 
         @Override
-//        public BlockState getStateForPlacement(BlockPlaceContext context) {
-//            return this.defaultBlockState().setValue(FACING, context.getNearestLookingDirection().getOpposite());
-//        }
-//
-//        @Override
-//        protected void createBlockStateDefinition(StateDefinition.Builder<net.minecraft.world.level.block.Block, BlockState> p_52719_) {
-//            p_52719_.add(FACING);
-//        }
+        public BlockState getStateForPlacement(BlockPlaceContext context) {
+            return this.defaultBlockState().setValue(CANNON_FACING, context.getNearestLookingDirection().getOpposite());
+        }
 
-//        @Override
-//        public BlockState rotate(BlockState p_52716_, Rotation p_52717_) {
-//            return p_52716_.setValue(FACING, p_52717_.rotate(p_52716_.getValue(FACING)));
-//        }
+        @Override
+        protected void createBlockStateDefinition(StateDefinition.Builder<net.minecraft.world.level.block.Block, BlockState> p_52719_) {
+            p_52719_.add(CANNON_FACING);
+        }
 
         @NotNull
         public RenderShape getRenderShape(@NotNull BlockState state) {
@@ -110,6 +108,35 @@ public class RailGun1Small extends AbstractTurret {
         public void codeAnimations(AbstractTurret.Tile entity, Integer uniqueID, AnimationEvent<?> customPredicate) {
             this.getAnimationProcessor().getBone("bone").setRotationX((float) (Math.PI * 0.5));
             super.codeAnimations(entity, uniqueID, customPredicate);
+        }
+
+        @Override
+        public void setLivingAnimations(AbstractTurret.Tile animatable, Integer instanceId) {
+            super.setLivingAnimations(animatable, instanceId);
+            switch (animatable.getBlockState().getValue(CANNON_FACING)) {
+                case SOUTH -> {
+                    this.getAnimationProcessor().getBone("bone").setRotationY((float) (Math.PI));
+                }
+
+                case NORTH -> {
+                }
+
+                case WEST -> {
+                    this.getAnimationProcessor().getBone("bone").setRotationY((float) (Math.PI * 0.5));
+                }
+
+                case EAST -> {
+                    this.getAnimationProcessor().getBone("bone").setRotationY((float) (Math.PI * -0.5));
+                }
+
+                case UP -> {
+                    this.getAnimationProcessor().getBone("bone").setRotationX((float) (Math.PI * 0.5));
+                }
+
+                case DOWN -> {
+                    this.getAnimationProcessor().getBone("bone").setRotationX((float) (Math.PI * -0.5));
+                }
+            }
         }
     }
 
