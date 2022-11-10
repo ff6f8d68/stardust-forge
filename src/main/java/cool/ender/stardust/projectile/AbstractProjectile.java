@@ -22,8 +22,6 @@ import software.bernie.geckolib3.util.GeckoLibUtil;
 
 abstract public class AbstractProjectile {
 
-    abstract AbstractExplosion getExplosion();
-
     public abstract static class Entity extends AbstractHurtingProjectile implements IAnimatable {
         public AnimationFactory factory = GeckoLibUtil.createFactory(this);
         public Entity(EntityType<? extends AbstractHurtingProjectile> p_36833_, Level p_36834_) {
@@ -34,6 +32,9 @@ abstract public class AbstractProjectile {
         public enum ProjectileType {
             ENERGY_LASER, ENERGY_PLASMA, ENERGY_SUBSTANCE_DECOMPOSER, KINETIC_ARMOR_PIERCING, KINETIC_HIGHLY_EXPLOSIVE, KINETIC_BULLET, KINETIC_ORDNANCE_PENETRATOR
         }
+
+        abstract AbstractExplosion getExplosion();
+
 
         @Override
         public AnimationFactory getFactory() {
