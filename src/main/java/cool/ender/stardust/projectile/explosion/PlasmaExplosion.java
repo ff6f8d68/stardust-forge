@@ -2,6 +2,8 @@ package cool.ender.stardust.projectile.explosion;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.AreaEffectCloud;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Explosion;
@@ -12,6 +14,11 @@ public class PlasmaExplosion extends AbstractExplosion{
 
     public PlasmaExplosion(float attribute, float radius, float energy, Level level) {
         super(attribute, radius, energy, level);
+    }
+
+    @Override
+    public void playSound(Vec3 location) {
+        this.level.playLocalSound(location.x, location.y, location.z, SoundEvents.DRAGON_FIREBALL_EXPLODE, SoundSource.HOSTILE, this.radius, (1.0F + (this.level.random.nextFloat() - this.level.random.nextFloat()) * 0.2F) * 0.7F, false);
     }
 
     @Override

@@ -38,7 +38,7 @@ public class RailGun1Small extends AbstractTurret {
 
         public Block() {
             super(Properties.of(Material.METAL).noOcclusion());
-            this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
+//            this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
         }
 
         @Nullable
@@ -53,21 +53,20 @@ public class RailGun1Small extends AbstractTurret {
         }
 
         @Override
-        public BlockState getStateForPlacement(BlockPlaceContext p_52669_) {
-            return this.defaultBlockState().setValue(FACING, p_52669_.getNearestLookingDirection().getOpposite());
-        }
+//        public BlockState getStateForPlacement(BlockPlaceContext context) {
+//            return this.defaultBlockState().setValue(FACING, context.getNearestLookingDirection().getOpposite());
+//        }
+//
+//        @Override
+//        protected void createBlockStateDefinition(StateDefinition.Builder<net.minecraft.world.level.block.Block, BlockState> p_52719_) {
+//            p_52719_.add(FACING);
+//        }
 
-        @Override
-        protected void createBlockStateDefinition(StateDefinition.Builder<net.minecraft.world.level.block.Block, BlockState> p_52719_) {
-            p_52719_.add(FACING);
-        }
+//        @Override
+//        public BlockState rotate(BlockState p_52716_, Rotation p_52717_) {
+//            return p_52716_.setValue(FACING, p_52717_.rotate(p_52716_.getValue(FACING)));
+//        }
 
-        @Override
-        public BlockState rotate(BlockState p_52716_, Rotation p_52717_) {
-            return p_52716_.setValue(FACING, p_52717_.rotate(p_52716_.getValue(FACING)));
-        }
-
-        @Override
         @NotNull
         public RenderShape getRenderShape(@NotNull BlockState state) {
             return RenderShape.ENTITYBLOCK_ANIMATED;
@@ -107,6 +106,11 @@ public class RailGun1Small extends AbstractTurret {
             return null;
         }
 
+        @Override
+        public void codeAnimations(AbstractTurret.Tile entity, Integer uniqueID, AnimationEvent<?> customPredicate) {
+            this.getAnimationProcessor().getBone("bone").setRotationX((float) (Math.PI * 0.5));
+            super.codeAnimations(entity, uniqueID, customPredicate);
+        }
     }
 
     public static class Renderer extends AbstractTurret.Renderer {
