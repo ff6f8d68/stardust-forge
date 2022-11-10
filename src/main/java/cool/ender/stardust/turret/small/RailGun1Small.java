@@ -6,6 +6,7 @@ import cool.ender.stardust.turret.AbstractTurret;
 import cool.ender.stardust.turret.medium.RailGun1Medium;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.DirectionalBlock;
@@ -13,13 +14,17 @@ import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.DoorHingeSide;
 import net.minecraft.world.level.material.Material;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 
 public class RailGun1Small extends AbstractTurret {
@@ -51,6 +56,10 @@ public class RailGun1Small extends AbstractTurret {
         public RenderShape getRenderShape(@NotNull BlockState state) {
             return RenderShape.ENTITYBLOCK_ANIMATED;
         }
+
+        public VoxelShape getShape(BlockState p_52807_, BlockGetter p_52808_, BlockPos p_52809_, CollisionContext p_52810_) {
+            return box(0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 32.0D);
+        }
     }
 
     public static class Tile extends AbstractTurret.Tile {
@@ -80,6 +89,13 @@ public class RailGun1Small extends AbstractTurret {
         @Override
         public ResourceLocation getAnimationFileLocation(AbstractTurret.Tile animatable) {
             return null;
+        }
+
+        @Override
+        public void setLivingAnimations(AbstractTurret.Tile animatable, Integer instanceId) {
+            super.setLivingAnimations(animatable, instanceId);
+            this.getAnimationProcessor().getBone("bone").setRotationY((float) (Math.PI));
+
         }
     }
 
