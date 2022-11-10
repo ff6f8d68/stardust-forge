@@ -8,12 +8,12 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.block.DirectionalBlock;
-import net.minecraft.world.level.block.EntityBlock;
-import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.DoorHingeSide;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -37,7 +37,8 @@ public class RailGun1Small extends AbstractTurret {
     public static class Block extends DirectionalBlock implements EntityBlock {
 
         public Block() {
-            super(Properties.of(Material.STONE).noOcclusion());
+            super(Properties.of(Material.METAL).noOcclusion());
+            this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
         }
 
         @Nullable
@@ -52,13 +53,28 @@ public class RailGun1Small extends AbstractTurret {
         }
 
         @Override
+        public BlockState getStateForPlacement(BlockPlaceContext p_52669_) {
+            return this.defaultBlockState().setValue(FACING, p_52669_.getNearestLookingDirection().getOpposite());
+        }
+
+        @Override
+        protected void createBlockStateDefinition(StateDefinition.Builder<net.minecraft.world.level.block.Block, BlockState> p_52719_) {
+            p_52719_.add(FACING);
+        }
+
+        @Override
+        public BlockState rotate(BlockState p_52716_, Rotation p_52717_) {
+            return p_52716_.setValue(FACING, p_52717_.rotate(p_52716_.getValue(FACING)));
+        }
+
+        @Override
         @NotNull
         public RenderShape getRenderShape(@NotNull BlockState state) {
             return RenderShape.ENTITYBLOCK_ANIMATED;
         }
 
         public VoxelShape getShape(BlockState p_52807_, BlockGetter p_52808_, BlockPos p_52809_, CollisionContext p_52810_) {
-            return box(0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 32.0D);
+            return box(0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D);
         }
     }
 
@@ -91,12 +107,6 @@ public class RailGun1Small extends AbstractTurret {
             return null;
         }
 
-        @Override
-        public void setLivingAnimations(AbstractTurret.Tile animatable, Integer instanceId) {
-            super.setLivingAnimations(animatable, instanceId);
-            this.getAnimationProcessor().getBone("bone").setRotationY((float) (Math.PI));
-
-        }
     }
 
     public static class Renderer extends AbstractTurret.Renderer {
