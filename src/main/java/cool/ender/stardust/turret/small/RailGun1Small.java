@@ -1,20 +1,33 @@
 package cool.ender.stardust.turret.small;
 
 import cool.ender.stardust.Stardust;
+import cool.ender.stardust.projectile.PlasmaProjectile;
 import cool.ender.stardust.registry.TileRegistry;
 import cool.ender.stardust.turret.AbstractTurret;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Vec3i;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.DragonFireball;
+import net.minecraft.world.entity.projectile.Fireball;
+import net.minecraft.world.entity.projectile.LargeFireball;
+import net.minecraft.world.entity.projectile.SmallFireball;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.material.Material;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
@@ -39,15 +52,33 @@ public class RailGun1Small extends AbstractTurret {
 
         public static final DirectionProperty CANNON_FACING = DirectionProperty.create("cannon_facing", Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST, Direction.UP, Direction.DOWN);
 
+        public Tile tile = null;
+
         public Block() {
             super(Properties.of(Material.METAL).noOcclusion());
             this.registerDefaultState(this.stateDefinition.any().setValue(CANNON_FACING, Direction.SOUTH));
         }
 
+        @Override
+        public InteractionResult use(BlockState p_60503_, Level level, BlockPos p_60505_, Player p_60506_, InteractionHand p_60507_, BlockHitResult p_60508_) {
+            if (level.isClientSide) {
+                return InteractionResult.SUCCESS;
+            } else {
+                Stardust.LOGGER.info("use triggered");
+                this.tile.shoot();
+                return InteractionResult.CONSUME;
+            }
+        }
+
+        public int getAnalogOutputSignal(BlockState p_52689_, Level p_52690_, BlockPos p_52691_) {
+            return AbstractContainerMenu.getRedstoneSignalFromBlockEntity(p_52690_.getBlockEntity(p_52691_));
+        }
+
         @Nullable
         @Override
         public BlockEntity newBlockEntity(@NotNull BlockPos blockPos, @NotNull BlockState blockState) {
-            return new Tile(blockPos, blockState);
+            this.tile = new Tile(blockPos, blockState);
+            return tile;
         }
 
         @Override
@@ -85,6 +116,17 @@ public class RailGun1Small extends AbstractTurret {
         public void registerControllers(AnimationData data) {
 
         }
+
+        public void shoot() {
+            Stardust.LOGGER.info("shoot triggered");
+            Vec3 centerVec = new Vec3(this.getBlockPos().getX() + 0.5, this.getBlockPos().getX() + 0.5, this.getBlockPos().getX() + 0.5);
+            Vec3i facingVec = this.getBlockState().getValue(CANNON_FACING).getNormal();
+            centerVec.subtract(facingVec.getX(), facingVec.getY(), facingVec.getZ());
+            SmallFireball projectile = new SmallFireball(this.getLevel(), centerVec.x, centerVec.y, centerVec.z, facingVec.getX(), facingVec.getY(), facingVec.getZ());
+            projectile.shoot(facingVec.getX(), facingVec.getY(), facingVec.getZ(), 0, 0);
+            assert this.level != null;
+            this.level.addFreshEntity(projectile);
+        }
     }
 
     public static class Model extends AbstractTurret.Model {
@@ -106,7 +148,6 @@ public class RailGun1Small extends AbstractTurret {
 
         @Override
         public void codeAnimations(AbstractTurret.Tile entity, Integer uniqueID, AnimationEvent<?> customPredicate) {
-            this.getAnimationProcessor().getBone("bone").setRotationX((float) (Math.PI * 0.5));
             super.codeAnimations(entity, uniqueID, customPredicate);
         }
 

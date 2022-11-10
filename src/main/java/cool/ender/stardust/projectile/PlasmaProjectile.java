@@ -11,6 +11,8 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.projectile.AbstractHurtingProjectile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -26,6 +28,24 @@ public class PlasmaProjectile extends AbstractProjectile{
     public static class Entity extends AbstractProjectile.Entity {
         public Entity(EntityType<? extends AbstractProjectile.Entity> entityType, Level level) {
             super(entityType, level);
+        }
+
+        public Entity(EntityType<? extends Entity> p_36826_, LivingEntity livingEntity, double x, double y, double z, Level level) {
+            super(p_36826_, livingEntity.getX(), livingEntity.getY(), livingEntity.getZ(), x, y, z, level);
+            this.setOwner(livingEntity);
+            this.setRot(livingEntity.getYRot(), livingEntity.getXRot());
+        }
+
+        public Entity(double x, double y, double z, double to_x, double to_y, double to_z, Level level) {
+            this(EntityRegistry.PLASMA_PROJECTILE_ENTITY.get(), level);
+            this.moveTo(x, y, z, this.getYRot(), this.getXRot());
+            this.reapplyPosition();
+            double d0 = Math.sqrt(to_x * to_x + to_y * to_y + to_z * to_z);
+            if (d0 != 0.0D) {
+                this.xPower = to_x / d0 * 0.1D;
+                this.yPower = to_y / d0 * 0.1D;
+                this.zPower = to_z / d0 * 0.1D;
+            }
 
         }
 
@@ -38,6 +58,7 @@ public class PlasmaProjectile extends AbstractProjectile{
         protected void onHit(HitResult p_37260_) {
             super.onHit(p_37260_);
             if (!this.level.isClientSide()) {
+                Stardust.LOGGER.info("HIT");
                 this.getExplosion().doDamage(p_37260_.getLocation());
                 this.remove(RemovalReason.DISCARDED);
             }
