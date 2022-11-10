@@ -24,7 +24,7 @@ abstract public class AbstractTurret{
     }
 
     public enum REGISTRY_TYPE {
-        BLOCK, TILE, MODEL
+        BLOCK, TILE, MODEL, ITEM
     }
 
     public String getRegisterName(REGISTRY_TYPE type) {

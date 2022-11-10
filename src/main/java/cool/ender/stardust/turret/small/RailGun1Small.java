@@ -7,6 +7,9 @@ import cool.ender.stardust.turret.medium.RailGun1Medium;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.DirectionalBlock;
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
@@ -25,7 +28,7 @@ public class RailGun1Small extends AbstractTurret {
         return "rail_gun_1_small";
     }
 
-    public static class Block extends AbstractTurret.Block {
+    public static class Block extends DirectionalBlock implements EntityBlock {
 
         public Block() {
             super(Properties.of(Material.STONE).noOcclusion());
@@ -35,6 +38,12 @@ public class RailGun1Small extends AbstractTurret {
         @Override
         public BlockEntity newBlockEntity(@NotNull BlockPos blockPos, @NotNull BlockState blockState) {
             return new Tile(blockPos, blockState);
+        }
+
+        @Override
+        @NotNull
+        public RenderShape getRenderShape(@NotNull BlockState state) {
+            return RenderShape.ENTITYBLOCK_ANIMATED;
         }
     }
 

@@ -2,6 +2,7 @@ package cool.ender.stardust;
 
 import cool.ender.stardust.registry.BlockRegistry;
 import cool.ender.stardust.registry.EntityRegistry;
+import cool.ender.stardust.registry.ItemRegistry;
 import cool.ender.stardust.registry.TileRegistry;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -26,6 +27,7 @@ public class Stardust {
         BlockRegistry.BLOCKS.register(bus);
         TileRegistry.TILES.register(bus);
         EntityRegistry.ENTITIES.register(bus);
+        ItemRegistry.ITEMS.register(bus);
     }
 
 }
