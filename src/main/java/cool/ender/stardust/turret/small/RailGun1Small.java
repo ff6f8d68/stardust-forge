@@ -11,6 +11,8 @@ import net.minecraft.core.Vec3i;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.animal.Sheep;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.DragonFireball;
 import net.minecraft.world.entity.projectile.Fireball;
@@ -64,7 +66,6 @@ public class RailGun1Small extends AbstractTurret {
             if (level.isClientSide) {
                 return InteractionResult.SUCCESS;
             } else {
-                Stardust.LOGGER.info("use triggered");
                 this.tile.shoot();
                 return InteractionResult.CONSUME;
             }
@@ -118,12 +119,12 @@ public class RailGun1Small extends AbstractTurret {
         }
 
         public void shoot() {
-            Stardust.LOGGER.info("shoot triggered");
-            Vec3 centerVec = new Vec3(this.getBlockPos().getX() + 0.5, this.getBlockPos().getX() + 0.5, this.getBlockPos().getX() + 0.5);
+            Vec3 centerVec = new Vec3(this.getBlockPos().getX() + 0.5, this.getBlockPos().getY() + 0.5, this.getBlockPos().getZ() + 0.5);
             Vec3i facingVec = this.getBlockState().getValue(CANNON_FACING).getNormal();
-            centerVec.subtract(facingVec.getX(), facingVec.getY(), facingVec.getZ());
-            SmallFireball projectile = new SmallFireball(this.getLevel(), centerVec.x, centerVec.y, centerVec.z, facingVec.getX(), facingVec.getY(), facingVec.getZ());
-            projectile.shoot(facingVec.getX(), facingVec.getY(), facingVec.getZ(), 0, 0);
+            centerVec = centerVec.add(facingVec.getX(), facingVec.getY(), facingVec.getZ());
+            Stardust.LOGGER.info(centerVec);
+            Stardust.LOGGER.info(facingVec);
+            PlasmaProjectile.Entity projectile = new PlasmaProjectile.Entity(centerVec.x, centerVec.y, centerVec.z, facingVec.getX(), facingVec.getY(), facingVec.getZ(), this.getLevel());
             assert this.level != null;
             this.level.addFreshEntity(projectile);
         }
