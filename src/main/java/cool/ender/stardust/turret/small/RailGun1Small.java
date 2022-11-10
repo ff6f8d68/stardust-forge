@@ -7,6 +7,7 @@ import cool.ender.stardust.turret.medium.RailGun1Medium;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.DirectionalBlock;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.RenderShape;
@@ -38,6 +39,11 @@ public class RailGun1Small extends AbstractTurret {
         @Override
         public BlockEntity newBlockEntity(@NotNull BlockPos blockPos, @NotNull BlockState blockState) {
             return new Tile(blockPos, blockState);
+        }
+
+        @Override
+        public boolean propagatesSkylightDown(@NotNull BlockState p_49928_, @NotNull BlockGetter p_49929_, @NotNull BlockPos p_49930_) {
+            return true;
         }
 
         @Override
