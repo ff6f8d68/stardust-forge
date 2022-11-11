@@ -26,6 +26,7 @@ public class Stardust {
         EntityRegistry.ENTITIES.register(bus);
         ItemRegistry.ITEMS.register(bus);
         SoundRegistry.SOUND_EVENTS.register(bus);
+        ParticleRegistry.PARTICLE_TYPES.register(bus);
     }
 
 }

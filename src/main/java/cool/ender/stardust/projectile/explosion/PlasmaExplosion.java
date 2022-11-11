@@ -1,6 +1,10 @@
 package cool.ender.stardust.projectile.explosion;
 
+import cool.ender.stardust.Stardust;
+import cool.ender.stardust.particle.ExplosionParticle;
+import cool.ender.stardust.registry.ParticleRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -21,16 +25,16 @@ public class PlasmaExplosion extends AbstractExplosion{
         this.level.playLocalSound(location.x, location.y, location.z, SoundEvents.DRAGON_FIREBALL_EXPLODE, SoundSource.HOSTILE, this.radius, (1.0F + (this.level.random.nextFloat() - this.level.random.nextFloat()) * 0.2F) * 0.7F, false);
     }
 
+    public void addParticle(Vec3 location) {
+        this.level.addParticle((ParticleOptions) ParticleRegistry.PLASMA_EXPLOSION_1.get(), location.x, location.y, location.z, 0, 0, 0);
+    }
+
     @Override
     public void doDamage(Vec3 location) {
         super.doDamage(location);
-        this.level.explode(null, location.x, location.y, location.z, this.radius, false, Explosion.BlockInteraction.BREAK);
-        AreaEffectCloud cloud = new AreaEffectCloud(this.level, location.x, location.y, location.z);
-        cloud.setParticle(ParticleTypes.SOUL_FIRE_FLAME);
-        cloud.setRadius(radius);
-        cloud.setDuration(20);
-        cloud.setRadiusPerTick((7.0F - cloud.getRadius()) / (float)cloud.getDuration());
-        this.level.addFreshEntity(cloud);
+        Explosion explosion = new Explosion(this.level, null, location.x, location.y, location.z, this.radius);
+        explosion.explode();
+        explosion.finalizeExplosion(false);
     }
 
 

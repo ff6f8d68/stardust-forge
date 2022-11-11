@@ -13,4 +13,6 @@ import software.bernie.example.GeckoLibMod;
 public class SoundRegistry {
     public static final DeferredRegister<SoundEvent> SOUND_EVENTS = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, Stardust.MOD_ID);
     public static final RegistryObject<SoundEvent> PLASMA_BLAST = SOUND_EVENTS.register("plasma_blast", () -> new SoundEvent(new ResourceLocation(Stardust.MOD_ID, "plasma_blast")));
+    public static final RegistryObject<SoundEvent> PLASMA_EXPLOSION = SOUND_EVENTS.register("plasma_explosion", () -> new SoundEvent(new ResourceLocation(Stardust.MOD_ID, "plasma_explosion")));
+    public static final RegistryObject<SoundEvent> X_WING_SHOOTING_SOUND = SOUND_EVENTS.register("x_wing_shooting_sound", () -> new SoundEvent(new ResourceLocation(Stardust.MOD_ID, "x_wing_shooting_sound")));
 }

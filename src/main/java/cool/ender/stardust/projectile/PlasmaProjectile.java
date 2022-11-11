@@ -4,11 +4,14 @@ import cool.ender.stardust.Stardust;
 import cool.ender.stardust.projectile.explosion.AbstractExplosion;
 import cool.ender.stardust.projectile.explosion.PlasmaExplosion;
 import cool.ender.stardust.registry.EntityRegistry;
+import cool.ender.stardust.registry.ParticleRegistry;
+import cool.ender.stardust.registry.SoundRegistry;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -28,6 +31,7 @@ public class PlasmaProjectile extends AbstractProjectile{
     public static class Entity extends AbstractProjectile.Entity {
         public Entity(EntityType<? extends AbstractProjectile.Entity> entityType, Level level) {
             super(entityType, level);
+            setNoGravity(true);
         }
 
         public Entity(LivingEntity livingEntity, double x, double y, double z, Level level) {
@@ -57,16 +61,18 @@ public class PlasmaProjectile extends AbstractProjectile{
 
         @Override
         protected void onHit(HitResult p_37260_) {
+            level.playSound(null, p_37260_.getLocation().x, p_37260_.getLocation().y, p_37260_.getLocation().z, SoundRegistry.PLASMA_EXPLOSION.get(), SoundSource.BLOCKS, 2.0f, 1.0f);
             if (!this.level.isClientSide()) {
+                Stardust.LOGGER.info("hit on server");
                 this.getExplosion().doDamage(p_37260_.getLocation());
+
                 this.remove(RemovalReason.DISCARDED);
+            } else {
+                this.level.addParticle((ParticleOptions) ParticleRegistry.PLASMA_EXPLOSION.get(), p_37260_.getLocation().x, p_37260_.getLocation().y, p_37260_.getLocation().z, 0, 0, 0);
+
+                Stardust.LOGGER.info("hit on client");
             }
             super.onHit(p_37260_);
-        }
-
-        @Override
-        protected @NotNull ParticleOptions getTrailParticle() {
-            return ParticleTypes.END_ROD;
         }
 
         @Override

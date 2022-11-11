@@ -7,5 +7,24 @@
         "stream": true
       }
     ]
+  },
+  "plasma_explosion": {
+    "category": "record",
+    "sounds": [
+      {
+        "name": "stardust:plasma_explosion",
+        "stream": true
+      }
+    ]
+  },
+
+  "x_wing_shooting_sound": {
+    "category": "record",
+    "sounds": [
+      {
+        "name": "stardust:x_wing_shooting_sound",
+        "stream": true
+      }
+    ]
   }
 }

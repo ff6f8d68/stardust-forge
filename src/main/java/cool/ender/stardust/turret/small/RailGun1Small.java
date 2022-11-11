@@ -65,10 +65,10 @@ public class RailGun1Small extends AbstractTurret {
 
         @Override
         public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player p_60506_, InteractionHand p_60507_, BlockHitResult p_60508_) {
+            ((Tile)level.getBlockEntity(blockPos)).shoot();
             if (level.isClientSide) {
                 return InteractionResult.SUCCESS;
             } else {
-                ((Tile)level.getBlockEntity(blockPos)).shoot();
                 return InteractionResult.CONSUME;
             }
         }
@@ -103,8 +103,14 @@ public class RailGun1Small extends AbstractTurret {
             return RenderShape.ENTITYBLOCK_ANIMATED;
         }
 
+        @Override
         public VoxelShape getShape(BlockState p_52807_, BlockGetter p_52808_, BlockPos p_52809_, CollisionContext p_52810_) {
             return box(0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D);
+        }
+
+        @Override
+        public boolean hasDynamicShape() {
+            return false;
         }
     }
 
@@ -129,7 +135,7 @@ public class RailGun1Small extends AbstractTurret {
             PlasmaProjectile.Entity projectile = new PlasmaProjectile.Entity(centerVec.x, centerVec.y, centerVec.z, facingVec.getX(), facingVec.getY(), facingVec.getZ(), this.getLevel());
             assert this.level != null;
             this.level.addFreshEntity(projectile);
-            level.playSound(null, centerVec.x, centerVec.y, centerVec.z, SoundRegistry.PLASMA_BLAST.get(), SoundSource.BLOCKS, 1.0f, 1.0f);
+            level.playSound(null, centerVec.x, centerVec.y, centerVec.z, SoundRegistry.X_WING_SHOOTING_SOUND.get(), SoundSource.BLOCKS, 1.0f, 1.0f);
         }
     }
 
