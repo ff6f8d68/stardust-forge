@@ -51,18 +51,6 @@ public class PlasmaProjectile extends AbstractProjectile{
         }
 
         @Override
-        public void tick() {
-            super.tick();
-            if (this.getLevel().isClientSide) {
-                Stardust.LOGGER.info("client");
-            } else {
-                Stardust.LOGGER.info("server");
-            }
-
-            Stardust.LOGGER.info(getOnPos());
-        }
-
-        @Override
         public void registerControllers(AnimationData data) {
 
         }
@@ -70,7 +58,6 @@ public class PlasmaProjectile extends AbstractProjectile{
         @Override
         protected void onHit(HitResult p_37260_) {
             if (!this.level.isClientSide()) {
-                Stardust.LOGGER.info("HIT");
                 this.getExplosion().doDamage(p_37260_.getLocation());
                 this.remove(RemovalReason.DISCARDED);
             }

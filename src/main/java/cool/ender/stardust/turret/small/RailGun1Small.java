@@ -122,8 +122,6 @@ public class RailGun1Small extends AbstractTurret {
             Vec3 centerVec = new Vec3(this.getBlockPos().getX() + 0.5, this.getBlockPos().getY() + 0.5, this.getBlockPos().getZ() + 0.5);
             Vec3i facingVec = this.getBlockState().getValue(CANNON_FACING).getNormal();
             centerVec = centerVec.add(facingVec.getX(), facingVec.getY(), facingVec.getZ());
-            Stardust.LOGGER.info(centerVec);
-            Stardust.LOGGER.info(facingVec);
             PlasmaProjectile.Entity projectile = new PlasmaProjectile.Entity(centerVec.x, centerVec.y, centerVec.z, facingVec.getX(), facingVec.getY(), facingVec.getZ(), this.getLevel());
             assert this.level != null;
             this.level.addFreshEntity(projectile);
@@ -133,7 +131,7 @@ public class RailGun1Small extends AbstractTurret {
     public static class Model extends AbstractTurret.Model {
 
         @Override
-        public ResourceLocation getModelLocation(AbstractTurret.Tile object) {
+        public ResourceLocation getModelLocation(AbstractTurret.Tile tile) {
             return new ResourceLocation(Stardust.MOD_ID, "geo/rail_gun_1_small.geo.json");
         }
 
