@@ -1,9 +1,6 @@
 package cool.ender.stardust;
 
-import cool.ender.stardust.registry.BlockRegistry;
-import cool.ender.stardust.registry.EntityRegistry;
-import cool.ender.stardust.registry.ItemRegistry;
-import cool.ender.stardust.registry.TileRegistry;
+import cool.ender.stardust.registry.*;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
@@ -28,6 +25,7 @@ public class Stardust {
         TileRegistry.TILES.register(bus);
         EntityRegistry.ENTITIES.register(bus);
         ItemRegistry.ITEMS.register(bus);
+        SoundRegistry.SOUND_EVENTS.register(bus);
     }
 
 }

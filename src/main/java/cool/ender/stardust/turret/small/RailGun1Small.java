@@ -2,6 +2,7 @@ package cool.ender.stardust.turret.small;
 
 import cool.ender.stardust.Stardust;
 import cool.ender.stardust.projectile.PlasmaProjectile;
+import cool.ender.stardust.registry.SoundRegistry;
 import cool.ender.stardust.registry.TileRegistry;
 import cool.ender.stardust.turret.AbstractTurret;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -9,6 +10,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityType;
@@ -106,8 +109,6 @@ public class RailGun1Small extends AbstractTurret {
     }
 
     public static class Tile extends AbstractTurret.Tile {
-        int i = 0;
-
         protected Tile(BlockEntityType<?> entityType, BlockPos p_155229_, BlockState p_155230_) {
             super(entityType, p_155229_, p_155230_);
         }
@@ -122,17 +123,13 @@ public class RailGun1Small extends AbstractTurret {
         }
 
         public void shoot() {
-
-            Stardust.LOGGER.info(i++);
-
             Vec3 centerVec = new Vec3(this.getBlockPos().getX() + 0.5, this.getBlockPos().getY() + 0.5, this.getBlockPos().getZ() + 0.5);
-//            Stardust.LOGGER.info(centerVec);
             Vec3i facingVec = this.getBlockState().getValue(CANNON_FACING).getNormal();
-            Stardust.LOGGER.info(facingVec);
             centerVec = centerVec.add(facingVec.getX(), facingVec.getY(), facingVec.getZ());
             PlasmaProjectile.Entity projectile = new PlasmaProjectile.Entity(centerVec.x, centerVec.y, centerVec.z, facingVec.getX(), facingVec.getY(), facingVec.getZ(), this.getLevel());
             assert this.level != null;
             this.level.addFreshEntity(projectile);
+            level.playSound(null, centerVec.x, centerVec.y, centerVec.z, SoundRegistry.PLASMA_BLAST.get(), SoundSource.BLOCKS, 1.0f, 1.0f);
         }
     }
 

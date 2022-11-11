@@ -1,0 +1,11 @@
+{
+  "plasma_blast": {
+    "category": "record",
+    "sounds": [
+      {
+        "name": "stardust:plasma_blast",
+        "stream": true
+      }
+    ]
+  }
+}
