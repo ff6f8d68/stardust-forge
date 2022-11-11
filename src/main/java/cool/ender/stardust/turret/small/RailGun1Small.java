@@ -24,6 +24,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
@@ -54,19 +55,17 @@ public class RailGun1Small extends AbstractTurret {
 
         public static final DirectionProperty CANNON_FACING = DirectionProperty.create("cannon_facing", Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST, Direction.UP, Direction.DOWN);
 
-        public Tile tile = null;
-
         public Block() {
             super(Properties.of(Material.METAL).noOcclusion());
             this.registerDefaultState(this.stateDefinition.any().setValue(CANNON_FACING, Direction.SOUTH));
         }
 
         @Override
-        public InteractionResult use(BlockState p_60503_, Level level, BlockPos p_60505_, Player p_60506_, InteractionHand p_60507_, BlockHitResult p_60508_) {
+        public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player p_60506_, InteractionHand p_60507_, BlockHitResult p_60508_) {
             if (level.isClientSide) {
                 return InteractionResult.SUCCESS;
             } else {
-                this.tile.shoot();
+                ((Tile)level.getBlockEntity(blockPos)).shoot();
                 return InteractionResult.CONSUME;
             }
         }
@@ -78,8 +77,7 @@ public class RailGun1Small extends AbstractTurret {
         @Nullable
         @Override
         public BlockEntity newBlockEntity(@NotNull BlockPos blockPos, @NotNull BlockState blockState) {
-            this.tile = new Tile(blockPos, blockState);
-            return tile;
+            return new Tile(blockPos, blockState);
         }
 
         @Override
@@ -108,9 +106,14 @@ public class RailGun1Small extends AbstractTurret {
     }
 
     public static class Tile extends AbstractTurret.Tile {
+        int i = 0;
+
+        protected Tile(BlockEntityType<?> entityType, BlockPos p_155229_, BlockState p_155230_) {
+            super(entityType, p_155229_, p_155230_);
+        }
 
         public Tile(BlockPos p_155229_, BlockState p_155230_) {
-            super(TileRegistry.RAIL_GUN_1_SMALL_TILE.get(), p_155229_, p_155230_);
+            this(TileRegistry.RAIL_GUN_1_SMALL_TILE.get(), p_155229_, p_155230_);
         }
 
         @Override
@@ -119,8 +122,13 @@ public class RailGun1Small extends AbstractTurret {
         }
 
         public void shoot() {
+
+            Stardust.LOGGER.info(i++);
+
             Vec3 centerVec = new Vec3(this.getBlockPos().getX() + 0.5, this.getBlockPos().getY() + 0.5, this.getBlockPos().getZ() + 0.5);
+//            Stardust.LOGGER.info(centerVec);
             Vec3i facingVec = this.getBlockState().getValue(CANNON_FACING).getNormal();
+            Stardust.LOGGER.info(facingVec);
             centerVec = centerVec.add(facingVec.getX(), facingVec.getY(), facingVec.getZ());
             PlasmaProjectile.Entity projectile = new PlasmaProjectile.Entity(centerVec.x, centerVec.y, centerVec.z, facingVec.getX(), facingVec.getY(), facingVec.getZ(), this.getLevel());
             assert this.level != null;
