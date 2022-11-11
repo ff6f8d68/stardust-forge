@@ -24,7 +24,6 @@ public class ExplosionFrameParticle extends TextureSheetParticle {
 
     @Override
     public void tick() {
-        Stardust.LOGGER.info("x");
         super.tick();
     }
 

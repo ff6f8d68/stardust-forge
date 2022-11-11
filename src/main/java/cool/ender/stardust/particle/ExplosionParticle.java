@@ -1,7 +1,5 @@
 package cool.ender.stardust.particle;
 
-
-import cool.ender.stardust.Stardust;
 import cool.ender.stardust.registry.ParticleRegistry;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
@@ -28,9 +26,7 @@ public class ExplosionParticle extends TextureSheetParticle {
     @Override
     public void tick() {
         super.tick();
-        Stardust.LOGGER.info("a");
         if (age == 1) {
-            Stardust.LOGGER.info("1");
             this.level.addParticle((ParticleOptions) ParticleRegistry.PLASMA_EXPLOSION_1.get(), this.x, this.y, this.z, 0, 0, 0);
         }
         if (age == 3) {
