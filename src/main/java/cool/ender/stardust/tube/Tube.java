@@ -5,9 +5,13 @@ import cool.ender.stardust.registry.TileRegistry;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.material.Material;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
@@ -23,22 +27,105 @@ import software.bernie.geckolib3.util.GeckoLibUtil;
 
 public class Tube {
 
-    public static class Block extends BaseEntityBlock{
+    public static class Block extends BaseEntityBlock {
 
-        public Block() {
+        public static final BooleanProperty NORTH = BooleanProperty.create("north");
+        public static final BooleanProperty EAST = BooleanProperty.create("east");
+        public static final BooleanProperty SOUTH = BooleanProperty.create("south");
+        public static final BooleanProperty WEST = BooleanProperty.create("west");
+        public static final BooleanProperty UP = BooleanProperty.create("up");
+        public static final BooleanProperty DOWN = BooleanProperty.create("down");
+
+        public Block () {
             super(Properties.of(Material.STONE).noOcclusion());
         }
 
         public BlockEntity newBlockEntity( @NotNull BlockPos blockPos, @NotNull BlockState blockState) {
             return new Tile(blockPos, blockState);
         }
+
+        public void neighborChanged ( BlockState blockState, Level level, BlockPos selfBlock, net.minecraft.world.level.block.Block block, BlockPos neighborBlock, boolean p_62514_ ) {
+            if (level.getBlockState(neighborBlock).getBlock() instanceof Block) {
+                if (selfBlock.north().equals(neighborBlock)) {
+                    level.setBlock(selfBlock, blockState.setValue(NORTH, true), 2);
+                }
+                if (selfBlock.south().equals(neighborBlock)) {
+                    level.setBlock(selfBlock, blockState.setValue(SOUTH, true), 2);
+                }
+                if (selfBlock.east().equals(neighborBlock)) {
+                    level.setBlock(selfBlock, blockState.setValue(EAST, true), 2);
+                }
+                if (selfBlock.west().equals(neighborBlock)) {
+                    level.setBlock(selfBlock, blockState.setValue(WEST, true), 2);
+                }
+                if (selfBlock.above().equals(neighborBlock)) {
+                    level.setBlock(selfBlock, blockState.setValue(UP, true), 2);
+                }
+                if (selfBlock.below().equals(neighborBlock)) {
+                    level.setBlock(selfBlock, blockState.setValue(DOWN, true), 2);
+                }
+            } else {
+                if (selfBlock.north().equals(neighborBlock)) {
+                    level.setBlock(selfBlock, blockState.setValue(NORTH, false), 2);
+                }
+                if (selfBlock.south().equals(neighborBlock)) {
+                    level.setBlock(selfBlock, blockState.setValue(SOUTH, false), 2);
+                }
+                if (selfBlock.east().equals(neighborBlock)) {
+                    level.setBlock(selfBlock, blockState.setValue(EAST, false), 2);
+                }
+                if (selfBlock.west().equals(neighborBlock)) {
+                    level.setBlock(selfBlock, blockState.setValue(WEST, false), 2);
+                }
+                if (selfBlock.above().equals(neighborBlock)) {
+                    level.setBlock(selfBlock, blockState.setValue(UP, false), 2);
+                }
+                if (selfBlock.below().equals(neighborBlock)) {
+                    level.setBlock(selfBlock, blockState.setValue(DOWN, false), 2);
+                }
+            }
+        }
+
+        @Nullable
+        @Override
+        public BlockState getStateForPlacement ( BlockPlaceContext context ) {
+            BlockPos placePos = context.getClickedPos();
+            BlockState defaultState = this.defaultBlockState();
+            if (context.getLevel().getBlockState(placePos.north()).getBlock() instanceof Tube.Block) {
+                defaultState = defaultState.setValue(NORTH, true);
+            }
+            if (context.getLevel().getBlockState(placePos.south()).getBlock() instanceof Tube.Block) {
+                defaultState = defaultState.setValue(SOUTH, true);
+            }
+            if (context.getLevel().getBlockState(placePos.east()).getBlock() instanceof Tube.Block) {
+                defaultState = defaultState.setValue(EAST, true);
+            }
+            if (context.getLevel().getBlockState(placePos.west()).getBlock() instanceof Tube.Block) {
+                defaultState = defaultState.setValue(WEST, true);
+            }
+            if (context.getLevel().getBlockState(placePos.above()).getBlock() instanceof Tube.Block) {
+                defaultState = defaultState.setValue(UP, true);
+            }
+            if (context.getLevel().getBlockState(placePos.below()).getBlock() instanceof Tube.Block) {
+                defaultState = defaultState.setValue(DOWN, true);
+            }
+
+            return defaultState;
+        }
+
+        @Override
+        protected void createBlockStateDefinition ( StateDefinition.Builder<net.minecraft.world.level.block.Block, BlockState> p_49915_ ) {
+            p_49915_.add(NORTH, SOUTH, EAST, WEST, UP, DOWN);
+        }
     }
+
 
     public static class Tile extends BlockEntity implements IAnimatable {
 
         public AnimationFactory factory = GeckoLibUtil.createFactory(this);
-        public Tile(BlockPos p_155229_, BlockState p_155230_) {
-            super(TileRegistry.TUBE_TILE.get(), p_155229_, p_155230_);
+
+        public Tile ( BlockPos p_155229_, BlockState p_155232_ ) {
+            super(TileRegistry.TUBE_TILE.get(), p_155229_, p_155232_);
         }
 
         public void registerControllers( AnimationData data) {
