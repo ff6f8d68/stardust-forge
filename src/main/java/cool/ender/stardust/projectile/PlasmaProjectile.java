@@ -79,7 +79,7 @@ public class PlasmaProjectile extends AbstractProjectile {
         protected void onHit(HitResult p_37260_) {
 
             if (!this.level.isClientSide()) {
-                ((ServerLevel) this.level).sendParticles((ParticleOptions) ParticleRegistry.LIGHT_SPARK.get(), p_37260_.getLocation().x, p_37260_.getLocation().y, p_37260_.getLocation().z, 1, 0, 0, 0, 0);
+                ((ServerLevel) this.level).sendParticles((ParticleOptions) ParticleRegistry.PLASMA_EXPLOSION.get(), p_37260_.getLocation().x, p_37260_.getLocation().y, p_37260_.getLocation().z, 1, 0, 0, 0, 0);
                 level.playSound(null, p_37260_.getLocation().x, p_37260_.getLocation().y, p_37260_.getLocation().z, SoundRegistry.PLASMA_EXPLOSION.get(), SoundSource.BLOCKS, 2.0f, 1.0f);
                 this.getExplosion().doDamage(p_37260_.getLocation());
                 this.remove(RemovalReason.DISCARDED);

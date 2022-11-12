@@ -30,6 +30,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
@@ -57,7 +58,6 @@ public class RailGun1Small extends AbstractTurret {
     public static class Block extends AbstractTurret.Block implements EntityBlock {
 
         public static final DirectionProperty CANNON_FACING = DirectionProperty.create("cannon_facing", Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST, Direction.UP, Direction.DOWN);
-
         public Block() {
             super(Properties.of(Material.METAL).noOcclusion());
             this.registerDefaultState(this.stateDefinition.any().setValue(CANNON_FACING, Direction.SOUTH));
