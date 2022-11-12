@@ -18,6 +18,7 @@ import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
@@ -38,9 +39,11 @@ public class Tube {
 
         public Block () {
             super(Properties.of(Material.STONE).noOcclusion());
+            this.registerDefaultState(this.stateDefinition.any().setValue(NORTH, false).setValue(EAST, false).setValue(SOUTH, false).setValue(WEST, false).setValue(UP, false).setValue(DOWN, false));
+
         }
 
-        public BlockEntity newBlockEntity( @NotNull BlockPos blockPos, @NotNull BlockState blockState) {
+        public BlockEntity newBlockEntity ( @NotNull BlockPos blockPos, @NotNull BlockState blockState ) {
             return new Tile(blockPos, blockState);
         }
 
@@ -128,7 +131,7 @@ public class Tube {
             super(TileRegistry.TUBE_TILE.get(), p_155229_, p_155232_);
         }
 
-        public void registerControllers( AnimationData data) {
+        public void registerControllers ( AnimationData data ) {
 
         }
 
@@ -139,35 +142,157 @@ public class Tube {
     }
 
     public static class Model extends AnimatedGeoModel<Tile> {
-        public ResourceLocation getModelLocation(Tile object) {
+        public ResourceLocation getModelLocation ( Tile object ) {
+            if (!object.getBlockState().getValue(Block.NORTH) &&
+                    !object.getBlockState().getValue(Block.SOUTH) &&
+                    !object.getBlockState().getValue(Block.WEST) &&
+                    !object.getBlockState().getValue(Block.EAST) &&
+                    !object.getBlockState().getValue(Block.UP) &&
+                    !object.getBlockState().getValue(Block.DOWN)) {
+                return new ResourceLocation(Stardust.MOD_ID, "geo/tube_1_1.geo.json");
+            }
+            //single
+            if (object.getBlockState().getValue(Block.NORTH) &&
+                    !object.getBlockState().getValue(Block.SOUTH) &&
+                    !object.getBlockState().getValue(Block.WEST) &&
+                    !object.getBlockState().getValue(Block.EAST) &&
+                    !object.getBlockState().getValue(Block.UP) &&
+                    !object.getBlockState().getValue(Block.DOWN)) {
+                return new ResourceLocation(Stardust.MOD_ID, "geo/tube_2_1.geo.json");
+            }
+            if (!object.getBlockState().getValue(Block.NORTH) &&
+                    object.getBlockState().getValue(Block.SOUTH) &&
+                    !object.getBlockState().getValue(Block.WEST) &&
+                    !object.getBlockState().getValue(Block.EAST) &&
+                    !object.getBlockState().getValue(Block.UP) &&
+                    !object.getBlockState().getValue(Block.DOWN)) {
+                return new ResourceLocation(Stardust.MOD_ID, "geo/tube_3_1.geo.json");
+            }
+            if (!object.getBlockState().getValue(Block.NORTH) &&
+                    !object.getBlockState().getValue(Block.SOUTH) &&
+                    object.getBlockState().getValue(Block.WEST) &&
+                    !object.getBlockState().getValue(Block.EAST) &&
+                    !object.getBlockState().getValue(Block.UP) &&
+                    !object.getBlockState().getValue(Block.DOWN)) {
+                return new ResourceLocation(Stardust.MOD_ID, "geo/tube_4_1.geo.json");
+            }
+            if (!object.getBlockState().getValue(Block.NORTH) &&
+                    !object.getBlockState().getValue(Block.SOUTH) &&
+                    !object.getBlockState().getValue(Block.WEST) &&
+                    object.getBlockState().getValue(Block.EAST) &&
+                    !object.getBlockState().getValue(Block.UP) &&
+                    !object.getBlockState().getValue(Block.DOWN)) {
+                return new ResourceLocation(Stardust.MOD_ID, "geo/tube_5_1.geo.json");
+            }
+            if (!object.getBlockState().getValue(Block.NORTH) &&
+                    !object.getBlockState().getValue(Block.SOUTH) &&
+                    !object.getBlockState().getValue(Block.WEST) &&
+                    !object.getBlockState().getValue(Block.EAST) &&
+                    object.getBlockState().getValue(Block.UP) &&
+                    !object.getBlockState().getValue(Block.DOWN)) {
+                return new ResourceLocation(Stardust.MOD_ID, "geo/tube_6_1.geo.json");
+            }
+            if (!object.getBlockState().getValue(Block.NORTH) &&
+                    !object.getBlockState().getValue(Block.SOUTH) &&
+                    !object.getBlockState().getValue(Block.WEST) &&
+                    !object.getBlockState().getValue(Block.EAST) &&
+                    !object.getBlockState().getValue(Block.UP) &&
+                    object.getBlockState().getValue(Block.DOWN)) {
+                return new ResourceLocation(Stardust.MOD_ID, "geo/tube_7_1.geo.json");
+            }
+
             return new ResourceLocation(Stardust.MOD_ID, "geo/tube_1_1.geo.json");
         }
 
-        public ResourceLocation getTextureLocation(Tile object) {
+        public ResourceLocation getTextureLocation ( Tile object ) {
+            if (!object.getBlockState().getValue(Block.NORTH) &&
+                    !object.getBlockState().getValue(Block.SOUTH) &&
+                    !object.getBlockState().getValue(Block.WEST) &&
+                    !object.getBlockState().getValue(Block.EAST) &&
+                    !object.getBlockState().getValue(Block.UP) &&
+                    !object.getBlockState().getValue(Block.DOWN)) {
+                return new ResourceLocation(Stardust.MOD_ID, "textures/block/tube_1_1.png");
+            }
+            //single
+            if (object.getBlockState().getValue(Block.NORTH) &&
+                    !object.getBlockState().getValue(Block.SOUTH) &&
+                    !object.getBlockState().getValue(Block.WEST) &&
+                    !object.getBlockState().getValue(Block.EAST) &&
+                    !object.getBlockState().getValue(Block.UP) &&
+                    !object.getBlockState().getValue(Block.DOWN)) {
+                return new ResourceLocation(Stardust.MOD_ID, "textures/block/tube_2_1.png");
+            }
+            if (!object.getBlockState().getValue(Block.NORTH) &&
+                    object.getBlockState().getValue(Block.SOUTH) &&
+                    !object.getBlockState().getValue(Block.WEST) &&
+                    !object.getBlockState().getValue(Block.EAST) &&
+                    !object.getBlockState().getValue(Block.UP) &&
+                    !object.getBlockState().getValue(Block.DOWN)) {
+                return new ResourceLocation(Stardust.MOD_ID, "textures/block/tube_3_1.png");
+            }
+            if (!object.getBlockState().getValue(Block.NORTH) &&
+                    !object.getBlockState().getValue(Block.SOUTH) &&
+                    object.getBlockState().getValue(Block.WEST) &&
+                    !object.getBlockState().getValue(Block.EAST) &&
+                    !object.getBlockState().getValue(Block.UP) &&
+                    !object.getBlockState().getValue(Block.DOWN)) {
+                return new ResourceLocation(Stardust.MOD_ID, "textures/block/tube_4_1.png");
+            }
+            if (!object.getBlockState().getValue(Block.NORTH) &&
+                    !object.getBlockState().getValue(Block.SOUTH) &&
+                    !object.getBlockState().getValue(Block.WEST) &&
+                    object.getBlockState().getValue(Block.EAST) &&
+                    !object.getBlockState().getValue(Block.UP) &&
+                    !object.getBlockState().getValue(Block.DOWN)) {
+                return new ResourceLocation(Stardust.MOD_ID, "textures/block/tube_5_1.png");
+            }
+            if (!object.getBlockState().getValue(Block.NORTH) &&
+                    !object.getBlockState().getValue(Block.SOUTH) &&
+                    !object.getBlockState().getValue(Block.WEST) &&
+                    !object.getBlockState().getValue(Block.EAST) &&
+                    object.getBlockState().getValue(Block.UP) &&
+                    !object.getBlockState().getValue(Block.DOWN)) {
+                return new ResourceLocation(Stardust.MOD_ID, "textures/block/tube_6_1.png");
+            }
+            if (!object.getBlockState().getValue(Block.NORTH) &&
+                    !object.getBlockState().getValue(Block.SOUTH) &&
+                    !object.getBlockState().getValue(Block.WEST) &&
+                    !object.getBlockState().getValue(Block.EAST) &&
+                    !object.getBlockState().getValue(Block.UP) &&
+                    object.getBlockState().getValue(Block.DOWN)) {
+                return new ResourceLocation(Stardust.MOD_ID, "textures/block/tube_7_1.png");
+            }
             return new ResourceLocation(Stardust.MOD_ID, "textures/block/tube_1_1.png");
         }
 
-        public ResourceLocation getAnimationFileLocation(Tile animatable) {
+        public ResourceLocation getAnimationFileLocation ( Tile animatable ) {
             return null;
+        }
+
+        @Override
+        public void setLivingAnimations ( Tile animatable, Integer instanceId ) {
+            super.setLivingAnimations(animatable, instanceId);
+            this.getAnimationProcessor().getBone("bone").setRotationZ((float) (Math.PI));
         }
     }
 
     public static class Renderer extends GeoBlockRenderer<Tile> {
-        public Renderer(BlockEntityRendererProvider.Context rendererProvider) {
+        public Renderer ( BlockEntityRendererProvider.Context rendererProvider ) {
             super(rendererProvider, new Model());
         }
     }
 
-    public abstract static class Listener  {
+    public abstract static class Listener {
         @Mod.EventBusSubscriber(modid = Stardust.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
-        public abstract static class ClientListener  {
+        public abstract static class ClientListener {
             @SubscribeEvent
-            public static void registerRenderers(final EntityRenderersEvent.RegisterRenderers event) {
+            public static void registerRenderers ( final EntityRenderersEvent.RegisterRenderers event ) {
                 event.registerBlockEntityRenderer(TileRegistry.TUBE_TILE.get(), Renderer::new);
             }
         }
     }
-    public String getRegisterName() {
+
+    public String getRegisterName () {
         return "tube";
     }
 }
