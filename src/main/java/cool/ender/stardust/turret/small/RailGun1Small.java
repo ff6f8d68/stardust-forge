@@ -64,11 +64,18 @@ public class RailGun1Small extends AbstractTurret {
         }
 
         @Override
+        public void neighborChanged(BlockState blockState, Level level, BlockPos selfBlock, net.minecraft.world.level.block.Block block, BlockPos neighborBlock, boolean p_60514_) {
+            if (level.hasNeighborSignal(selfBlock)) {
+                ((Tile) level.getBlockEntity(selfBlock)).shoot();
+            }
+        }
+
+        @Override
         public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player p_60506_, InteractionHand p_60507_, BlockHitResult p_60508_) {
-            ((Tile)level.getBlockEntity(blockPos)).shoot();
             if (level.isClientSide) {
                 return InteractionResult.SUCCESS;
             } else {
+                ((Tile) level.getBlockEntity(blockPos)).shoot();
                 return InteractionResult.CONSUME;
             }
         }
