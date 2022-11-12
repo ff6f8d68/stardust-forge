@@ -36,6 +36,8 @@ import software.bernie.geckolib3.core.manager.AnimationData;
 public class PlasmaProjectile extends AbstractProjectile {
 
     public static class Entity extends AbstractProjectile.Entity {
+        int age = 0;
+
         public Entity(EntityType<? extends AbstractProjectile.Entity> entityType, Level level) {
             super(entityType, level);
             setNoGravity(true);
@@ -54,9 +56,9 @@ public class PlasmaProjectile extends AbstractProjectile {
             this.reapplyPosition();
             double d0 = Math.sqrt(to_x * to_x + to_y * to_y + to_z * to_z);
             if (d0 != 0.0D) {
-                this.xPower = to_x / d0 * 0.1d;
-                this.yPower = to_y / d0 * 0.1d;
-                this.zPower = to_z / d0 * 0.1d;
+                this.xPower = to_x / d0;
+                this.yPower = to_y / d0;
+                this.zPower = to_z / d0;
             }
 
         }
@@ -64,6 +66,16 @@ public class PlasmaProjectile extends AbstractProjectile {
         @Override
         public void registerControllers(AnimationData data) {
 
+        }
+
+        @Override
+        public void tick() {
+            super.tick();
+            if (!this.level.isClientSide()) {
+                if (++age > 120) {
+                    this.remove(RemovalReason.DISCARDED);
+                }
+            }
         }
 
         @Override
@@ -81,7 +93,7 @@ public class PlasmaProjectile extends AbstractProjectile {
 
         @Override
         AbstractExplosion getExplosion() {
-            return new PlasmaExplosion(0f, 3f, 100f, this.level);
+            return new PlasmaExplosion(0f, 5f, 100f, this.level);
         }
     }
 

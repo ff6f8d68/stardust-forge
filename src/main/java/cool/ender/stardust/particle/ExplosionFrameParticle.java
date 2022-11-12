@@ -18,7 +18,7 @@ public class ExplosionFrameParticle extends TextureSheetParticle {
         this.setSpriteFromAge(spriteSet);
         this.friction = 0.8f;
         this.quadSize = 5f;
-        this.lifetime = 20;
+        this.lifetime = 2;
         this.hasPhysics = false;
     }
 
