@@ -21,5 +21,6 @@ public class ClientListener {
         Minecraft.getInstance().particleEngine.register(ParticleRegistry.PLASMA_EXPLOSION_5.get(), ExplosionFrameParticle.Provider::new);
         Minecraft.getInstance().particleEngine.register(ParticleRegistry.PLASMA_EXPLOSION_6.get(), ExplosionFrameParticle.Provider::new);
         Minecraft.getInstance().particleEngine.register(ParticleRegistry.PLASMA_EXPLOSION.get(), ExplosionParticle.Provider::new);
+        Minecraft.getInstance().particleEngine.register(ParticleRegistry.PLASMA_EXPLOSION_TEST.get(), ExplosionFrameParticle.Provider::new);
     }
 }

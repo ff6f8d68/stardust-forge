@@ -16,5 +16,6 @@ public class ParticleRegistry {
     public static final RegistryObject<ParticleType<SimpleParticleType>> PLASMA_EXPLOSION_5 = PARTICLE_TYPES.register("plasma_explosion_5", () -> new SimpleParticleType(true));
     public static final RegistryObject<ParticleType<SimpleParticleType>> PLASMA_EXPLOSION_6 = PARTICLE_TYPES.register("plasma_explosion_6", () -> new SimpleParticleType(true));
     public static final RegistryObject<ParticleType<SimpleParticleType>> PLASMA_EXPLOSION = PARTICLE_TYPES.register("plasma_explosion", () -> new SimpleParticleType(true));
+    public static final RegistryObject<ParticleType<SimpleParticleType>> PLASMA_EXPLOSION_TEST = PARTICLE_TYPES.register("lightspark", () -> new SimpleParticleType(true));
 
 }

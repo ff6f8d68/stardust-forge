@@ -6,27 +6,34 @@ import cool.ender.stardust.projectile.explosion.PlasmaExplosion;
 import cool.ender.stardust.registry.EntityRegistry;
 import cool.ender.stardust.registry.ParticleRegistry;
 import cool.ender.stardust.registry.SoundRegistry;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractHurtingProjectile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib3.core.manager.AnimationData;
 
-public class PlasmaProjectile extends AbstractProjectile{
+public class PlasmaProjectile extends AbstractProjectile {
 
     public static class Entity extends AbstractProjectile.Entity {
         public Entity(EntityType<? extends AbstractProjectile.Entity> entityType, Level level) {
@@ -47,9 +54,9 @@ public class PlasmaProjectile extends AbstractProjectile{
             this.reapplyPosition();
             double d0 = Math.sqrt(to_x * to_x + to_y * to_y + to_z * to_z);
             if (d0 != 0.0D) {
-                this.xPower = to_x / d0;
-                this.yPower = to_y / d0;
-                this.zPower = to_z / d0;
+                this.xPower = to_x / d0 * 0.1d;
+                this.yPower = to_y / d0 * 0.1d;
+                this.zPower = to_z / d0 * 0.1d;
             }
 
         }
@@ -61,23 +68,20 @@ public class PlasmaProjectile extends AbstractProjectile{
 
         @Override
         protected void onHit(HitResult p_37260_) {
-            level.playSound(null, p_37260_.getLocation().x, p_37260_.getLocation().y, p_37260_.getLocation().z, SoundRegistry.PLASMA_EXPLOSION.get(), SoundSource.BLOCKS, 2.0f, 1.0f);
+
             if (!this.level.isClientSide()) {
-                Stardust.LOGGER.info("hit on server");
+                ((ServerLevel) this.level).sendParticles((ParticleOptions) ParticleRegistry.PLASMA_EXPLOSION.get(), p_37260_.getLocation().x, p_37260_.getLocation().y, p_37260_.getLocation().z, 1, 0, 0, 0, 0);
+//                this.level.addParticle((ParticleOptions) ParticleRegistry.PLASMA_EXPLOSION_TEST.get(), p_37260_.getLocation().x, p_37260_.getLocation().y, p_37260_.getLocation().z, 0, 0, 0);
+                level.playSound(null, p_37260_.getLocation().x, p_37260_.getLocation().y, p_37260_.getLocation().z, SoundRegistry.PLASMA_EXPLOSION.get(), SoundSource.BLOCKS, 2.0f, 1.0f);
                 this.getExplosion().doDamage(p_37260_.getLocation());
-
                 this.remove(RemovalReason.DISCARDED);
-            } else {
-                this.level.addParticle((ParticleOptions) ParticleRegistry.PLASMA_EXPLOSION.get(), p_37260_.getLocation().x, p_37260_.getLocation().y, p_37260_.getLocation().z, 0, 0, 0);
-
-                Stardust.LOGGER.info("hit on client");
             }
             super.onHit(p_37260_);
         }
 
         @Override
         AbstractExplosion getExplosion() {
-            return new PlasmaExplosion(0f, 10f, 100f, this.level);
+            return new PlasmaExplosion(0f, 3f, 100f, this.level);
         }
     }
 
