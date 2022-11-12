@@ -3,6 +3,7 @@ package cool.ender.stardust.client;
 import cool.ender.stardust.Stardust;
 import cool.ender.stardust.particle.ExplosionFrameParticle;
 import cool.ender.stardust.particle.ExplosionParticle;
+import cool.ender.stardust.particle.LightingParticle;
 import cool.ender.stardust.registry.ParticleRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.api.distmarker.Dist;
@@ -21,6 +22,6 @@ public class ClientListener {
         Minecraft.getInstance().particleEngine.register(ParticleRegistry.PLASMA_EXPLOSION_5.get(), ExplosionFrameParticle.Provider::new);
         Minecraft.getInstance().particleEngine.register(ParticleRegistry.PLASMA_EXPLOSION_6.get(), ExplosionFrameParticle.Provider::new);
         Minecraft.getInstance().particleEngine.register(ParticleRegistry.PLASMA_EXPLOSION.get(), ExplosionParticle.Provider::new);
-        Minecraft.getInstance().particleEngine.register(ParticleRegistry.PLASMA_EXPLOSION_TEST.get(), ExplosionFrameParticle.Provider::new);
+        Minecraft.getInstance().particleEngine.register(ParticleRegistry.LIGHT_SPARK.get(), LightingParticle.Provider::new);
     }
 }

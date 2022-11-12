@@ -6,28 +6,19 @@ import cool.ender.stardust.projectile.explosion.PlasmaExplosion;
 import cool.ender.stardust.registry.EntityRegistry;
 import cool.ender.stardust.registry.ParticleRegistry;
 import cool.ender.stardust.registry.SoundRegistry;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.AbstractHurtingProjectile;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.NotNull;
@@ -69,10 +60,16 @@ public class PlasmaProjectile extends AbstractProjectile {
         }
 
         @Override
+        protected ParticleOptions getTrailParticle() {
+            return ParticleTypes.SOUL_FIRE_FLAME;
+        }
+
+        @Override
         public void tick() {
             super.tick();
             if (!this.level.isClientSide()) {
-                if (++age > 120) {
+                if (++age > 40) {
+                    Stardust.LOGGER.info("removed");
                     this.remove(RemovalReason.DISCARDED);
                 }
             }
@@ -82,8 +79,7 @@ public class PlasmaProjectile extends AbstractProjectile {
         protected void onHit(HitResult p_37260_) {
 
             if (!this.level.isClientSide()) {
-                ((ServerLevel) this.level).sendParticles((ParticleOptions) ParticleRegistry.PLASMA_EXPLOSION.get(), p_37260_.getLocation().x, p_37260_.getLocation().y, p_37260_.getLocation().z, 1, 0, 0, 0, 0);
-//                this.level.addParticle((ParticleOptions) ParticleRegistry.PLASMA_EXPLOSION_TEST.get(), p_37260_.getLocation().x, p_37260_.getLocation().y, p_37260_.getLocation().z, 0, 0, 0);
+                ((ServerLevel) this.level).sendParticles((ParticleOptions) ParticleRegistry.LIGHT_SPARK.get(), p_37260_.getLocation().x, p_37260_.getLocation().y, p_37260_.getLocation().z, 1, 0, 0, 0, 0);
                 level.playSound(null, p_37260_.getLocation().x, p_37260_.getLocation().y, p_37260_.getLocation().z, SoundRegistry.PLASMA_EXPLOSION.get(), SoundSource.BLOCKS, 2.0f, 1.0f);
                 this.getExplosion().doDamage(p_37260_.getLocation());
                 this.remove(RemovalReason.DISCARDED);
