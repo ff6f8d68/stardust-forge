@@ -164,6 +164,32 @@
 					}
 				}
 			}
+		},
+		"keep": {
+			"loop": "hold_on_last_frame",
+			"animation_length": 1.45833,
+			"bones": {
+				"screen": {
+					"rotation": {
+						"vector": [90, 0, 0]
+					}
+				},
+				"screen2": {
+					"rotation": {
+						"vector": [70, 0, 0]
+					}
+				},
+				"screen3": {
+					"rotation": {
+						"vector": [0, 65, 0]
+					}
+				},
+				"screen4": {
+					"rotation": {
+						"vector": [0, -65, 0]
+					}
+				}
+			}
 		}
 	}
 }
