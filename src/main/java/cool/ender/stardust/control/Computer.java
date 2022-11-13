@@ -5,17 +5,20 @@ import cool.ender.stardust.registry.TileRegistry;
 import cool.ender.stardust.turret.AbstractTurret;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.BaseEntityBlock;
-import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -42,8 +45,11 @@ import java.util.Objects;
 
 public class Computer {
     public static class Block extends BaseEntityBlock {
+
+        public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
         public Block() {
             super(Properties.of(Material.GLASS));
+            this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.SOUTH));
         }
 
         @NotNull
@@ -59,6 +65,21 @@ public class Computer {
             } else {
                 return InteractionResult.CONSUME;
             }
+        }
+
+        @Override
+        protected void createBlockStateDefinition(StateDefinition.Builder<net.minecraft.world.level.block.Block, BlockState> p_48725_) {
+            p_48725_.add(FACING);
+        }
+
+        @Override
+        public BlockState rotate(BlockState p_48722_, Rotation p_48723_) {
+            return p_48722_.setValue(FACING, p_48723_.rotate(p_48722_.getValue(FACING)));
+        }
+
+        @Override
+        public BlockState getStateForPlacement(BlockPlaceContext p_48689_) {
+            return this.defaultBlockState().setValue(FACING, p_48689_.getHorizontalDirection().getOpposite());
         }
 
         @Override
