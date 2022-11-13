@@ -47,6 +47,7 @@ public class Computer {
     public static class Block extends BaseEntityBlock {
 
         public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
+
         public Block() {
             super(Properties.of(Material.GLASS));
             this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.SOUTH));
@@ -93,7 +94,24 @@ public class Computer {
         }
 
         @Override
-        public VoxelShape getShape(BlockState p_52807_, BlockGetter p_52808_, BlockPos p_52809_, CollisionContext p_52810_) {
+        public VoxelShape getShape(BlockState blockState, BlockGetter p_52808_, BlockPos p_52809_, CollisionContext p_52810_) {
+
+            switch (blockState.getValue(FACING)) {
+                case EAST -> {
+                    return box(0.0D, 0.0D, 2.0D, 14.0D, 16.0D, 16.0D);
+                }
+                case WEST -> {
+                    return box(2.0D, 0.0D, 2.0D, 16.0D, 16.0D, 16.0D);
+                }
+
+                case SOUTH -> {
+                    return box(0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 14.0D);
+                }
+                case NORTH -> {
+                    return box(0.0D, 0.0D, 2.0D, 16.0D, 16.0D, 16.0D);
+                }
+            }
+
             return box(0.0D, 0.0D, 2.0D, 16.0D, 16.0D, 16.0D);
         }
 
