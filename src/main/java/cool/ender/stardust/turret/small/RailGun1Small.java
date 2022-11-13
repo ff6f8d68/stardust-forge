@@ -64,6 +64,11 @@ public class RailGun1Small extends AbstractTurret {
         }
 
         @Override
+        public boolean canConnectRedstone(BlockState state, BlockGetter level, BlockPos pos, @Nullable Direction direction) {
+            return true;
+        }
+
+        @Override
         public void neighborChanged(BlockState blockState, Level level, BlockPos selfBlock, net.minecraft.world.level.block.Block block, BlockPos neighborBlock, boolean p_60514_) {
             if (level.hasNeighborSignal(selfBlock)) {
                 ((Tile) level.getBlockEntity(selfBlock)).shoot();
