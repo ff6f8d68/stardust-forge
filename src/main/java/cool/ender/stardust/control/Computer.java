@@ -54,12 +54,13 @@ public class Computer {
         @Override
         public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player p_60506_, InteractionHand p_60507_, BlockHitResult p_60508_) {
             if (level.isClientSide) {
-                ((Tile) Objects.requireNonNull(level.getBlockEntity(blockPos))).open = !((Tile) Objects.requireNonNull(level.getBlockEntity(blockPos))).open;
+                ((Tile) Objects.requireNonNull(level.getBlockEntity(blockPos))).open();
                 return InteractionResult.SUCCESS;
             } else {
                 return InteractionResult.CONSUME;
             }
         }
+
         @Override
         public int getLightBlock(BlockState p_60585_, BlockGetter p_60586_, BlockPos p_60587_) {
             return 15;
@@ -85,8 +86,8 @@ public class Computer {
     public static class Tile extends BlockEntity implements IAnimatable {
         public AnimationFactory factory = GeckoLibUtil.createFactory(this);
 
-        boolean open = false;
-        boolean isProgressing = false;
+        boolean isOpen = false;
+        boolean isProgress = false;
 
         public Tile(BlockEntityType<?> p_155228_, BlockPos p_155229_, BlockState p_155230_) {
             super(p_155228_, p_155229_, p_155230_);
@@ -98,33 +99,34 @@ public class Computer {
 
         @Override
         public void registerControllers(AnimationData data) {
-            data.addAnimationController(new AnimationController(this, "controller", 20, this::predicate));
+            data.addAnimationController(new AnimationController(this, "controller", 5, this::predicate));
         }
 
         public void open() {
-            this.isProgressing = true;
+            this.isProgress = true;
         }
 
         public void close() {
-
+            this.isProgress = true;
         }
 
         private <E extends BlockEntity & IAnimatable> PlayState predicate(AnimationEvent<E> event) {
             AnimationController<E> controller = event.getController();
-            controller.transitionLengthTicks = 20;
-            if (isProgressing) {
-                Stardust.LOGGER.info("progressing");
-                if (open) {
+            if (isProgress) {
+                if (isOpen) {
                     controller.setAnimation(new AnimationBuilder().addAnimation("close", ILoopType.EDefaultLoopTypes.PLAY_ONCE));
+                    controller.transitionLengthTicks = 0;
                 } else {
-                    controller.setAnimation(new AnimationBuilder().addAnimation("open", ILoopType.EDefaultLoopTypes.HOLD_ON_LAST_FRAME));
+                    controller.setAnimation(new AnimationBuilder().addAnimation("open", ILoopType.EDefaultLoopTypes.PLAY_ONCE));
+                    controller.transitionLengthTicks = 10;
                 }
-                this.open = !this.open;
-                this.isProgressing = false;
+                this.isOpen = !this.isOpen;
+                this.isProgress = false;
             } else {
-                if (this.open) {
+                if (this.isOpen) {
+                    //keep opening
                     controller.setAnimation(new AnimationBuilder().addAnimation("keep", ILoopType.EDefaultLoopTypes.LOOP));
-                    return PlayState.STOP;
+                    controller.transitionLengthTicks = 10;
                 }
             }
             return PlayState.CONTINUE;
