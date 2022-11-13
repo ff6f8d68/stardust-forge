@@ -7,6 +7,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -18,6 +19,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
@@ -42,15 +44,17 @@ import software.bernie.geckolib3.renderers.geo.GeoBlockRenderer;
 import software.bernie.geckolib3.util.GeckoLibUtil;
 
 import java.util.Objects;
+import java.util.Random;
 
 public class Computer {
     public static class Block extends BaseEntityBlock {
 
         public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
+        public static final BooleanProperty OPEN = BooleanProperty.create("open");
 
         public Block() {
             super(Properties.of(Material.GLASS));
-            this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.SOUTH));
+            this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.SOUTH).setValue(OPEN, false));
         }
 
         @NotNull
@@ -61,16 +65,24 @@ public class Computer {
         @Override
         public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player p_60506_, InteractionHand p_60507_, BlockHitResult p_60508_) {
             if (level.isClientSide) {
-                ((Tile) Objects.requireNonNull(level.getBlockEntity(blockPos))).open();
+                ((Tile) Objects.requireNonNull(level.getBlockEntity(blockPos))).switching = true;
                 return InteractionResult.SUCCESS;
             } else {
+                level.scheduleTick(blockPos, this,1);
                 return InteractionResult.CONSUME;
             }
         }
 
+
+        @Override
+        public void tick(BlockState blockState, ServerLevel level, BlockPos blockPos, Random p_60465_) {
+            super.tick(blockState, level, blockPos, p_60465_);
+            level.setBlock(blockPos, blockState.setValue(Block.OPEN, !blockState.getValue(OPEN)), 2);
+        }
+
         @Override
         protected void createBlockStateDefinition(StateDefinition.Builder<net.minecraft.world.level.block.Block, BlockState> p_48725_) {
-            p_48725_.add(FACING);
+            p_48725_.add(FACING, OPEN);
         }
 
         @Override
@@ -123,10 +135,9 @@ public class Computer {
     }
 
     public static class Tile extends BlockEntity implements IAnimatable {
-        public AnimationFactory factory = GeckoLibUtil.createFactory(this);
 
-        boolean isOpen = false;
-        boolean isProgress = false;
+        boolean switching = false;
+        public AnimationFactory factory = GeckoLibUtil.createFactory(this);
 
         public Tile(BlockEntityType<?> p_155228_, BlockPos p_155229_, BlockState p_155230_) {
             super(p_155228_, p_155229_, p_155230_);
@@ -141,28 +152,19 @@ public class Computer {
             data.addAnimationController(new AnimationController(this, "controller", 5, this::predicate));
         }
 
-        public void open() {
-            this.isProgress = true;
-        }
-
-        public void close() {
-            this.isProgress = true;
-        }
-
         private <E extends BlockEntity & IAnimatable> PlayState predicate(AnimationEvent<E> event) {
             AnimationController<E> controller = event.getController();
-            if (isProgress) {
-                if (isOpen) {
+            if (switching) {
+                if (this.getBlockState().getValue(Block.OPEN)) {
                     controller.setAnimation(new AnimationBuilder().addAnimation("close", ILoopType.EDefaultLoopTypes.PLAY_ONCE));
                     controller.transitionLengthTicks = 0;
                 } else {
                     controller.setAnimation(new AnimationBuilder().addAnimation("open", ILoopType.EDefaultLoopTypes.PLAY_ONCE));
                     controller.transitionLengthTicks = 10;
                 }
-                this.isOpen = !this.isOpen;
-                this.isProgress = false;
+                this.switching = false;
             } else {
-                if (this.isOpen) {
+                if (this.getBlockState().getValue(Block.OPEN)) {
                     //keep opening
                     controller.setAnimation(new AnimationBuilder().addAnimation("keep", ILoopType.EDefaultLoopTypes.LOOP));
                     controller.transitionLengthTicks = 10;
