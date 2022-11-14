@@ -1,6 +1,7 @@
 package cool.ender.stardust;
 
 import cool.ender.stardust.registry.*;
+import cool.ender.stardust.world.dimension.EarthOuterSpaceDimension;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
@@ -27,6 +28,7 @@ public class Stardust {
         ItemRegistry.ITEMS.register(bus);
         SoundRegistry.SOUND_EVENTS.register(bus);
         ParticleRegistry.PARTICLE_TYPES.register(bus);
+        EarthOuterSpaceDimension.register();
     }
 
 }
