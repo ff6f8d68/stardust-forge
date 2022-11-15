@@ -21,4 +21,6 @@ public class BlockRegistry {
     public static final RegistryObject<ShieldGenerator.Block> SHIELD_GENERATOR_BLOCK = BLOCKS.register("shield_generator_block", ShieldGenerator.Block::new);
     public static final RegistryObject<Shield.Block> SHIELD_BLOCK = BLOCKS.register("shield_block", Shield.Block::new);
 
+    public static final RegistryObject<Tube.Block> TUBE_BLOCK = BLOCKS.register(new Tube().getRegisterName(), Tube.Block::new);
+
 }
