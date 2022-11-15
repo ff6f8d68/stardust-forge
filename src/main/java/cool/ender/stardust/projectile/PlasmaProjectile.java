@@ -69,7 +69,6 @@ public class PlasmaProjectile extends AbstractProjectile {
             super.tick();
             if (!this.level.isClientSide()) {
                 if (++age > 40) {
-                    Stardust.LOGGER.info("removed");
                     this.remove(RemovalReason.DISCARDED);
                 }
             }
