@@ -1,14 +1,13 @@
 package cool.ender.stardust.shield;
 
+import cool.ender.stardust.Stardust;
 import cool.ender.stardust.registry.BlockRegistry;
 import cool.ender.stardust.registry.TileRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.block.BarrierBlock;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.EntityBlock;
-import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -18,7 +17,7 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.plaf.PanelUI;
 
 public class Shield {
-    public static class Block extends BarrierBlock implements EntityBlock {
+    public static class Block extends GlassBlock implements EntityBlock {
 
         public Block() {
             super(Properties.of(Material.BARRIER).strength(-1.0F, 3600000.8F).noDrops().noOcclusion());
@@ -30,16 +29,6 @@ public class Shield {
             return new Tile(blockPos, blockState);
         }
 
-        @Override
-        public RenderShape getRenderShape(BlockState p_49098_) {
-            return RenderShape.MODEL;
-        }
-
-        @Override
-        public boolean hidesNeighborFace(BlockGetter level, BlockPos pos, BlockState state, BlockState neighborState, Direction dir) {
-            if (state.getBlock() == BlockRegistry.SHIELD_BLOCK.get() && neighborState.getBlock() == BlockRegistry.SHIELD_BLOCK.get()) return true;
-            return super.hidesNeighborFace(level, pos, state, neighborState, dir);
-        }
     }
 
     public static class Tile extends BlockEntity {
