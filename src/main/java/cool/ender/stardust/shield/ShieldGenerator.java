@@ -2,29 +2,20 @@ package cool.ender.stardust.shield;
 
 import cool.ender.stardust.Stardust;
 import cool.ender.stardust.registry.TileRegistry;
+import it.unimi.dsi.fastutil.Hash;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.Connection;
-import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.entity.TickingBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.client.model.data.IModelData;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -41,7 +32,7 @@ public class ShieldGenerator {
                 return InteractionResult.SUCCESS;
             } else {
                 ((Tile) Objects.requireNonNull(level.getBlockEntity(blockPos))).scan();
-                level.scheduleTick(blockPos, this,1);
+                level.scheduleTick(blockPos, this, 1);
                 return InteractionResult.CONSUME;
             }
         }
@@ -54,37 +45,42 @@ public class ShieldGenerator {
 
         @Override
         public void tick(BlockState blockState, ServerLevel level, BlockPos blockPos, Random random) {
-            Stardust.LOGGER.info("tick triggered");
-
             super.tick(blockState, level, blockPos, random);
             Tile tile = (Tile) level.getBlockEntity(blockPos);
             assert tile != null;
             if (tile.scanningTask != null) {
-                if (tile.scanningTask.scan()) {
+                if (tile.scanningTask.tick()) {
                     if (!tile.scanningTask.failed) {
                         Stardust.LOGGER.info("success");
                         Stardust.LOGGER.info("x:" + tile.scanningTask.max_x);
                         Stardust.LOGGER.info("y:" + tile.scanningTask.max_y);
                         Stardust.LOGGER.info("z:" + tile.scanningTask.max_z);
 
-                        Stardust.LOGGER.info("x:" + tile.scanningTask.max_x);
-                        Stardust.LOGGER.info("y:" + tile.scanningTask.max_y);
-                        Stardust.LOGGER.info("z:" + tile.scanningTask.max_z);
+                        Stardust.LOGGER.info("x:" + tile.scanningTask.min_x);
+                        Stardust.LOGGER.info("y:" + tile.scanningTask.min_y);
+                        Stardust.LOGGER.info("z:" + tile.scanningTask.min_z);
+
+                        tile.generatingTask = new ShieldGeneratingTask(tile.scanningTask.max_x, tile.scanningTask.max_y, tile.scanningTask.max_z, tile.scanningTask.min_x, tile.scanningTask.min_y, tile.scanningTask.min_z, 2, level);
 
                     } else {
                         Stardust.LOGGER.info("fail");
                     }
                     tile.scanningTask = null;
                 } else {
-                    level.scheduleTick(blockPos, this,1);
+                    level.scheduleTick(blockPos, this, 1);
                     Stardust.LOGGER.info("scan");
                 }
+            }
+            if (tile.generatingTask != null) {
+                tile.generatingTask.tick();
             }
         }
     }
 
     public static class Tile extends BlockEntity {
         ShipScanningTask scanningTask;
+        ShieldGeneratingTask generatingTask;
+
         public Tile(BlockPos p_155229_, BlockState p_155230_) {
             super(TileRegistry.SHIELD_GENERATOR_TILE.get(), p_155229_, p_155230_);
         }
@@ -101,6 +97,69 @@ public class ShieldGenerator {
         }
 
 
+    }
+
+    public static class ShieldGeneratingTask {
+        BlockPos maxCornerBlock;
+        BlockPos minCornerBlock;
+
+        Level level;
+
+        Queue<BlockPos> taskQueue = new LinkedList<>();
+        HashSet<BlockPos> generatedPos = new HashSet<>();
+
+        public ShieldGeneratingTask(long max_x, long max_y, long max_z, long min_x, long min_y, long min_z, long shieldOffset, Level level) {
+            maxCornerBlock = new BlockPos(max_x + shieldOffset, max_y + shieldOffset, max_z + shieldOffset);
+            minCornerBlock = new BlockPos(min_x - shieldOffset, min_y - shieldOffset, min_z - shieldOffset);
+            this.level = level;
+        }
+
+        boolean isShieldPos(BlockPos blockPos) {
+            return (blockPos.getX() == maxCornerBlock.getX() || blockPos.getX() == minCornerBlock.getX()) &&
+                    (blockPos.getY() == maxCornerBlock.getY() || blockPos.getY() == minCornerBlock.getY()) &&
+                    (blockPos.getY() == maxCornerBlock.getZ() || blockPos.getZ() == minCornerBlock.getZ());
+        }
+
+        void tick() {
+            if (taskQueue.isEmpty()) return;
+            int limit = taskQueue.size();
+            int count = 0;
+            while (!taskQueue.isEmpty()) {
+                if (count == limit) break;
+                BlockPos pos = taskQueue.poll();
+                if (!generatedPos.contains(pos.above()) && isShieldPos(pos.above())) {
+                    this.level.setBlock(pos.above(), Blocks.BARRIER.defaultBlockState(), 2);
+                    this.generatedPos.add(pos.above());
+                    taskQueue.add(pos.above());
+                }
+                if (!generatedPos.contains(pos.below()) && isShieldPos(pos.below())) {
+                    this.level.setBlock(pos.below(), Blocks.BARRIER.defaultBlockState(), 2);
+                    this.generatedPos.add(pos.below());
+                    taskQueue.add(pos.below());
+                }
+                if (!generatedPos.contains(pos.north()) && isShieldPos(pos.north())) {
+                    this.level.setBlock(pos.north(), Blocks.BARRIER.defaultBlockState(), 2);
+                    this.generatedPos.add(pos.north());
+                    taskQueue.add(pos.north());
+                }
+                if (!generatedPos.contains(pos.south()) && isShieldPos(pos.south())) {
+                    this.level.setBlock(pos.south(), Blocks.BARRIER.defaultBlockState(), 2);
+                    this.generatedPos.add(pos.south());
+                    taskQueue.add(pos.south());
+                }
+                if (!generatedPos.contains(pos.east()) && isShieldPos(pos.east())) {
+                    this.level.setBlock(pos.east(), Blocks.BARRIER.defaultBlockState(), 2);
+                    this.generatedPos.add(pos.east());
+                    taskQueue.add(pos.east());
+                }
+                if (!generatedPos.contains(pos.west()) && isShieldPos(pos.west())) {
+                    this.level.setBlock(pos.west(), Blocks.BARRIER.defaultBlockState(), 2);
+                    this.generatedPos.add(pos.west());
+                    taskQueue.add(pos.west());
+                }
+                count++;
+            }
+        }
     }
 
     public static class ShipScanningTask {
@@ -127,7 +186,7 @@ public class ShieldGenerator {
         }
 
 
-        public boolean scan() {
+        public boolean tick() {
             if (blockCounted >= MAX_SHIP_BLOCK) {
                 this.failed = true;
                 return true;
