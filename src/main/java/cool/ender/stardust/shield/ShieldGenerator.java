@@ -175,10 +175,10 @@ public class ShieldGenerator {
     }
 
     public static class ShipScanningTask {
-        private static final int MAX_SHIP_BLOCK = 4096;
+        private static final long MAX_SHIP_BLOCK = 32768;
         Queue<BlockPos> queue = new LinkedList<>();
         HashSet<BlockPos> scannedPos = new HashSet<>();
-        int blockCounted = 0;
+        long blockCounted = 0;
         Level level;
 
         long max_x = Long.MIN_VALUE;
