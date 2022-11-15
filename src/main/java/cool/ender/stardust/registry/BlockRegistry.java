@@ -4,6 +4,7 @@ import cool.ender.stardust.Stardust;
 import cool.ender.stardust.control.Computer;
 import cool.ender.stardust.shield.Shield;
 import cool.ender.stardust.shield.ShieldGenerator;
+import cool.ender.stardust.tube.Tube;
 import cool.ender.stardust.turret.AbstractTurret;
 import cool.ender.stardust.turret.medium.RailGun1Medium;
 import cool.ender.stardust.turret.small.RailGun1Small;
