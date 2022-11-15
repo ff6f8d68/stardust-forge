@@ -1,7 +1,10 @@
 package cool.ender.stardust.shield;
 
+import cool.ender.stardust.registry.BlockRegistry;
 import cool.ender.stardust.registry.TileRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.BarrierBlock;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.EntityBlock;
@@ -32,9 +35,11 @@ public class Shield {
             return RenderShape.MODEL;
         }
 
-
-
-
+        @Override
+        public boolean hidesNeighborFace(BlockGetter level, BlockPos pos, BlockState state, BlockState neighborState, Direction dir) {
+            if (state.getBlock() == BlockRegistry.SHIELD_BLOCK.get() && neighborState.getBlock() == BlockRegistry.SHIELD_BLOCK.get()) return true;
+            return super.hidesNeighborFace(level, pos, state, neighborState, dir);
+        }
     }
 
     public static class Tile extends BlockEntity {
