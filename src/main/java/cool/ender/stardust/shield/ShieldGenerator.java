@@ -74,7 +74,7 @@ public class ShieldGenerator {
                         Stardust.LOGGER.info("x:" + tile.scanningTask.min_x);
                         Stardust.LOGGER.info("y:" + tile.scanningTask.min_y);
                         Stardust.LOGGER.info("z:" + tile.scanningTask.min_z);
-                        tile.generatingTask = new ShieldGeneratingTask(tile.scanningTask.max_x, tile.scanningTask.max_y, tile.scanningTask.max_z, tile.scanningTask.min_x, tile.scanningTask.min_y, tile.scanningTask.min_z, 2, level);
+                        tile.generatingTask = new ShieldGeneratingTask(tile.scanningTask.max_x, tile.scanningTask.max_y, tile.scanningTask.max_z, tile.scanningTask.min_x, tile.scanningTask.min_y, tile.scanningTask.min_z, 2, level, blockPos, (Tile) level.getBlockEntity(blockPos), blockState.getValue(FACING));
                         tile.scanningTask = null;
                         level.scheduleTick(blockPos, this, 1);
                     } else {
@@ -127,13 +127,21 @@ public class ShieldGenerator {
         Queue<BlockPos> generationQueue = new LinkedList<>();
         HashSet<BlockPos> generatedPos = new HashSet<>();
         long age = 0;
+        boolean hitShieldFlag = false;
+        BlockPos energyPos;
+        BlockPos generatorPos;
+        Tile tile;
 
-        public ShieldGeneratingTask(long max_x, long max_y, long max_z, long min_x, long min_y, long min_z, long shieldOffset, Level level) {
+        Direction direction;
+
+        public ShieldGeneratingTask(long max_x, long max_y, long max_z, long min_x, long min_y, long min_z, long shieldOffset, Level level, BlockPos generatorPos, Tile tile, Direction direction) {
             maxCornerBlock = new BlockPos(max_x + shieldOffset, max_y + shieldOffset, max_z + shieldOffset);
             minCornerBlock = new BlockPos(min_x - shieldOffset, min_y - shieldOffset, min_z - shieldOffset);
-            this.pioneerQueue.add(maxCornerBlock);
-            this.generatedPos.add(maxCornerBlock);
             this.level = level;
+            this.generatorPos = generatorPos;
+            this.energyPos = generatorPos;
+            this.tile = tile;
+            this.direction = direction;
         }
 
         boolean isShieldPos(BlockPos blockPos) {
@@ -149,54 +157,65 @@ public class ShieldGenerator {
 
         boolean tick() {
             age++;
-            if (age % 3 == 0) {
-                while (!generationQueue.isEmpty()) {
-                    BlockPos shieldPos = generationQueue.poll();
-                    this.level.setBlock(shieldPos, Blocks.BARRIER.defaultBlockState(), 2);
+            if (hitShieldFlag) {
+                if (age % 3 == 0) {
+                    while (!generationQueue.isEmpty()) {
+                        BlockPos shieldPos = generationQueue.poll();
+                        this.level.setBlock(shieldPos, Blocks.BARRIER.defaultBlockState(), 2);
+                    }
+                }
+                if (pioneerQueue.isEmpty()) {
+                    while (!generationQueue.isEmpty()) {
+                        BlockPos shieldPos = generationQueue.poll();
+                        this.level.setBlock(shieldPos, Blocks.BARRIER.defaultBlockState(), 2);
+                    }
+                    return true;
+                }
+                int limit = pioneerQueue.size();
+                int count = 0;
+                while (!pioneerQueue.isEmpty()) {
+                    if (count == limit) break;
+                    BlockPos pos = pioneerQueue.poll();
+                    generationQueue.add(pos);
+                    assert pos != null;
+                    this.level.setBlock(pos, Blocks.GLASS.defaultBlockState(), 2);
+                    if (!generatedPos.contains(pos.above()) && isShieldPos(pos.above())) {
+                        this.generatedPos.add(pos.above());
+                        pioneerQueue.add(pos.above());
+                    }
+                    if (!generatedPos.contains(pos.below()) && isShieldPos(pos.below())) {
+                        this.generatedPos.add(pos.below());
+                        pioneerQueue.add(pos.below());
+                    }
+                    if (!generatedPos.contains(pos.north()) && isShieldPos(pos.north())) {
+                        this.generatedPos.add(pos.north());
+                        pioneerQueue.add(pos.north());
+                    }
+                    if (!generatedPos.contains(pos.south()) && isShieldPos(pos.south())) {
+                        this.generatedPos.add(pos.south());
+                        pioneerQueue.add(pos.south());
+                    }
+                    if (!generatedPos.contains(pos.east()) && isShieldPos(pos.east())) {
+                        this.generatedPos.add(pos.east());
+                        pioneerQueue.add(pos.east());
+                    }
+                    if (!generatedPos.contains(pos.west()) && isShieldPos(pos.west())) {
+                        this.generatedPos.add(pos.west());
+                        pioneerQueue.add(pos.west());
+                    }
+                    count++;
+                }
+            } else {
+                if (age % 10 == 0) {
+                    energyPos = energyPos.relative(direction);
+                    this.level.setBlock(energyPos, Blocks.BARRIER.defaultBlockState(), 2);
+                    if (isShieldPos(energyPos)) {
+                        this.hitShieldFlag = true;
+                        this.pioneerQueue.add(energyPos);
+                        this.generatedPos.add(energyPos);
+                    }
                 }
             }
-            if (pioneerQueue.isEmpty()) {
-                while (!generationQueue.isEmpty()) {
-                    BlockPos shieldPos = generationQueue.poll();
-                    this.level.setBlock(shieldPos, Blocks.BARRIER.defaultBlockState(), 2);
-                }
-                return true;
-            }
-            int limit = pioneerQueue.size();
-            int count = 0;
-            while (!pioneerQueue.isEmpty()) {
-                if (count == limit) break;
-                BlockPos pos = pioneerQueue.poll();
-                generationQueue.add(pos);
-                assert pos != null;
-                this.level.setBlock(pos, Blocks.GLASS.defaultBlockState(), 2);
-                if (!generatedPos.contains(pos.above()) && isShieldPos(pos.above())) {
-                    this.generatedPos.add(pos.above());
-                    pioneerQueue.add(pos.above());
-                }
-                if (!generatedPos.contains(pos.below()) && isShieldPos(pos.below())) {
-                    this.generatedPos.add(pos.below());
-                    pioneerQueue.add(pos.below());
-                }
-                if (!generatedPos.contains(pos.north()) && isShieldPos(pos.north())) {
-                    this.generatedPos.add(pos.north());
-                    pioneerQueue.add(pos.north());
-                }
-                if (!generatedPos.contains(pos.south()) && isShieldPos(pos.south())) {
-                    this.generatedPos.add(pos.south());
-                    pioneerQueue.add(pos.south());
-                }
-                if (!generatedPos.contains(pos.east()) && isShieldPos(pos.east())) {
-                    this.generatedPos.add(pos.east());
-                    pioneerQueue.add(pos.east());
-                }
-                if (!generatedPos.contains(pos.west()) && isShieldPos(pos.west())) {
-                    this.generatedPos.add(pos.west());
-                    pioneerQueue.add(pos.west());
-                }
-                count++;
-            }
-
             return false;
         }
     }
