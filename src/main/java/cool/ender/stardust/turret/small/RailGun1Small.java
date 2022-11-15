@@ -145,7 +145,7 @@ public class RailGun1Small extends AbstractTurret {
             Vec3 centerVec = new Vec3(this.getBlockPos().getX() + 0.5, this.getBlockPos().getY() + 0.5, this.getBlockPos().getZ() + 0.5);
             Vec3i facingVec = this.getBlockState().getValue(CANNON_FACING).getNormal();
             centerVec = centerVec.add(facingVec.getX(), facingVec.getY(), facingVec.getZ());
-            PlasmaProjectile.Entity projectile = new PlasmaProjectile.Entity(centerVec.x, centerVec.y, centerVec.z, facingVec.getX(), facingVec.getY(), facingVec.getZ(), this.getLevel());
+            PlasmaProjectile.Entity projectile = new PlasmaProjectile.Entity(centerVec.x, centerVec.y, centerVec.z, facingVec.getX(), facingVec.getY(), facingVec.getZ(), this.getLevel(), this);
             assert this.level != null;
             this.level.addFreshEntity(projectile);
             level.playSound(null, centerVec.x, centerVec.y, centerVec.z, SoundRegistry.X_WING_SHOOTING_SOUND.get(), SoundSource.BLOCKS, 1.0f, 1.0f);

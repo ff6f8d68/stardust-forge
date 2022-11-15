@@ -1,7 +1,9 @@
 package cool.ender.stardust.shield;
 
 import cool.ender.stardust.Stardust;
+import cool.ender.stardust.registry.BlockRegistry;
 import cool.ender.stardust.registry.TileRegistry;
+import cool.ender.stardust.turret.AbstractTurret;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -155,20 +157,24 @@ public class ShieldGenerator {
             return flag_equal && flag_x && flag_y && flag_z;
         }
 
+        void popShieldBlocks() {
+            while (!generationQueue.isEmpty()) {
+                BlockPos shieldPos = generationQueue.poll();
+                this.level.setBlock(shieldPos, BlockRegistry.SHIELD_BLOCK.get().defaultBlockState(), 2);
+                Shield.Tile tile = (Shield.Tile) this.level.getBlockEntity(shieldPos);
+                assert tile != null;
+                tile.setOwner(generatorPos);
+            }
+        }
+
         boolean tick() {
             age++;
             if (hitShieldFlag) {
                 if (age % 3 == 0) {
-                    while (!generationQueue.isEmpty()) {
-                        BlockPos shieldPos = generationQueue.poll();
-                        this.level.setBlock(shieldPos, Blocks.BARRIER.defaultBlockState(), 2);
-                    }
+                    popShieldBlocks();
                 }
                 if (pioneerQueue.isEmpty()) {
-                    while (!generationQueue.isEmpty()) {
-                        BlockPos shieldPos = generationQueue.poll();
-                        this.level.setBlock(shieldPos, Blocks.BARRIER.defaultBlockState(), 2);
-                    }
+                    popShieldBlocks();
                     return true;
                 }
                 int limit = pioneerQueue.size();
@@ -179,6 +185,7 @@ public class ShieldGenerator {
                     generationQueue.add(pos);
                     assert pos != null;
                     this.level.setBlock(pos, Blocks.GLASS.defaultBlockState(), 2);
+
                     if (!generatedPos.contains(pos.above()) && isShieldPos(pos.above())) {
                         this.generatedPos.add(pos.above());
                         pioneerQueue.add(pos.above());
@@ -208,7 +215,10 @@ public class ShieldGenerator {
             } else {
                 if (age % 10 == 0) {
                     energyPos = energyPos.relative(direction);
-                    this.level.setBlock(energyPos, Blocks.BARRIER.defaultBlockState(), 2);
+                    this.level.setBlock(energyPos, BlockRegistry.SHIELD_BLOCK.get().defaultBlockState(), 2);
+                    Shield.Tile tile = (Shield.Tile) this.level.getBlockEntity(energyPos);
+                    assert tile != null;
+                    tile.setOwner(generatorPos);
                     if (isShieldPos(energyPos)) {
                         this.hitShieldFlag = true;
                         this.pioneerQueue.add(energyPos);
@@ -227,6 +237,8 @@ public class ShieldGenerator {
         long blockCounted = 0;
         Level level;
 
+        BlockPos start;
+
         long max_x = Long.MIN_VALUE;
         long max_y = Long.MIN_VALUE;
         long max_z = Long.MIN_VALUE;
@@ -241,6 +253,7 @@ public class ShieldGenerator {
             this.level = level;
             this.queue.add(start);
             this.scannedPos.add(start);
+            this.start = start;
         }
 
 
@@ -257,6 +270,10 @@ public class ShieldGenerator {
                 while (!queue.isEmpty()) {
                     if (count == limit) break;
                     BlockPos pos = queue.poll();
+                    BlockEntity blockEntity = level.getBlockEntity(pos);
+                    if (blockEntity instanceof AbstractTurret.Tile) {
+                        ((AbstractTurret.Tile) blockEntity).addShieldGenerator(this.start);
+                    }
                     //x
                     if (pos.getX() > this.max_x) {
                         this.max_x = pos.getX();

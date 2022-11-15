@@ -17,6 +17,9 @@ import software.bernie.geckolib3.model.AnimatedGeoModel;
 import software.bernie.geckolib3.renderers.geo.GeoBlockRenderer;
 import software.bernie.geckolib3.util.GeckoLibUtil;
 
+import javax.swing.plaf.PanelUI;
+import java.util.HashSet;
+
 abstract public class AbstractTurret{
 
     public String getRegisterName() {
@@ -50,10 +53,16 @@ abstract public class AbstractTurret{
     }
 
     public abstract static class Tile extends BlockEntity implements IAnimatable {
+
+        public HashSet<BlockPos> relatedShieldGenerators = new HashSet<>();
         public AnimationFactory factory = GeckoLibUtil.createFactory(this);
 
         public Tile(BlockEntityType<?> p_155228_, BlockPos p_155229_, BlockState p_155230_) {
             super(p_155228_, p_155229_, p_155230_);
+        }
+
+        public void addShieldGenerator(BlockPos pos) {
+            this.relatedShieldGenerators.add(pos);
         }
 
         @Override

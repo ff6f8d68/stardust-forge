@@ -6,6 +6,7 @@ import cool.ender.stardust.projectile.explosion.PlasmaExplosion;
 import cool.ender.stardust.registry.EntityRegistry;
 import cool.ender.stardust.registry.ParticleRegistry;
 import cool.ender.stardust.registry.SoundRegistry;
+import cool.ender.stardust.turret.AbstractTurret;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.core.particles.ParticleOptions;
@@ -16,6 +17,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
@@ -34,15 +36,16 @@ public class PlasmaProjectile extends AbstractProjectile {
             setNoGravity(true);
         }
 
-        public Entity(LivingEntity livingEntity, double x, double y, double z, Level level) {
-            super(EntityRegistry.PLASMA_PROJECTILE_ENTITY.get(), livingEntity.getX(), livingEntity.getY(), livingEntity.getZ(), x, y, z, level);
+        public Entity(LivingEntity livingEntity, double x, double y, double z, Level level, AbstractTurret.Tile owner) {
+            super(EntityRegistry.PLASMA_PROJECTILE_ENTITY.get(), livingEntity.getX(), livingEntity.getY(), livingEntity.getZ(), x, y, z, level, owner);
             this.setOwner(livingEntity);
             this.setRot(livingEntity.getYRot(), livingEntity.getXRot());
         }
 
-        public Entity(double x, double y, double z, double to_x, double to_y, double to_z, Level level) {
-
+        public Entity(double x, double y, double z, double to_x, double to_y, double to_z, Level level, AbstractTurret.Tile owner) {
             this(EntityRegistry.PLASMA_PROJECTILE_ENTITY.get(), level);
+            this.owner = owner;
+            Stardust.LOGGER.info(owner);
             this.moveTo(x, y, z, this.getYRot(), this.getXRot());
             this.reapplyPosition();
             double d0 = Math.sqrt(to_x * to_x + to_y * to_y + to_z * to_z);
@@ -75,15 +78,18 @@ public class PlasmaProjectile extends AbstractProjectile {
         }
 
         @Override
-        protected void onHit(HitResult p_37260_) {
-
-            if (!this.level.isClientSide()) {
-                ((ServerLevel) this.level).sendParticles((ParticleOptions) ParticleRegistry.PLASMA_EXPLOSION.get(), p_37260_.getLocation().x, p_37260_.getLocation().y, p_37260_.getLocation().z, 1, 0, 0, 0, 0);
-                level.playSound(null, p_37260_.getLocation().x, p_37260_.getLocation().y, p_37260_.getLocation().z, SoundRegistry.PLASMA_EXPLOSION.get(), SoundSource.BLOCKS, 2.0f, 1.0f);
-                this.getExplosion().doDamage(p_37260_.getLocation());
-                this.remove(RemovalReason.DISCARDED);
+        protected void onHit(@NotNull HitResult result) {
+            super.onHit(result);
+            if (avoidFlag) {
+                this.avoidFlag = false;
+            } else {
+                if (!this.level.isClientSide()) {
+                    ((ServerLevel) this.level).sendParticles((ParticleOptions) ParticleRegistry.PLASMA_EXPLOSION.get(), result.getLocation().x, result.getLocation().y, result.getLocation().z, 1, 0, 0, 0, 0);
+                    level.playSound(null, result.getLocation().x, result.getLocation().y, result.getLocation().z, SoundRegistry.PLASMA_EXPLOSION.get(), SoundSource.BLOCKS, 2.0f, 1.0f);
+                    this.getExplosion().doDamage(result.getLocation());
+                    this.remove(RemovalReason.DISCARDED);
+                }
             }
-            super.onHit(p_37260_);
         }
 
         @Override
