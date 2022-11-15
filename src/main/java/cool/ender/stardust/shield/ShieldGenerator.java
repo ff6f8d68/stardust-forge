@@ -63,6 +63,14 @@ public class ShieldGenerator {
                 if (tile.scanningTask.scan()) {
                     if (!tile.scanningTask.failed) {
                         Stardust.LOGGER.info("success");
+                        Stardust.LOGGER.info("x:" + tile.scanningTask.max_x);
+                        Stardust.LOGGER.info("y:" + tile.scanningTask.max_y);
+                        Stardust.LOGGER.info("z:" + tile.scanningTask.max_z);
+
+                        Stardust.LOGGER.info("x:" + tile.scanningTask.max_x);
+                        Stardust.LOGGER.info("y:" + tile.scanningTask.max_y);
+                        Stardust.LOGGER.info("z:" + tile.scanningTask.max_z);
+
                     } else {
                         Stardust.LOGGER.info("fail");
                     }
@@ -120,16 +128,17 @@ public class ShieldGenerator {
 
 
         public boolean scan() {
-            if (blockCounted == MAX_SHIP_BLOCK) {
+            if (blockCounted >= MAX_SHIP_BLOCK) {
                 this.failed = true;
                 return true;
             }
             if (blockCounted != 0 && queue.isEmpty()) {
                 return true;
             } else {
+                int limit = queue.size();
+                int count = 0;
                 while (!queue.isEmpty()) {
-
-                    Stardust.LOGGER.info("loop");
+                    if (count == limit) break;
                     BlockPos pos = queue.poll();
                     //x
                     if (pos.getX() > this.max_x) {
@@ -179,6 +188,7 @@ public class ShieldGenerator {
                         this.scannedPos.add(pos.west());
                         queue.add(pos.west());
                     }
+                    count++;
                 }
             }
             return false;
