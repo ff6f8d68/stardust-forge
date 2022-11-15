@@ -117,7 +117,6 @@ public class ShieldGenerator {
             this.taskQueue.add(maxCornerBlock);
             this.generatedPos.add(maxCornerBlock);
             this.level = level;
-            this.level.setBlock(maxCornerBlock, Blocks.GLASS.defaultBlockState(), 2);
         }
 
         boolean isShieldPos(BlockPos blockPos) {
@@ -138,33 +137,28 @@ public class ShieldGenerator {
             while (!taskQueue.isEmpty()) {
                 if (count == limit) break;
                 BlockPos pos = taskQueue.poll();
+                this.level.setBlock(pos, Blocks.BARRIER.defaultBlockState(), 2);
                 if (!generatedPos.contains(pos.above()) && isShieldPos(pos.above())) {
-                    this.level.setBlock(pos.above(), Blocks.GLASS.defaultBlockState(), 2);
                     this.generatedPos.add(pos.above());
                     taskQueue.add(pos.above());
                 }
                 if (!generatedPos.contains(pos.below()) && isShieldPos(pos.below())) {
-                    this.level.setBlock(pos.below(), Blocks.GLASS.defaultBlockState(), 2);
                     this.generatedPos.add(pos.below());
                     taskQueue.add(pos.below());
                 }
                 if (!generatedPos.contains(pos.north()) && isShieldPos(pos.north())) {
-                    this.level.setBlock(pos.north(), Blocks.GLASS.defaultBlockState(), 2);
                     this.generatedPos.add(pos.north());
                     taskQueue.add(pos.north());
                 }
                 if (!generatedPos.contains(pos.south()) && isShieldPos(pos.south())) {
-                    this.level.setBlock(pos.south(), Blocks.GLASS.defaultBlockState(), 2);
                     this.generatedPos.add(pos.south());
                     taskQueue.add(pos.south());
                 }
                 if (!generatedPos.contains(pos.east()) && isShieldPos(pos.east())) {
-                    this.level.setBlock(pos.east(), Blocks.GLASS.defaultBlockState(), 2);
                     this.generatedPos.add(pos.east());
                     taskQueue.add(pos.east());
                 }
                 if (!generatedPos.contains(pos.west()) && isShieldPos(pos.west())) {
-                    this.level.setBlock(pos.west(), Blocks.GLASS.defaultBlockState(), 2);
                     this.generatedPos.add(pos.west());
                     taskQueue.add(pos.west());
                 }
