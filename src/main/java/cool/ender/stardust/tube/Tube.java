@@ -143,126 +143,15 @@ public class Tube {
 
     public static class Model extends AnimatedGeoModel<Tile> {
         public ResourceLocation getModelLocation ( Tile object ) {
-            if (!object.getBlockState().getValue(Block.NORTH) &&
-                    !object.getBlockState().getValue(Block.SOUTH) &&
-                    !object.getBlockState().getValue(Block.WEST) &&
-                    !object.getBlockState().getValue(Block.EAST) &&
-                    !object.getBlockState().getValue(Block.UP) &&
-                    !object.getBlockState().getValue(Block.DOWN)) {
-                return new ResourceLocation(Stardust.MOD_ID, "geo/tube_1_1.geo.json");
-            }
-            //single
-            if (object.getBlockState().getValue(Block.NORTH) &&
-                    !object.getBlockState().getValue(Block.SOUTH) &&
-                    !object.getBlockState().getValue(Block.WEST) &&
-                    !object.getBlockState().getValue(Block.EAST) &&
-                    !object.getBlockState().getValue(Block.UP) &&
-                    !object.getBlockState().getValue(Block.DOWN)) {
-                return new ResourceLocation(Stardust.MOD_ID, "geo/tube_2_1.geo.json");
-            }
-            if (!object.getBlockState().getValue(Block.NORTH) &&
-                    object.getBlockState().getValue(Block.SOUTH) &&
-                    !object.getBlockState().getValue(Block.WEST) &&
-                    !object.getBlockState().getValue(Block.EAST) &&
-                    !object.getBlockState().getValue(Block.UP) &&
-                    !object.getBlockState().getValue(Block.DOWN)) {
-                return new ResourceLocation(Stardust.MOD_ID, "geo/tube_3_1.geo.json");
-            }
-            if (!object.getBlockState().getValue(Block.NORTH) &&
-                    !object.getBlockState().getValue(Block.SOUTH) &&
-                    object.getBlockState().getValue(Block.WEST) &&
-                    !object.getBlockState().getValue(Block.EAST) &&
-                    !object.getBlockState().getValue(Block.UP) &&
-                    !object.getBlockState().getValue(Block.DOWN)) {
-                return new ResourceLocation(Stardust.MOD_ID, "geo/tube_4_1.geo.json");
-            }
-            if (!object.getBlockState().getValue(Block.NORTH) &&
-                    !object.getBlockState().getValue(Block.SOUTH) &&
-                    !object.getBlockState().getValue(Block.WEST) &&
-                    object.getBlockState().getValue(Block.EAST) &&
-                    !object.getBlockState().getValue(Block.UP) &&
-                    !object.getBlockState().getValue(Block.DOWN)) {
-                return new ResourceLocation(Stardust.MOD_ID, "geo/tube_5_1.geo.json");
-            }
-            if (!object.getBlockState().getValue(Block.NORTH) &&
-                    !object.getBlockState().getValue(Block.SOUTH) &&
-                    !object.getBlockState().getValue(Block.WEST) &&
-                    !object.getBlockState().getValue(Block.EAST) &&
-                    object.getBlockState().getValue(Block.UP) &&
-                    !object.getBlockState().getValue(Block.DOWN)) {
-                return new ResourceLocation(Stardust.MOD_ID, "geo/tube_6_1.geo.json");
-            }
-            if (!object.getBlockState().getValue(Block.NORTH) &&
-                    !object.getBlockState().getValue(Block.SOUTH) &&
-                    !object.getBlockState().getValue(Block.WEST) &&
-                    !object.getBlockState().getValue(Block.EAST) &&
-                    !object.getBlockState().getValue(Block.UP) &&
-                    object.getBlockState().getValue(Block.DOWN)) {
-                return new ResourceLocation(Stardust.MOD_ID, "geo/tube_7_1.geo.json");
-            }
 
-            return new ResourceLocation(Stardust.MOD_ID, "geo/tube_1_1.geo.json");
+
+            return new ResourceLocation(Stardust.MOD_ID, "geo/tube_7_1.geo.json");
         }
 
+
         public ResourceLocation getTextureLocation ( Tile object ) {
-            if (!object.getBlockState().getValue(Block.NORTH) &&
-                    !object.getBlockState().getValue(Block.SOUTH) &&
-                    !object.getBlockState().getValue(Block.WEST) &&
-                    !object.getBlockState().getValue(Block.EAST) &&
-                    !object.getBlockState().getValue(Block.UP) &&
-                    !object.getBlockState().getValue(Block.DOWN)) {
-                return new ResourceLocation(Stardust.MOD_ID, "textures/block/tube_1_1.png");
-            }
-            //single
-            if (object.getBlockState().getValue(Block.NORTH) &&
-                    !object.getBlockState().getValue(Block.SOUTH) &&
-                    !object.getBlockState().getValue(Block.WEST) &&
-                    !object.getBlockState().getValue(Block.EAST) &&
-                    !object.getBlockState().getValue(Block.UP) &&
-                    !object.getBlockState().getValue(Block.DOWN)) {
-                return new ResourceLocation(Stardust.MOD_ID, "textures/block/tube_2_1.png");
-            }
-            if (!object.getBlockState().getValue(Block.NORTH) &&
-                    object.getBlockState().getValue(Block.SOUTH) &&
-                    !object.getBlockState().getValue(Block.WEST) &&
-                    !object.getBlockState().getValue(Block.EAST) &&
-                    !object.getBlockState().getValue(Block.UP) &&
-                    !object.getBlockState().getValue(Block.DOWN)) {
-                return new ResourceLocation(Stardust.MOD_ID, "textures/block/tube_3_1.png");
-            }
-            if (!object.getBlockState().getValue(Block.NORTH) &&
-                    !object.getBlockState().getValue(Block.SOUTH) &&
-                    object.getBlockState().getValue(Block.WEST) &&
-                    !object.getBlockState().getValue(Block.EAST) &&
-                    !object.getBlockState().getValue(Block.UP) &&
-                    !object.getBlockState().getValue(Block.DOWN)) {
-                return new ResourceLocation(Stardust.MOD_ID, "textures/block/tube_4_1.png");
-            }
-            if (!object.getBlockState().getValue(Block.NORTH) &&
-                    !object.getBlockState().getValue(Block.SOUTH) &&
-                    !object.getBlockState().getValue(Block.WEST) &&
-                    object.getBlockState().getValue(Block.EAST) &&
-                    !object.getBlockState().getValue(Block.UP) &&
-                    !object.getBlockState().getValue(Block.DOWN)) {
-                return new ResourceLocation(Stardust.MOD_ID, "textures/block/tube_5_1.png");
-            }
-            if (!object.getBlockState().getValue(Block.NORTH) &&
-                    !object.getBlockState().getValue(Block.SOUTH) &&
-                    !object.getBlockState().getValue(Block.WEST) &&
-                    !object.getBlockState().getValue(Block.EAST) &&
-                    object.getBlockState().getValue(Block.UP) &&
-                    !object.getBlockState().getValue(Block.DOWN)) {
-                return new ResourceLocation(Stardust.MOD_ID, "textures/block/tube_6_1.png");
-            }
-            if (!object.getBlockState().getValue(Block.NORTH) &&
-                    !object.getBlockState().getValue(Block.SOUTH) &&
-                    !object.getBlockState().getValue(Block.WEST) &&
-                    !object.getBlockState().getValue(Block.EAST) &&
-                    !object.getBlockState().getValue(Block.UP) &&
-                    object.getBlockState().getValue(Block.DOWN)) {
-                return new ResourceLocation(Stardust.MOD_ID, "textures/block/tube_7_1.png");
-            }
-            return new ResourceLocation(Stardust.MOD_ID, "textures/block/tube_1_1.png");
+
+            return new ResourceLocation(Stardust.MOD_ID, "textures/block/tube_7_1.png");
         }
 
         public ResourceLocation getAnimationFileLocation ( Tile animatable ) {
@@ -271,8 +160,58 @@ public class Tube {
 
         @Override
         public void setLivingAnimations ( Tile animatable, Integer instanceId ) {
+            String[] strings = new String[5];
             super.setLivingAnimations(animatable, instanceId);
-            this.getAnimationProcessor().getBone("bone").setRotationZ((float) (Math.PI));
+
+            if (!animatable.getBlockState().getValue(Block.NORTH)) {
+                strings[4] = "bone6";
+                this.getAnimationProcessor().getBone(strings[4]).setHidden(true);
+            }
+            if (!animatable.getBlockState().getValue(Block.SOUTH)) {
+                strings[4] = "bone4";
+                this.getAnimationProcessor().getBone(strings[4]).setHidden(true);
+            }
+            if (!animatable.getBlockState().getValue(Block.WEST)) {
+                strings[4] = "bone10";
+                this.getAnimationProcessor().getBone(strings[4]).setHidden(true);
+            }
+            if (!animatable.getBlockState().getValue(Block.EAST)) {
+                strings[4] = "bone2";
+                this.getAnimationProcessor().getBone(strings[4]).setHidden(true);
+            }
+            if (!animatable.getBlockState().getValue(Block.UP)) {
+                strings[4] = "bone12";
+                this.getAnimationProcessor().getBone(strings[4]).setHidden(true);
+            }
+            if (!animatable.getBlockState().getValue(Block.DOWN)) {
+                strings[4] = "bone8";
+                this.getAnimationProcessor().getBone(strings[4]).setHidden(true);
+            }
+            if (animatable.getBlockState().getValue(Block.NORTH)) {
+                strings[4] = "bone6";
+                this.getAnimationProcessor().getBone(strings[4]).setHidden(true, false);
+            }
+            if (animatable.getBlockState().getValue(Block.SOUTH)) {
+                strings[4] = "bone4";
+                this.getAnimationProcessor().getBone(strings[4]).setHidden(true, false);
+            }
+            if (animatable.getBlockState().getValue(Block.WEST)) {
+                strings[4] = "bone10";
+                this.getAnimationProcessor().getBone(strings[4]).setHidden(true, false);
+            }
+            if (animatable.getBlockState().getValue(Block.EAST)) {
+                strings[4] = "bone2";
+                this.getAnimationProcessor().getBone(strings[4]).setHidden(true, false);
+            }
+            if (animatable.getBlockState().getValue(Block.UP)) {
+                strings[4] = "bone12";
+                this.getAnimationProcessor().getBone(strings[4]).setHidden(true, false);
+            }
+            if (animatable.getBlockState().getValue(Block.DOWN)) {
+                strings[4] = "bone8";
+                this.getAnimationProcessor().getBone(strings[4]).setHidden(true, false);
+            }
+
         }
     }
 
