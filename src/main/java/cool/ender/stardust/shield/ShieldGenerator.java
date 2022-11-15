@@ -2,8 +2,8 @@ package cool.ender.stardust.shield;
 
 import cool.ender.stardust.Stardust;
 import cool.ender.stardust.registry.TileRegistry;
-import it.unimi.dsi.fastutil.Hash;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -14,16 +14,30 @@ import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
+import static net.minecraft.world.level.block.DirectionalBlock.FACING;
+
 public class ShieldGenerator {
     public static class Block extends BaseEntityBlock {
         public Block() {
             super(Properties.of(Material.METAL));
+            this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.SOUTH));
+        }
+
+        @Override
+        public BlockState getStateForPlacement(BlockPlaceContext context) {
+            return this.defaultBlockState().setValue(FACING, context.getNearestLookingDirection().getOpposite());
+        }
+
+        @Override
+        protected void createBlockStateDefinition(StateDefinition.Builder<net.minecraft.world.level.block.Block, BlockState> p_52719_) {
+            p_52719_.add(FACING);
         }
 
         @Override
@@ -34,6 +48,7 @@ public class ShieldGenerator {
                 ((Tile) Objects.requireNonNull(level.getBlockEntity(blockPos))).scan();
                 level.scheduleTick(blockPos, this, 1);
                 return InteractionResult.CONSUME;
+
             }
         }
 
@@ -108,13 +123,15 @@ public class ShieldGenerator {
 
         Level level;
 
-        Queue<BlockPos> taskQueue = new LinkedList<>();
+        Queue<BlockPos> pioneerQueue = new LinkedList<>();
+        Queue<BlockPos> generationQueue = new LinkedList<>();
         HashSet<BlockPos> generatedPos = new HashSet<>();
+        long age = 0;
 
         public ShieldGeneratingTask(long max_x, long max_y, long max_z, long min_x, long min_y, long min_z, long shieldOffset, Level level) {
             maxCornerBlock = new BlockPos(max_x + shieldOffset, max_y + shieldOffset, max_z + shieldOffset);
             minCornerBlock = new BlockPos(min_x - shieldOffset, min_y - shieldOffset, min_z - shieldOffset);
-            this.taskQueue.add(maxCornerBlock);
+            this.pioneerQueue.add(maxCornerBlock);
             this.generatedPos.add(maxCornerBlock);
             this.level = level;
         }
@@ -131,39 +148,55 @@ public class ShieldGenerator {
         }
 
         boolean tick() {
-            if (taskQueue.isEmpty()) return true;
-            int limit = taskQueue.size();
+            age++;
+            if (age % 3 == 0) {
+                while (!generationQueue.isEmpty()) {
+                    BlockPos shieldPos = generationQueue.poll();
+                    this.level.setBlock(shieldPos, Blocks.BARRIER.defaultBlockState(), 2);
+                }
+            }
+            if (pioneerQueue.isEmpty()) {
+                while (!generationQueue.isEmpty()) {
+                    BlockPos shieldPos = generationQueue.poll();
+                    this.level.setBlock(shieldPos, Blocks.BARRIER.defaultBlockState(), 2);
+                }
+                return true;
+            }
+            int limit = pioneerQueue.size();
             int count = 0;
-            while (!taskQueue.isEmpty()) {
+            while (!pioneerQueue.isEmpty()) {
                 if (count == limit) break;
-                BlockPos pos = taskQueue.poll();
-                this.level.setBlock(pos, Blocks.BARRIER.defaultBlockState(), 2);
+                BlockPos pos = pioneerQueue.poll();
+                generationQueue.add(pos);
+                assert pos != null;
+                this.level.setBlock(pos, Blocks.GLASS.defaultBlockState(), 2);
                 if (!generatedPos.contains(pos.above()) && isShieldPos(pos.above())) {
                     this.generatedPos.add(pos.above());
-                    taskQueue.add(pos.above());
+                    pioneerQueue.add(pos.above());
                 }
                 if (!generatedPos.contains(pos.below()) && isShieldPos(pos.below())) {
                     this.generatedPos.add(pos.below());
-                    taskQueue.add(pos.below());
+                    pioneerQueue.add(pos.below());
                 }
                 if (!generatedPos.contains(pos.north()) && isShieldPos(pos.north())) {
                     this.generatedPos.add(pos.north());
-                    taskQueue.add(pos.north());
+                    pioneerQueue.add(pos.north());
                 }
                 if (!generatedPos.contains(pos.south()) && isShieldPos(pos.south())) {
                     this.generatedPos.add(pos.south());
-                    taskQueue.add(pos.south());
+                    pioneerQueue.add(pos.south());
                 }
                 if (!generatedPos.contains(pos.east()) && isShieldPos(pos.east())) {
                     this.generatedPos.add(pos.east());
-                    taskQueue.add(pos.east());
+                    pioneerQueue.add(pos.east());
                 }
                 if (!generatedPos.contains(pos.west()) && isShieldPos(pos.west())) {
                     this.generatedPos.add(pos.west());
-                    taskQueue.add(pos.west());
+                    pioneerQueue.add(pos.west());
                 }
                 count++;
             }
+
             return false;
         }
     }
