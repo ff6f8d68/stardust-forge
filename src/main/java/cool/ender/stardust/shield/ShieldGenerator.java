@@ -69,13 +69,6 @@ public class ShieldGenerator {
                 if (tile.scanningTask.tick()) {
                     if (!tile.scanningTask.failed) {
                         Stardust.LOGGER.info("success");
-                        Stardust.LOGGER.info("x:" + tile.scanningTask.max_x);
-                        Stardust.LOGGER.info("y:" + tile.scanningTask.max_y);
-                        Stardust.LOGGER.info("z:" + tile.scanningTask.max_z);
-
-                        Stardust.LOGGER.info("x:" + tile.scanningTask.min_x);
-                        Stardust.LOGGER.info("y:" + tile.scanningTask.min_y);
-                        Stardust.LOGGER.info("z:" + tile.scanningTask.min_z);
                         tile.generatingTask = new ShieldGeneratingTask(tile.scanningTask.max_x, tile.scanningTask.max_y, tile.scanningTask.max_z, tile.scanningTask.min_x, tile.scanningTask.min_y, tile.scanningTask.min_z, 2, level, blockPos, (Tile) level.getBlockEntity(blockPos), blockState.getValue(FACING));
                         tile.scanningTask = null;
                         level.scheduleTick(blockPos, this, 1);
@@ -85,7 +78,6 @@ public class ShieldGenerator {
                     tile.scanningTask = null;
                 } else {
                     level.scheduleTick(blockPos, this, 1);
-                    Stardust.LOGGER.info("scan");
                 }
             }
             if (tile.generatingTask != null) {
