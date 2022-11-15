@@ -5,6 +5,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.BarrierBlock;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -25,6 +26,15 @@ public class Shield {
         public BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
             return new Tile(blockPos, blockState);
         }
+
+        @Override
+        public RenderShape getRenderShape(BlockState p_49098_) {
+            return RenderShape.MODEL;
+        }
+
+
+
+
     }
 
     public static class Tile extends BlockEntity {

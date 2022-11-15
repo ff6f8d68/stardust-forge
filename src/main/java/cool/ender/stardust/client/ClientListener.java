@@ -4,12 +4,16 @@ import cool.ender.stardust.Stardust;
 import cool.ender.stardust.particle.ExplosionFrameParticle;
 import cool.ender.stardust.particle.ExplosionParticle;
 import cool.ender.stardust.particle.LightingParticle;
+import cool.ender.stardust.registry.BlockRegistry;
 import cool.ender.stardust.registry.ParticleRegistry;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
 @Mod.EventBusSubscriber(modid = Stardust.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class ClientListener {
@@ -23,5 +27,9 @@ public class ClientListener {
         Minecraft.getInstance().particleEngine.register(ParticleRegistry.PLASMA_EXPLOSION_6.get(), ExplosionFrameParticle.Provider::new);
         Minecraft.getInstance().particleEngine.register(ParticleRegistry.PLASMA_EXPLOSION.get(), ExplosionParticle.Provider::new);
         Minecraft.getInstance().particleEngine.register(ParticleRegistry.LIGHT_SPARK.get(), LightingParticle.Provider::new);
+    }
+    @SubscribeEvent
+    public static void onRenderTypeSetup(FMLClientSetupEvent event) {
+        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.SHIELD_BLOCK.get(), RenderType.translucent());
     }
 }

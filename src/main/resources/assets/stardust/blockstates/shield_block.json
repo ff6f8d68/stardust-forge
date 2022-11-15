@@ -1,0 +1,5 @@
+{
+  "variants": {
+    "": { "model": "stardust:block/shield_block" }
+  }
+}
