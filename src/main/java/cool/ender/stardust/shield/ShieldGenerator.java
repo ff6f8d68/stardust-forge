@@ -2,11 +2,13 @@ package cool.ender.stardust.shield;
 
 import cool.ender.stardust.Stardust;
 import cool.ender.stardust.registry.BlockRegistry;
+import cool.ender.stardust.registry.SoundRegistry;
 import cool.ender.stardust.registry.TileRegistry;
 import cool.ender.stardust.turret.AbstractTurret;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -17,6 +19,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
@@ -27,9 +30,11 @@ import static net.minecraft.world.level.block.DirectionalBlock.FACING;
 
 public class ShieldGenerator {
     public static class Block extends BaseEntityBlock {
+        public static final BooleanProperty ACTIVATED = BooleanProperty.create("activated");
+
         public Block() {
             super(Properties.of(Material.METAL));
-            this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.SOUTH));
+            this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.SOUTH).setValue(ACTIVATED, false));
         }
 
         @Override
@@ -39,7 +44,7 @@ public class ShieldGenerator {
 
         @Override
         protected void createBlockStateDefinition(StateDefinition.Builder<net.minecraft.world.level.block.Block, BlockState> p_52719_) {
-            p_52719_.add(FACING);
+            p_52719_.add(FACING, ACTIVATED);
         }
 
         @Override
@@ -47,7 +52,15 @@ public class ShieldGenerator {
             if (level.isClientSide) {
                 return InteractionResult.SUCCESS;
             } else {
-                ((Tile) Objects.requireNonNull(level.getBlockEntity(blockPos))).scan();
+                Tile tile = (Tile) level.getBlockEntity(blockPos);
+                assert tile != null;
+                if (blockState.getValue(ACTIVATED)) {
+                    level.setBlock(blockPos, BlockRegistry.SHIELD_GENERATOR_BLOCK.get().defaultBlockState(), 2);
+                } else {
+                    tile.scan();
+                    level.setBlock(blockPos, BlockRegistry.SHIELD_GENERATOR_BLOCK.get().defaultBlockState().setValue(ACTIVATED, true), 2);
+                }
+
                 level.scheduleTick(blockPos, this, 1);
                 return InteractionResult.CONSUME;
 
@@ -69,7 +82,8 @@ public class ShieldGenerator {
                 if (tile.scanningTask.tick()) {
                     if (!tile.scanningTask.failed) {
                         Stardust.LOGGER.info("success");
-                        tile.generatingTask = new ShieldGeneratingTask(tile.scanningTask.max_x, tile.scanningTask.max_y, tile.scanningTask.max_z, tile.scanningTask.min_x, tile.scanningTask.min_y, tile.scanningTask.min_z, 2, level, blockPos, (Tile) level.getBlockEntity(blockPos), blockState.getValue(FACING));
+                        level.playSound(null, blockPos.getX(), blockPos.getY(), blockPos.getZ(), SoundRegistry.SHIELD_GENERATOR_ON.get(), SoundSource.BLOCKS, 2.0f, 1.0f);
+                        tile.generatingTask = new ShieldGeneratingTask(tile.scanningTask.max_x, tile.scanningTask.max_y, tile.scanningTask.max_z, tile.scanningTask.min_x, tile.scanningTask.min_y, tile.scanningTask.min_z, 5, level, blockPos, (Tile) level.getBlockEntity(blockPos), blockState.getValue(FACING));
                         tile.scanningTask = null;
                         level.scheduleTick(blockPos, this, 1);
                     } else {
@@ -162,7 +176,7 @@ public class ShieldGenerator {
         boolean tick() {
             age++;
             if (hitShieldFlag) {
-                if (age % 3 == 0) {
+                if (age % 5 == 0) {
                     popShieldBlocks();
                 }
                 if (pioneerQueue.isEmpty()) {
@@ -176,7 +190,7 @@ public class ShieldGenerator {
                     BlockPos pos = pioneerQueue.poll();
                     generationQueue.add(pos);
                     assert pos != null;
-                    this.level.setBlock(pos, Blocks.GLASS.defaultBlockState(), 2);
+                    this.level.setBlock(pos, BlockRegistry.SHIELD_BLOCK.get().defaultBlockState().setValue(Shield.Block.POWERED, true), 2);
 
                     if (!generatedPos.contains(pos.above()) && isShieldPos(pos.above())) {
                         this.generatedPos.add(pos.above());
@@ -205,17 +219,15 @@ public class ShieldGenerator {
                     count++;
                 }
             } else {
-                if (age % 10 == 0) {
-                    energyPos = energyPos.relative(direction);
-                    this.level.setBlock(energyPos, BlockRegistry.SHIELD_BLOCK.get().defaultBlockState(), 2);
-                    Shield.Tile tile = (Shield.Tile) this.level.getBlockEntity(energyPos);
-                    assert tile != null;
-                    tile.setOwner(generatorPos);
-                    if (isShieldPos(energyPos)) {
-                        this.hitShieldFlag = true;
-                        this.pioneerQueue.add(energyPos);
-                        this.generatedPos.add(energyPos);
-                    }
+                energyPos = energyPos.relative(direction);
+                this.level.setBlock(energyPos, BlockRegistry.SHIELD_BLOCK.get().defaultBlockState(), 2);
+                Shield.Tile tile = (Shield.Tile) this.level.getBlockEntity(energyPos);
+                assert tile != null;
+                tile.setOwner(generatorPos);
+                if (isShieldPos(energyPos)) {
+                    this.hitShieldFlag = true;
+                    this.pioneerQueue.add(energyPos);
+                    this.generatedPos.add(energyPos);
                 }
             }
             return false;

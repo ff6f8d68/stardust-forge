@@ -15,4 +15,7 @@ public class SoundRegistry {
     public static final RegistryObject<SoundEvent> PLASMA_BLAST = SOUND_EVENTS.register("plasma_blast", () -> new SoundEvent(new ResourceLocation(Stardust.MOD_ID, "plasma_blast")));
     public static final RegistryObject<SoundEvent> PLASMA_EXPLOSION = SOUND_EVENTS.register("plasma_explosion", () -> new SoundEvent(new ResourceLocation(Stardust.MOD_ID, "plasma_explosion")));
     public static final RegistryObject<SoundEvent> X_WING_SHOOTING_SOUND = SOUND_EVENTS.register("x_wing_shooting_sound", () -> new SoundEvent(new ResourceLocation(Stardust.MOD_ID, "x_wing_shooting_sound")));
+
+    public static final RegistryObject<SoundEvent> SHIELD_GENERATOR_ON = SOUND_EVENTS.register("shield_generator_on", () -> new SoundEvent(new ResourceLocation(Stardust.MOD_ID, "shield_generator_on")));
+    public static final RegistryObject<SoundEvent> SHIELD_GENERATOR_OFF = SOUND_EVENTS.register("shield_generator_off", () -> new SoundEvent(new ResourceLocation(Stardust.MOD_ID, "shield_generator_off")));
 }
