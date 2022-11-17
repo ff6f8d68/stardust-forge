@@ -36,7 +36,7 @@ public class Shield {
             super(Properties.of(Material.BARRIER).strength(-1.0F, 3600000.8F).noDrops().noOcclusion().lightLevel((BlockState state) -> {
                 if (state.getValue(POWERED)) return 15;
                 return 0;
-            }));
+            }).emissiveRendering((BlockState blockState, BlockGetter p_61037_, BlockPos p_61038_) -> blockState.getValue(POWERED)));
             this.registerDefaultState(this.stateDefinition.any().setValue(POWERED, false));
         }
 
