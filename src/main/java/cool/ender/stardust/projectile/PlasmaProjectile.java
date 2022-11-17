@@ -13,9 +13,11 @@ import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -86,16 +88,15 @@ public class PlasmaProjectile extends AbstractProjectile {
                 if (!this.level.isClientSide()) {
                     ((ServerLevel) this.level).sendParticles((ParticleOptions) ParticleRegistry.PLASMA_EXPLOSION.get(), result.getLocation().x, result.getLocation().y, result.getLocation().z, 1, 0, 0, 0, 0);
                     level.playSound(null, result.getLocation().x, result.getLocation().y, result.getLocation().z, SoundRegistry.PLASMA_EXPLOSION.get(), SoundSource.BLOCKS, 2.0f, 1.0f);
-                    this.getExplosion().doDamage(result.getLocation());
+                    Explosion explosion = new Explosion(this.level, null, result.getLocation().x, result.getLocation().y, result.getLocation().z, 5);
+                    explosion.explode();
+                    explosion.finalizeExplosion(false);
+                    this.level.playLocalSound(result.getLocation().x, result.getLocation().y, result.getLocation().z, SoundEvents.DRAGON_FIREBALL_EXPLODE, SoundSource.HOSTILE, 5, (1.0F + (this.level.random.nextFloat() - this.level.random.nextFloat()) * 0.2F) * 0.7F, false);
                     this.remove(RemovalReason.DISCARDED);
                 }
             }
         }
 
-        @Override
-        AbstractExplosion getExplosion() {
-            return new PlasmaExplosion(0f, 5f, 100f, this.level);
-        }
     }
 
     public static class Model extends AbstractProjectile.Model {

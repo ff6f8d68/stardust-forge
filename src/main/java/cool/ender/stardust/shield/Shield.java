@@ -11,6 +11,7 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -32,8 +33,16 @@ public class Shield {
         public static final BooleanProperty POWERED = BooleanProperty.create("powered");
 
         public Block() {
-            super(Properties.of(Material.BARRIER).strength(-1.0F, 3600000.8F).noDrops().noOcclusion());
+            super(Properties.of(Material.BARRIER).strength(-1.0F, 3600000.8F).noDrops().noOcclusion().lightLevel((BlockState state) -> {
+                if (state.getValue(POWERED)) return 15;
+                return 0;
+            }));
             this.registerDefaultState(this.stateDefinition.any().setValue(POWERED, false));
+        }
+
+        @Override
+        public void onNeighborChange(BlockState state, LevelReader level, BlockPos pos, BlockPos neighbor) {
+            super.onNeighborChange(state, level, pos, neighbor);
         }
 
         @Nullable

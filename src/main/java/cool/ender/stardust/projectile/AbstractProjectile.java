@@ -84,7 +84,6 @@ abstract public class AbstractProjectile {
             super.onHit(result);
         }
 
-        abstract AbstractExplosion getExplosion();
 
         @Override
         public void recreateFromPacket(@NotNull ClientboundAddEntityPacket p_150128_) {

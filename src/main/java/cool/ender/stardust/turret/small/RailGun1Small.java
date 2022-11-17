@@ -175,8 +175,8 @@ public class RailGun1Small extends AbstractTurret {
         }
 
         @Override
-        public void setLivingAnimations(AbstractTurret.Tile animatable, Integer instanceId) {
-            super.setLivingAnimations(animatable, instanceId);
+        public void setCustomAnimations(AbstractTurret.Tile animatable, int instanceId) {
+            super.setCustomAnimations(animatable, instanceId);
             switch (animatable.getBlockState().getValue(CANNON_FACING)) {
                 case SOUTH -> {
                     this.getAnimationProcessor().getBone("bone").setRotationY((float) (Math.PI));
