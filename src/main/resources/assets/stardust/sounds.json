@@ -8,6 +8,24 @@
       }
     ]
   },
+  "shield_generator_on": {
+    "category": "record",
+    "sounds": [
+      {
+        "name": "stardust:shield_generator_on",
+        "stream": true
+      }
+    ]
+  },
+  "shield_generator_off": {
+    "category": "record",
+    "sounds": [
+      {
+        "name": "stardust:shield_generator_off",
+        "stream": true
+      }
+    ]
+  },
   "plasma_explosion": {
     "category": "record",
     "sounds": [

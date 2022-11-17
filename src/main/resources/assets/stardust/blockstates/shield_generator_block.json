@@ -1,0 +1,6 @@
+{
+  "variants": {
+    "activated=true": { "model": "stardust:block/small_shield_generator_on" },
+    "activated=false": { "model": "stardust:block/small_shield_generator_off" }
+  }
+}

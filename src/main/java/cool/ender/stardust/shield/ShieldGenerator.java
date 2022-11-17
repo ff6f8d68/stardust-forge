@@ -5,8 +5,10 @@ import cool.ender.stardust.registry.BlockRegistry;
 import cool.ender.stardust.registry.SoundRegistry;
 import cool.ender.stardust.registry.TileRegistry;
 import cool.ender.stardust.turret.AbstractTurret;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -16,6 +18,7 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -23,6 +26,12 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
+import software.bernie.geckolib3.core.IAnimatable;
+import software.bernie.geckolib3.core.manager.AnimationData;
+import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib3.model.AnimatedGeoModel;
+import software.bernie.geckolib3.renderers.geo.GeoBlockRenderer;
+import software.bernie.geckolib3.util.GeckoLibUtil;
 
 import java.util.*;
 
@@ -35,6 +44,11 @@ public class ShieldGenerator {
         public Block() {
             super(Properties.of(Material.METAL));
             this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.SOUTH).setValue(ACTIVATED, false));
+        }
+
+        @Override
+        public RenderShape getRenderShape(BlockState p_49232_) {
+            return RenderShape.MODEL;
         }
 
         @Override
@@ -56,6 +70,7 @@ public class ShieldGenerator {
                 assert tile != null;
                 if (blockState.getValue(ACTIVATED)) {
                     level.setBlock(blockPos, BlockRegistry.SHIELD_GENERATOR_BLOCK.get().defaultBlockState(), 2);
+                    level.playSound(null, blockPos.getX(), blockPos.getY(), blockPos.getZ(), SoundRegistry.SHIELD_GENERATOR_OFF.get(), SoundSource.BLOCKS, 2.0f, 1.0f);
                 } else {
                     tile.scan();
                     level.setBlock(blockPos, BlockRegistry.SHIELD_GENERATOR_BLOCK.get().defaultBlockState().setValue(ACTIVATED, true), 2);
@@ -121,7 +136,6 @@ public class ShieldGenerator {
                 }
             }
         }
-
 
     }
 
