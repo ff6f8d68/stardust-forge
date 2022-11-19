@@ -19,6 +19,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.material.Material;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.plaf.PanelUI;
@@ -43,6 +45,24 @@ public class Shield {
         @Override
         public void onNeighborChange(BlockState state, LevelReader level, BlockPos pos, BlockPos neighbor) {
             super.onNeighborChange(state, level, pos, neighbor);
+        }
+
+        public void activeShield(Level level, BlockPos blockPos){
+            if (!level.isClientSide) {
+                level.setBlock(blockPos, BlockRegistry.SHIELD_BLOCK.get().defaultBlockState().setValue(Shield.Block.POWERED, true), 2);
+                level.scheduleTick(blockPos, this, 1);
+            }
+        }
+
+        @Override
+        public VoxelShape getCollisionShape(BlockState p_60572_, BlockGetter p_60573_, BlockPos p_60574_, CollisionContext p_60575_) {
+            return box(1, 1, 1, 15, 15, 15);
+        }
+
+        @Override
+        public void entityInside(BlockState p_60495_, Level level, BlockPos blockPos, Entity p_60498_) {
+            super.entityInside(p_60495_, level, blockPos, p_60498_);
+            activeShield(level, blockPos);
         }
 
         @Nullable
@@ -81,11 +101,8 @@ public class Shield {
 
         @Override
         public void stepOn(Level level, BlockPos blockPos, BlockState blockState, Entity entity) {
-            if (!level.isClientSide) {
-                level.setBlock(blockPos, BlockRegistry.SHIELD_BLOCK.get().defaultBlockState().setValue(Shield.Block.POWERED, true), 2);
-                level.scheduleTick(blockPos, this, 1);
-            }
             super.stepOn(level, blockPos, blockState, entity);
+            activeShield(level, blockPos);
         }
 
         @Override
