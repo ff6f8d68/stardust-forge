@@ -55,6 +55,11 @@ public class Shield {
         }
 
         @Override
+        public boolean propagatesSkylightDown(BlockState p_48740_, BlockGetter p_48741_, BlockPos p_48742_) {
+            return true;
+        }
+
+        @Override
         public VoxelShape getCollisionShape(BlockState p_60572_, BlockGetter p_60573_, BlockPos p_60574_, CollisionContext p_60575_) {
             return box(1, 1, 1, 15, 15, 15);
         }
