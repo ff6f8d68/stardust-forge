@@ -3,6 +3,7 @@ package cool.ender.stardust.registry;
 import com.mojang.datafixers.types.Type;
 import cool.ender.stardust.Stardust;
 import cool.ender.stardust.control.Computer;
+import cool.ender.stardust.missile.launcher.VerticalMissileLauncher;
 import cool.ender.stardust.shield.Shield;
 import cool.ender.stardust.shield.ShieldGenerator;
 import cool.ender.stardust.tube.Tube;
@@ -27,5 +28,6 @@ public class TileRegistry {
     public static final RegistryObject<BlockEntityType<ShieldGenerator.Tile>> SHIELD_GENERATOR_TILE = TILES.register("shield_generator_tile", () -> BlockEntityType.Builder.of(ShieldGenerator.Tile::new, BlockRegistry.SHIELD_GENERATOR_BLOCK.get()).build(null));
     public static final RegistryObject<BlockEntityType<Shield.Tile>> SHIELD_TILE = TILES.register("shield_tile", () -> BlockEntityType.Builder.of(Shield.Tile::new, BlockRegistry.SHIELD_BLOCK.get()).build(null));
     public static final RegistryObject<BlockEntityType<Tube.Tile>> TUBE_TILE = TILES.register("tube_tile", () -> BlockEntityType.Builder.of(Tube.Tile::new, BlockRegistry.TUBE_BLOCK.get()).build(null));
+    public static final RegistryObject<BlockEntityType<VerticalMissileLauncher.Tile>> VERTICAL_MISSILE_LAUNCHER_TILE = TILES.register("vertical_missile_launcher_tile", () -> BlockEntityType.Builder.of(VerticalMissileLauncher.Tile::new, BlockRegistry.VERTICAL_MISSILE_LAUNCHER_BLOCK.get()).build(null));
 
 }
