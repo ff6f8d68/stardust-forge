@@ -3,18 +3,14 @@ package cool.ender.stardust.missile.launcher;
 import cool.ender.stardust.Stardust;
 import cool.ender.stardust.registry.TileRegistry;
 import cool.ender.stardust.turret.AbstractTurret;
-import cool.ender.stardust.turret.small.RailGun1Small;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
@@ -32,16 +28,15 @@ import software.bernie.geckolib3.model.AnimatedGeoModel;
 import software.bernie.geckolib3.renderers.geo.GeoBlockRenderer;
 import software.bernie.geckolib3.util.GeckoLibUtil;
 
-import java.util.Objects;
-
 public class VerticalMissileLauncher {
     public static class Block extends BaseEntityBlock {
 
         public static final BooleanProperty ASSEMBLED = BooleanProperty.create("assembled");
+        public static final BooleanProperty CENTERED = BooleanProperty.create("centered");
 
         public Block() {
             super(Properties.of(Material.METAL).emissiveRendering((BlockState p_61036_, BlockGetter p_61037_, BlockPos p_61038_) -> true));
-            this.registerDefaultState(this.stateDefinition.any().setValue(ASSEMBLED, false));
+            this.registerDefaultState(this.stateDefinition.any().setValue(ASSEMBLED, false).setValue(CENTERED, false));
         }
 
         @Nullable
@@ -49,24 +44,28 @@ public class VerticalMissileLauncher {
         public BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
             return new Tile(blockPos, blockState);
         }
+
         @Override
         protected void createBlockStateDefinition(StateDefinition.Builder<net.minecraft.world.level.block.Block, BlockState> p_52719_) {
-            p_52719_.add(ASSEMBLED);
+            p_52719_.add(ASSEMBLED).add(CENTERED);
         }
 
 
         @Override
         public RenderShape getRenderShape(BlockState blockState) {
-            return blockState.getValue(ASSEMBLED) ? RenderShape.ENTITYBLOCK_ANIMATED : RenderShape.MODEL;
+            return blockState.getValue(CENTERED) ? RenderShape.ENTITYBLOCK_ANIMATED : RenderShape.MODEL;
         }
 
         @Override
         public void onPlace(BlockState blockState, Level level, BlockPos blockPos, BlockState p_60569_, boolean p_60570_) {
             if (!level.isClientSide) {
-                PlaceScanTask task = new PlaceScanTask(blockPos, level);
-                if (task.scan()) {
-                    BlockState centerState = level.getBlockState(task.getCenterPos());
-                    level.setBlock(task.getCenterPos(), centerState.setValue(ASSEMBLED, true), 2);
+                AssembleTask1 task1 = new AssembleTask1(blockPos, level);
+                if (task1.fastVerify()) {
+                    AssembleTask2 task2 = new AssembleTask2(task1.getCenterPos(), level);
+                    if (task2.searchAndSet()) {
+                        BlockState centerState = level.getBlockState(task1.getCenterPos());
+                        level.setBlock(task1.getCenterPos(), centerState.setValue(CENTERED, true), 2);
+                    }
                 }
             }
             super.onPlace(blockState, level, blockPos, p_60569_, p_60570_);
@@ -105,7 +104,7 @@ public class VerticalMissileLauncher {
         @Override
         public boolean shouldRender(BlockEntity blockEntity, Vec3 vec3) {
             BlockState blockstate = blockEntity.getBlockState();
-            return blockstate.getValue(Block.ASSEMBLED);
+            return blockstate.getValue(Block.CENTERED);
         }
     }
 
@@ -127,11 +126,9 @@ public class VerticalMissileLauncher {
         }
     }
 
-    public static class PlaceScanTask {
+    public static class AssembleTask1 {
         Level level;
         BlockPos placePos;
-
-        BlockPos centerPos;
         int north = 0;//-Z
         int south = 0;//+Z
         int west = 0;//-X
@@ -139,12 +136,12 @@ public class VerticalMissileLauncher {
         int up = 0;//+Y
         int down = 0;//-Y
 
-        public PlaceScanTask(BlockPos placePos, Level level) {
+        public AssembleTask1(BlockPos placePos, Level level) {
             this.level = level;
             this.placePos = placePos;
         }
 
-        public boolean scan() {
+        public boolean fastVerify() {
 
             //north & south
             BlockPos temPos = placePos.north();
@@ -192,7 +189,40 @@ public class VerticalMissileLauncher {
         }
 
         public BlockPos getCenterPos() {
-            return placePos.offset(east - 1 , -down, south - 1);
+            return placePos.offset(east - 1, -down, south - 1);
+        }
+    }
+
+    public static class AssembleTask2 {
+
+        BlockPos centerPos;
+        Level level;
+
+        public AssembleTask2(BlockPos centerPos, Level level) {
+            this.centerPos = centerPos;
+            this.level = level;
+        }
+
+        public boolean searchAndSet() {
+            for (int x = centerPos.getX() - 1; x <= centerPos.getX() + 1; x++) {
+                for (int y = centerPos.getY(); y <= centerPos.getY() + 4; y++) {
+                    for (int z = centerPos.getZ() - 1; z <= centerPos.getZ() + 1; z++) {
+                        BlockState current = level.getBlockState(new BlockPos(x, y, z));
+                        if (!(current.getBlock() instanceof  Block && !current.getValue(Block.ASSEMBLED))) {
+                            return false;
+                        }
+                    }
+                }
+            }
+            for (int x = centerPos.getX() - 1; x <= centerPos.getX() + 1; x++) {
+                for (int y = centerPos.getY(); y <= centerPos.getY() + 4; y++) {
+                    for (int z = centerPos.getZ() - 1; z <= centerPos.getZ() + 1; z++) {
+                        BlockState current = level.getBlockState(new BlockPos(x, y, z));
+                        level.setBlock(new BlockPos(x, y, z), current.setValue(Block.ASSEMBLED, true), 2);
+                    }
+                }
+            }
+            return true;
         }
     }
 
