@@ -66,7 +66,6 @@ public class ShieldGenerator {
                     level.playSound(null, blockPos.getX(), blockPos.getY(), blockPos.getZ(), SoundRegistry.SHIELD_GENERATOR_OFF.get(), SoundSource.BLOCKS, 2.0f, 1.0f);
                 } else {
                     tile.scan();
-                    level.setBlock(blockPos, blockState.setValue(ACTIVATED, true), 2);
                 }
 
                 level.scheduleTick(blockPos, this, 1);
@@ -89,6 +88,7 @@ public class ShieldGenerator {
             if (tile.scanningTask != null) {
                 if (tile.scanningTask.tick()) {
                     if (!tile.scanningTask.failed) {
+                        level.setBlock(blockPos, blockState.setValue(ACTIVATED, true), 2);
                         Stardust.LOGGER.info("success");
                         level.playSound(null, blockPos.getX(), blockPos.getY(), blockPos.getZ(), SoundRegistry.SHIELD_GENERATOR_ON.get(), SoundSource.BLOCKS, 2.0f, 1.0f);
                         tile.generatingTask = new ShieldGeneratingTask(tile.scanningTask.max_x, tile.scanningTask.max_y, tile.scanningTask.max_z, tile.scanningTask.min_x, tile.scanningTask.min_y, tile.scanningTask.min_z, 5, level, blockPos, (Tile) level.getBlockEntity(blockPos), blockState.getValue(FACING));

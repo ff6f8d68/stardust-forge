@@ -62,13 +62,15 @@ public class VerticalMissileLauncher {
 
         @Override
         public boolean canBeReplaced(BlockState blockState, BlockPlaceContext context) {
-            PlaceScanTask task = new PlaceScanTask(context.getClickedPos(), context.getLevel());
+            if (!context.getLevel().isClientSide) {
+                PlaceScanTask task = new PlaceScanTask(context.getClickedPos(), context.getLevel());
 
-            if (task.scan()) {
-                BlockState centerState = context.getLevel().getBlockState(task.centerPos);
-                Stardust.LOGGER.info(centerState);
-                Stardust.LOGGER.info(task.centerPos);
-                context.getLevel().setBlock(task.getCenterPos(), centerState.setValue(ASSEMBLED, true), 2);
+                if (task.scan()) {
+                    BlockState centerState = context.getLevel().getBlockState(task.getCenterPos());
+                    Stardust.LOGGER.info(centerState);
+                    Stardust.LOGGER.info(task.getCenterPos());
+                    context.getLevel().setBlock(task.getCenterPos(), centerState.setValue(ASSEMBLED, true), 2);
+                }
             }
             return super.canBeReplaced(blockState, context);
         }
@@ -158,8 +160,10 @@ public class VerticalMissileLauncher {
                 south++;
                 temPos = temPos.south();
             }
+
+            Stardust.LOGGER.info("south+north");
+            Stardust.LOGGER.info(south + north + 1);
             if (south + north < 2) {
-                Stardust.LOGGER.info("south/north");
                 return false;
             }
 
@@ -174,8 +178,9 @@ public class VerticalMissileLauncher {
                 west++;
                 temPos = temPos.west();
             }
+            Stardust.LOGGER.info("west+east");
+            Stardust.LOGGER.info(west + east + 1);
             if (east + west < 2) {
-                Stardust.LOGGER.info("east/west");
                 return false;
             }
 
@@ -190,6 +195,8 @@ public class VerticalMissileLauncher {
                 down++;
                 temPos = temPos.below();
             }
+            Stardust.LOGGER.info("above+below");
+            Stardust.LOGGER.info(up + down + 1);
             return up + down >= 5;
         }
 
