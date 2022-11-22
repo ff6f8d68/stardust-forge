@@ -6,6 +6,9 @@ import cool.ender.stardust.turret.AbstractTurret;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -84,11 +87,26 @@ public class VerticalMissileLauncher {
 
     public static class Tile extends BlockEntity implements IAnimatable {
 
-        Tile coreTile;
+        BlockPos centerPos;
         public AnimationFactory factory = GeckoLibUtil.createFactory(this);
 
         public Tile(BlockPos p_155229_, BlockState p_155230_) {
             super(TileRegistry.VERTICAL_MISSILE_LAUNCHER_TILE.get(), p_155229_, p_155230_);
+        }
+
+        @Override
+        public CompoundTag serializeNBT() {
+            CompoundTag nbt = super.serializeNBT();
+            nbt.putInt("center_x", centerPos.getX());
+            nbt.putInt("center_y", centerPos.getY());
+            nbt.putInt("center_z", centerPos.getZ());
+            return nbt;
+        }
+
+        @Override
+        public void deserializeNBT(CompoundTag nbt) {
+            super.deserializeNBT(nbt);
+            this.centerPos = new BlockPos(nbt.getInt("center_x"), nbt.getInt("center_y"), nbt.getInt("center_z"));
         }
 
         @Override
