@@ -8,6 +8,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.BlockGetter;
@@ -92,6 +94,37 @@ public class VerticalMissileLauncher {
 
         public Tile(BlockPos p_155229_, BlockState p_155230_) {
             super(TileRegistry.VERTICAL_MISSILE_LAUNCHER_TILE.get(), p_155229_, p_155230_);
+        }
+
+        @Override
+        public void handleUpdateTag(CompoundTag tag) {
+            this.centerPos = new BlockPos(tag.getInt("center_x"), tag.getInt("center_y"), tag.getInt("center_z"));
+        }
+
+        @Override
+        public CompoundTag getUpdateTag() {
+            CompoundTag tag = super.getUpdateTag();
+            tag.putInt("center_x", centerPos.getX());
+            tag.putInt("center_y", centerPos.getY());
+            tag.putInt("center_z", centerPos.getZ());
+            return tag;
+        }
+
+        /**
+         * Server Send
+         * */
+        @Nullable
+        @Override
+        public Packet<ClientGamePacketListener> getUpdatePacket() {
+            return super.getUpdatePacket();
+        }
+
+        /**
+         * Client Receive
+         * */
+        @Override
+        public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
+            super.onDataPacket(net, pkt);
         }
 
         @Override
