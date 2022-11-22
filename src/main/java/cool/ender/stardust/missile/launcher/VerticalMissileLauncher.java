@@ -5,6 +5,7 @@ import cool.ender.stardust.registry.TileRegistry;
 import cool.ender.stardust.turret.AbstractTurret;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -50,10 +51,14 @@ public class VerticalMissileLauncher {
             p_52719_.add(ASSEMBLED).add(CENTERED);
         }
 
+        @Override
+        public boolean hidesNeighborFace(BlockGetter level, BlockPos pos, BlockState state, BlockState neighborState, Direction dir) {
+            return false;
+        }
 
         @Override
         public RenderShape getRenderShape(BlockState blockState) {
-            return blockState.getValue(CENTERED) ? RenderShape.ENTITYBLOCK_ANIMATED : RenderShape.MODEL;
+            return blockState.getValue(ASSEMBLED) ? RenderShape.ENTITYBLOCK_ANIMATED : RenderShape.MODEL;
         }
 
         @Override
@@ -109,7 +114,6 @@ public class VerticalMissileLauncher {
     }
 
     public static class Model extends AnimatedGeoModel<Tile> {
-
         @Override
         public ResourceLocation getModelLocation(Tile object) {
             return new ResourceLocation(Stardust.MOD_ID, "geo/vertical_missile_launcher.geo.json");
@@ -123,6 +127,11 @@ public class VerticalMissileLauncher {
         @Override
         public ResourceLocation getAnimationFileLocation(Tile animatable) {
             return null;
+        }
+
+        @Override
+        public void setCustomAnimations(Tile animatable, int instanceId) {
+            super.setCustomAnimations(animatable, instanceId);
         }
     }
 
