@@ -61,18 +61,15 @@ public class VerticalMissileLauncher {
         }
 
         @Override
-        public boolean canBeReplaced(BlockState blockState, BlockPlaceContext context) {
-            if (!context.getLevel().isClientSide) {
-                PlaceScanTask task = new PlaceScanTask(context.getClickedPos(), context.getLevel());
-
+        public void onPlace(BlockState blockState, Level level, BlockPos blockPos, BlockState p_60569_, boolean p_60570_) {
+            if (!level.isClientSide) {
+                PlaceScanTask task = new PlaceScanTask(blockPos, level);
                 if (task.scan()) {
-                    BlockState centerState = context.getLevel().getBlockState(task.getCenterPos());
-                    Stardust.LOGGER.info(centerState);
-                    Stardust.LOGGER.info(task.getCenterPos());
-                    context.getLevel().setBlock(task.getCenterPos(), centerState.setValue(ASSEMBLED, true), 2);
+                    BlockState centerState = level.getBlockState(task.getCenterPos());
+                    level.setBlock(task.getCenterPos(), centerState.setValue(ASSEMBLED, true), 2);
                 }
             }
-            return super.canBeReplaced(blockState, context);
+            super.onPlace(blockState, level, blockPos, p_60569_, p_60570_);
         }
 
         @Override
@@ -161,8 +158,6 @@ public class VerticalMissileLauncher {
                 temPos = temPos.south();
             }
 
-            Stardust.LOGGER.info("south+north");
-            Stardust.LOGGER.info(south + north + 1);
             if (south + north < 2) {
                 return false;
             }
@@ -178,8 +173,6 @@ public class VerticalMissileLauncher {
                 west++;
                 temPos = temPos.west();
             }
-            Stardust.LOGGER.info("west+east");
-            Stardust.LOGGER.info(west + east + 1);
             if (east + west < 2) {
                 return false;
             }
@@ -195,9 +188,7 @@ public class VerticalMissileLauncher {
                 down++;
                 temPos = temPos.below();
             }
-            Stardust.LOGGER.info("above+below");
-            Stardust.LOGGER.info(up + down + 1);
-            return up + down >= 5;
+            return up + down >= 4;
         }
 
         public BlockPos getCenterPos() {
