@@ -159,10 +159,9 @@ public class Tube {
         }
 
         @Override
-        public void setLivingAnimations ( Tile animatable, Integer instanceId ) {
+        public void setCustomAnimations(Tile animatable, int instanceId) {
             String[] strings = new String[5];
-            super.setLivingAnimations(animatable, instanceId);
-
+            super.setCustomAnimations(animatable, instanceId);
             if (!animatable.getBlockState().getValue(Block.NORTH)) {
                 strings[4] = "bone6";
                 this.getAnimationProcessor().getBone(strings[4]).setHidden(true);
@@ -211,7 +210,6 @@ public class Tube {
                 strings[4] = "bone8";
                 this.getAnimationProcessor().getBone(strings[4]).setHidden(true, false);
             }
-
         }
     }
 

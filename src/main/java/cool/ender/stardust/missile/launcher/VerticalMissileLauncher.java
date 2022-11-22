@@ -158,7 +158,10 @@ public class VerticalMissileLauncher {
                 south++;
                 temPos = temPos.south();
             }
-            if (south + north < 2) return false;
+            if (south + north < 2) {
+                Stardust.LOGGER.info("south/north");
+                return false;
+            }
 
             //east & west
             temPos = placePos.east();
@@ -171,7 +174,10 @@ public class VerticalMissileLauncher {
                 west++;
                 temPos = temPos.west();
             }
-            if (east + west < 2) return false;
+            if (east + west < 2) {
+                Stardust.LOGGER.info("east/west");
+                return false;
+            }
 
             //up & down
             temPos = placePos.above();
