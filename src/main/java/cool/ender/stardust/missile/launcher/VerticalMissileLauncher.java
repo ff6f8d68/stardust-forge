@@ -12,15 +12,18 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
@@ -89,11 +92,6 @@ public class VerticalMissileLauncher {
             }
             super.onPlace(blockState, level, blockPos, p_60569_, p_60570_);
         }
-
-        @Override
-        public void onRemove(BlockState p_60515_, Level p_60516_, BlockPos p_60517_, BlockState p_60518_, boolean p_60519_) {
-            super.onRemove(p_60515_, p_60516_, p_60517_, p_60518_, p_60519_);
-        }
     }
 
     public static class Tile extends BlockEntity implements IAnimatable {
@@ -112,6 +110,21 @@ public class VerticalMissileLauncher {
                 tag.putInt("center_x", centerPos.getX());
                 tag.putInt("center_y", centerPos.getY());
                 tag.putInt("center_z", centerPos.getZ());
+            }
+        }
+
+        @Override
+        public void setRemoved() {
+            super.setRemoved();
+            assert this.level != null;
+            if (!this.level.isClientSide) {
+                if (this.level.isLoaded(this.getBlockPos())) {
+                    if (!(level.getBlockState(getBlockPos()).getBlock() instanceof Block)) {
+                        if (this.centerPos != null) {
+                            new DisassembleTask(this.centerPos, level).searchAndSet();
+                        }
+                    }
+                }
             }
         }
 
@@ -251,7 +264,7 @@ public class VerticalMissileLauncher {
                 for (int y = centerPos.getY(); y <= centerPos.getY() + 4; y++) {
                     for (int z = centerPos.getZ() - 1; z <= centerPos.getZ() + 1; z++) {
                         BlockState current = level.getBlockState(new BlockPos(x, y, z));
-                        if (!(current.getBlock() instanceof  Block && !current.getValue(Block.ASSEMBLED))) {
+                        if (!(current.getBlock() instanceof Block && !current.getValue(Block.ASSEMBLED))) {
                             return false;
                         }
                     }
@@ -265,8 +278,34 @@ public class VerticalMissileLauncher {
                         Tile currentTile = (Tile) level.getBlockEntity(currentPos);
                         assert currentTile != null;
                         currentTile.setCenterPos(centerPos);
-                        level.setBlockAndUpdate(currentPos, currentState.setValue(Block.ASSEMBLED, true));
+                        BlockState newState = currentState.setValue(Block.ASSEMBLED, true);
+                        level.setBlockAndUpdate(currentPos, newState);
+                        level.sendBlockUpdated(currentPos, newState, newState, 2);
+                    }
+                }
+            }
+            return true;
+        }
+    }
 
+    public static class DisassembleTask {
+        BlockPos centerPos;
+        Level level;
+
+        public DisassembleTask(BlockPos centerPos, Level level) {
+            this.centerPos = centerPos;
+            this.level = level;
+        }
+
+        public boolean searchAndSet() {
+            for (int x = centerPos.getX() - 1; x <= centerPos.getX() + 1; x++) {
+                for (int y = centerPos.getY(); y <= centerPos.getY() + 4; y++) {
+                    for (int z = centerPos.getZ() - 1; z <= centerPos.getZ() + 1; z++) {
+                        BlockPos currentPos = new BlockPos(x, y, z);
+                        BlockState currentState = level.getBlockState(currentPos);
+                        if (currentState.getBlock() instanceof Block) {
+                            level.setBlock(currentPos, Blocks.AIR.defaultBlockState(), 2);
+                        }
                     }
                 }
             }
