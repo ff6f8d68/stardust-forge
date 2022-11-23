@@ -14,6 +14,7 @@ import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -34,6 +35,8 @@ import software.bernie.geckolib3.model.AnimatedGeoModel;
 import software.bernie.geckolib3.renderers.geo.GeoBlockRenderer;
 import software.bernie.geckolib3.util.GeckoLibUtil;
 
+import java.util.Objects;
+
 public class VerticalMissileLauncher {
     public static class Block extends BaseEntityBlock {
 
@@ -43,6 +46,12 @@ public class VerticalMissileLauncher {
         public Block() {
             super(Properties.of(Material.METAL).emissiveRendering((BlockState p_61036_, BlockGetter p_61037_, BlockPos p_61038_) -> true));
             this.registerDefaultState(this.stateDefinition.any().setValue(ASSEMBLED, false).setValue(CENTERED, false));
+        }
+
+        @Override
+        public void destroy(LevelAccessor p_49860_, BlockPos p_49861_, BlockState p_49862_) {
+
+            super.destroy(p_49860_, p_49861_, p_49862_);
         }
 
         @Nullable
@@ -97,49 +106,23 @@ public class VerticalMissileLauncher {
         }
 
         @Override
-        public void handleUpdateTag(CompoundTag tag) {
+        protected void saveAdditional(CompoundTag tag) {
+            super.saveAdditional(tag);
+            if (this.centerPos != null) {
+                tag.putInt("center_x", centerPos.getX());
+                tag.putInt("center_y", centerPos.getY());
+                tag.putInt("center_z", centerPos.getZ());
+            }
+        }
+
+        @Override
+        public void load(CompoundTag tag) {
+            super.load(tag);
             this.centerPos = new BlockPos(tag.getInt("center_x"), tag.getInt("center_y"), tag.getInt("center_z"));
         }
 
-        @Override
-        public CompoundTag getUpdateTag() {
-            CompoundTag tag = super.getUpdateTag();
-            tag.putInt("center_x", centerPos.getX());
-            tag.putInt("center_y", centerPos.getY());
-            tag.putInt("center_z", centerPos.getZ());
-            return tag;
-        }
-
-        /**
-         * Server Send
-         * */
-        @Nullable
-        @Override
-        public Packet<ClientGamePacketListener> getUpdatePacket() {
-            return super.getUpdatePacket();
-        }
-
-        /**
-         * Client Receive
-         * */
-        @Override
-        public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
-            super.onDataPacket(net, pkt);
-        }
-
-        @Override
-        public CompoundTag serializeNBT() {
-            CompoundTag nbt = super.serializeNBT();
-            nbt.putInt("center_x", centerPos.getX());
-            nbt.putInt("center_y", centerPos.getY());
-            nbt.putInt("center_z", centerPos.getZ());
-            return nbt;
-        }
-
-        @Override
-        public void deserializeNBT(CompoundTag nbt) {
-            super.deserializeNBT(nbt);
-            this.centerPos = new BlockPos(nbt.getInt("center_x"), nbt.getInt("center_y"), nbt.getInt("center_z"));
+        public void setCenterPos(BlockPos blockPos) {
+            this.centerPos = blockPos;
         }
 
         @Override
@@ -277,8 +260,13 @@ public class VerticalMissileLauncher {
             for (int x = centerPos.getX() - 1; x <= centerPos.getX() + 1; x++) {
                 for (int y = centerPos.getY(); y <= centerPos.getY() + 4; y++) {
                     for (int z = centerPos.getZ() - 1; z <= centerPos.getZ() + 1; z++) {
-                        BlockState current = level.getBlockState(new BlockPos(x, y, z));
-                        level.setBlock(new BlockPos(x, y, z), current.setValue(Block.ASSEMBLED, true), 2);
+                        BlockPos currentPos = new BlockPos(x, y, z);
+                        BlockState currentState = level.getBlockState(currentPos);
+                        Tile currentTile = (Tile) level.getBlockEntity(currentPos);
+                        assert currentTile != null;
+                        currentTile.setCenterPos(centerPos);
+                        level.setBlockAndUpdate(currentPos, currentState.setValue(Block.ASSEMBLED, true));
+
                     }
                 }
             }
