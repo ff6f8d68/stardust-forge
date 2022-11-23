@@ -113,6 +113,12 @@ public class VerticalMissileLauncher {
             }
         }
 
+        public Tile getCenterTile() {
+            if (this.centerPos == null) return null;
+            assert level != null;
+            return (Tile) level.getBlockEntity(centerPos);
+        }
+
         @Override
         public void setRemoved() {
             super.setRemoved();
