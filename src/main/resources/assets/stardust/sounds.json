@@ -44,5 +44,14 @@
         "stream": true
       }
     ]
+  },
+  "missile_door": {
+    "category": "record",
+    "sounds": [
+      {
+        "name": "stardust:missile_door",
+        "stream": true
+      }
+    ]
   }
 }

@@ -2,6 +2,7 @@ package cool.ender.stardust.missile.launcher;
 
 import cool.ender.stardust.Stardust;
 import cool.ender.stardust.control.Computer;
+import cool.ender.stardust.registry.SoundRegistry;
 import cool.ender.stardust.registry.TileRegistry;
 import cool.ender.stardust.turret.AbstractTurret;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -9,6 +10,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -239,7 +241,7 @@ public class VerticalMissileLauncher {
         }
 
         public void switchState() {
-
+            level.playSound(null, getBlockPos().getX(), getBlockPos().getY(), getBlockPos().getZ(), SoundRegistry.MISSILE_DOOR.get(), SoundSource.BLOCKS, 1.0f, 1.0f);
             if (this.getBlockState().getValue(Block.OPEN)) {
                 this.level.setBlock(this.getBlockPos(), this.getBlockState().setValue(Block.OPEN, false), 2);
                 this.level.setBlock(this.getBlockPos(), this.getBlockState().setValue(Block.IDLE, false), 2);

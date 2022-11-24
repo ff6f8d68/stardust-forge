@@ -18,4 +18,6 @@ public class SoundRegistry {
 
     public static final RegistryObject<SoundEvent> SHIELD_GENERATOR_ON = SOUND_EVENTS.register("shield_generator_on", () -> new SoundEvent(new ResourceLocation(Stardust.MOD_ID, "shield_generator_on")));
     public static final RegistryObject<SoundEvent> SHIELD_GENERATOR_OFF = SOUND_EVENTS.register("shield_generator_off", () -> new SoundEvent(new ResourceLocation(Stardust.MOD_ID, "shield_generator_off")));
+    public static final RegistryObject<SoundEvent> MISSILE_DOOR = SOUND_EVENTS.register("missile_door", () -> new SoundEvent(new ResourceLocation(Stardust.MOD_ID, "missile_door")));
+
 }
