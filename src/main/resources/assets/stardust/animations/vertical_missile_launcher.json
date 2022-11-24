@@ -158,44 +158,44 @@
 					"effect": "missile_door.mp3"
 				}
 			}
-		}
-	},
-	"keep": {
-		"loop": true,
-		"bones": {
-			"red_light": {
-				"position": {
-					"vector": [0, 1, 0]
-				}
-			},
-			"blue_light": {
-				"scale": {
-					"vector": [0, 0, 0]
-				}
-			},
-			"left_door_mechanism": {
-				"position": {
-					"vector": [-1, 0, 0]
-				}
-			},
-			"right_door_mechanism": {
-				"position": {
-					"vector": [1, 0, 0]
-				}
-			},
-			"missile_launcher_doors": {
-				"rotation": {
-					"vector": [0, 22.5, 0]
-				}
-			},
-			"right_door": {
-				"rotation": {
-					"vector": [0, 0, 90]
-				}
-			},
-			"left_door": {
-				"rotation": {
-					"vector": [0, 0, -90]
+		},
+		"keep": {
+			"loop": true,
+			"bones": {
+				"red_light": {
+					"position": {
+						"vector": [0, 1, 0]
+					}
+				},
+				"blue_light": {
+					"scale": {
+						"vector": [0, 0, 0]
+					}
+				},
+				"left_door_mechanism": {
+					"position": {
+						"vector": [-1, 0, 0]
+					}
+				},
+				"right_door_mechanism": {
+					"position": {
+						"vector": [1, 0, 0]
+					}
+				},
+				"missile_launcher_doors": {
+					"rotation": {
+						"vector": [0, 22.5, 0]
+					}
+				},
+				"right_door": {
+					"rotation": {
+						"vector": [0, 0, 90]
+					}
+				},
+				"left_door": {
+					"rotation": {
+						"vector": [0, 0, -90]
+					}
 				}
 			}
 		}

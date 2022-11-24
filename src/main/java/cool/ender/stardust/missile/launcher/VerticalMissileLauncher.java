@@ -1,7 +1,7 @@
 package cool.ender.stardust.missile.launcher;
 
-import com.google.common.collect.ImmutableMap;
 import cool.ender.stardust.Stardust;
+import cool.ender.stardust.control.Computer;
 import cool.ender.stardust.registry.TileRegistry;
 import cool.ender.stardust.turret.AbstractTurret;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -10,9 +10,11 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.StringRepresentable;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.RenderShape;
@@ -21,9 +23,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
-import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -46,7 +48,6 @@ import software.bernie.geckolib3.renderers.geo.GeoBlockRenderer;
 import software.bernie.geckolib3.util.GeckoLibUtil;
 
 import java.util.*;
-import java.util.function.Function;
 
 public class VerticalMissileLauncher {
     public static class Block extends BaseEntityBlock {
@@ -63,9 +64,13 @@ public class VerticalMissileLauncher {
         public static final BooleanProperty ASSEMBLED = BooleanProperty.create("assembled");
         public static final BooleanProperty CENTERED = BooleanProperty.create("centered");
         public static final EnumProperty<ShapeType> SHAPE_TYPE = new EnumProperty<>("shape_type", ShapeType.class, List.of(ShapeType.values()));
+
+        public static final BooleanProperty OPEN = BooleanProperty.create("open");
+
+        public static final BooleanProperty IDLE = BooleanProperty.create("idle");
         public Block() {
             super(Properties.of(Material.METAL).emissiveRendering((BlockState p_61036_, BlockGetter p_61037_, BlockPos p_61038_) -> true));
-            this.registerDefaultState(this.stateDefinition.any().setValue(ASSEMBLED, false).setValue(CENTERED, false).setValue(SHAPE_TYPE, ShapeType.FULL));
+            this.registerDefaultState(this.stateDefinition.any().setValue(ASSEMBLED, false).setValue(CENTERED, false).setValue(SHAPE_TYPE, ShapeType.FULL).setValue(OPEN, false).setValue(IDLE, false));
         }
 
         @Nullable
@@ -76,7 +81,26 @@ public class VerticalMissileLauncher {
 
         @Override
         protected void createBlockStateDefinition(StateDefinition.Builder<net.minecraft.world.level.block.Block, BlockState> p_52719_) {
-            p_52719_.add(ASSEMBLED).add(CENTERED).add(SHAPE_TYPE);
+            p_52719_.add(ASSEMBLED).add(CENTERED).add(SHAPE_TYPE).add(IDLE).add(OPEN);
+        }
+
+        @Override
+        public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand hand, BlockHitResult result) {
+            if (!blockState.getValue(ASSEMBLED)) {
+                return super.use(blockState, level, blockPos, player, hand, result);
+            }
+            if (level.isClientSide) {
+                return InteractionResult.SUCCESS;
+            } else {
+                Tile tile = (Tile) level.getBlockEntity(blockPos);
+                if (tile != null) {
+                    Tile centerTile = tile.getCenterTile();
+                    if (centerTile != null) {
+                        centerTile.switchState();
+                    }
+                }
+                return InteractionResult.CONSUME;
+            }
         }
 
         @Override
@@ -167,7 +191,6 @@ public class VerticalMissileLauncher {
     public static class Tile extends BlockEntity implements IAnimatable {
 
         BlockPos centerPos;
-        boolean opened;
         public AnimationFactory factory = GeckoLibUtil.createFactory(this);
 
         public Tile(BlockPos p_155229_, BlockState p_155230_) {
@@ -227,13 +250,30 @@ public class VerticalMissileLauncher {
 
         private <E extends BlockEntity & IAnimatable> PlayState predicate(AnimationEvent<E> event) {
             AnimationController<E> controller = event.getController();
-            controller.setAnimation(new AnimationBuilder().addAnimation("open", ILoopType.EDefaultLoopTypes.PLAY_ONCE));
+            if (this.getBlockState().getValue(Block.IDLE)) return PlayState.CONTINUE;
+            if (this.getBlockState().getValue(Block.OPEN)) {
+                controller.setAnimation(new AnimationBuilder().addAnimation("open", ILoopType.EDefaultLoopTypes.PLAY_ONCE).addAnimation("keep", ILoopType.EDefaultLoopTypes.LOOP));
+            } else {
+                controller.setAnimation(new AnimationBuilder().addAnimation("close", ILoopType.EDefaultLoopTypes.PLAY_ONCE));
+                this.level.setBlock(this.getBlockPos(), this.getBlockState().setValue(Block.IDLE, true), 2);
+            }
             return PlayState.CONTINUE;
         }
 
         @Override
         public AnimationFactory getFactory() {
             return factory;
+        }
+
+        public void switchState() {
+
+            if (this.getBlockState().getValue(Block.OPEN)) {
+                this.level.setBlock(this.getBlockPos(), this.getBlockState().setValue(Block.OPEN, false), 2);
+                this.level.setBlock(this.getBlockPos(), this.getBlockState().setValue(Block.IDLE, false), 2);
+            } else {
+                this.level.setBlock(this.getBlockPos(), this.getBlockState().setValue(Block.OPEN, true), 2);
+                this.level.setBlock(this.getBlockPos(), this.getBlockState().setValue(Block.IDLE, false), 2);
+            }
         }
     }
 
@@ -387,7 +427,6 @@ public class VerticalMissileLauncher {
                             newState = currentState.setValue(Block.ASSEMBLED, true).setValue(Block.SHAPE_TYPE, Block.ShapeType.FULL);
                         }
                         level.setBlockAndUpdate(currentPos, newState);
-                        level.sendBlockUpdated(currentPos, newState, newState, 2);
                     }
                 }
             }
