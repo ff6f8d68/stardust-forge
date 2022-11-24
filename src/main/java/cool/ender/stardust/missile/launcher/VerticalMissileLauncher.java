@@ -126,7 +126,12 @@ public class VerticalMissileLauncher {
                 }
 
                 if (blockState.getValue(SHAPE_TYPE) == ShapeType.TOP) {
-                    return box(0, 0, 0, 0, 0, 0);
+                    BlockState centerState = blockGetter.getBlockState(blockPos.offset(0, -4, 0));
+                    if (centerState.getValue(OPEN)) {
+                        return box(0, 0, 0, 0, 0, 0);
+                    } else {
+                        return box(0, 8, 0, 16, 16, 16);
+                    }
 
                 }
                 if (blockState.getValue(SHAPE_TYPE) == ShapeType.BOTTOM) {
@@ -139,38 +144,6 @@ public class VerticalMissileLauncher {
             }
             return box(0, 0, 0, 16, 16, 16);
         }
-
-//        @Override
-//        protected @NotNull ImmutableMap<BlockState, VoxelShape> getShapeForEachState(@NotNull Function<BlockState, VoxelShape> p_152459_) {
-//            HashMap<BlockState, VoxelShape> map = new HashMap<>();
-//            for (BlockState blockState : this.stateDefinition.getPossibleStates()) {
-//                if (blockState.getValue(ASSEMBLED)) {
-//                    if (blockState.getValue(SHAPE_TYPE) == ShapeType.FULL) {
-//                        map.put(blockState, box(0, 0, 0, 16, 16, 16));
-//                        continue;
-//                    }
-//
-//                    if (blockState.getValue(SHAPE_TYPE) == ShapeType.TOP) {
-//                        map.put(blockState, box(0, 0, 0, 0, 0, 0));
-//                        continue;
-//
-//                    }
-//                    if (blockState.getValue(SHAPE_TYPE) == ShapeType.BOTTOM) {
-//                        map.put(blockState, box(0, 0, 0, 16, 8, 16));
-//                        continue;
-//                    }
-//
-//                    if (blockState.getValue(SHAPE_TYPE) == ShapeType.NO_COLLISION) {
-//                        map.put(blockState, box(0, 0, 0, 0, 0, 0));
-//                        continue;
-//                    }
-//                    map.put(blockState, box(0, 0, 0, 16, 16, 16));
-//                } else {
-//                    map.put(blockState, box(0, 0, 0, 16, 16, 16));
-//                }
-//            }
-//            return (ImmutableMap<BlockState, VoxelShape>) Collections.unmodifiableMap(map);
-//        }
 
         @Override
         public void onPlace(BlockState blockState, Level level, BlockPos blockPos, BlockState p_60569_, boolean p_60570_) {
