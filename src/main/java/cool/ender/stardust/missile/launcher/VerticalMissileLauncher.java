@@ -1,19 +1,15 @@
 package cool.ender.stardust.missile.launcher;
 
+import com.google.common.collect.ImmutableMap;
 import cool.ender.stardust.Stardust;
-import cool.ender.stardust.control.Computer;
 import cool.ender.stardust.registry.TileRegistry;
 import cool.ender.stardust.turret.AbstractTurret;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.Connection;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
-import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -24,10 +20,13 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.block.state.properties.Property;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -46,23 +45,27 @@ import software.bernie.geckolib3.model.AnimatedGeoModel;
 import software.bernie.geckolib3.renderers.geo.GeoBlockRenderer;
 import software.bernie.geckolib3.util.GeckoLibUtil;
 
-import java.util.Objects;
+import java.util.*;
+import java.util.function.Function;
 
 public class VerticalMissileLauncher {
     public static class Block extends BaseEntityBlock {
 
-        public static final BooleanProperty ASSEMBLED = BooleanProperty.create("assembled");
-        public static final BooleanProperty CENTERED = BooleanProperty.create("centered");
+        enum ShapeType implements StringRepresentable {
+            NO_COLLISION, TOP, BOTTOM, FULL;
 
-        public Block() {
-            super(Properties.of(Material.METAL).emissiveRendering((BlockState p_61036_, BlockGetter p_61037_, BlockPos p_61038_) -> true));
-            this.registerDefaultState(this.stateDefinition.any().setValue(ASSEMBLED, false).setValue(CENTERED, false));
+            @Override
+            public @NotNull String getSerializedName() {
+                return this.toString().toLowerCase();
+            }
         }
 
-        @Override
-        public void destroy(LevelAccessor p_49860_, BlockPos p_49861_, BlockState p_49862_) {
-
-            super.destroy(p_49860_, p_49861_, p_49862_);
+        public static final BooleanProperty ASSEMBLED = BooleanProperty.create("assembled");
+        public static final BooleanProperty CENTERED = BooleanProperty.create("centered");
+        public static final EnumProperty<ShapeType> SHAPE_TYPE = new EnumProperty<>("shape_type", ShapeType.class, List.of(ShapeType.values()));
+        public Block() {
+            super(Properties.of(Material.METAL).emissiveRendering((BlockState p_61036_, BlockGetter p_61037_, BlockPos p_61038_) -> true));
+            this.registerDefaultState(this.stateDefinition.any().setValue(ASSEMBLED, false).setValue(CENTERED, false).setValue(SHAPE_TYPE, ShapeType.FULL));
         }
 
         @Nullable
@@ -73,7 +76,7 @@ public class VerticalMissileLauncher {
 
         @Override
         protected void createBlockStateDefinition(StateDefinition.Builder<net.minecraft.world.level.block.Block, BlockState> p_52719_) {
-            p_52719_.add(ASSEMBLED).add(CENTERED);
+            p_52719_.add(ASSEMBLED).add(CENTERED).add(SHAPE_TYPE);
         }
 
         @Override
@@ -85,6 +88,65 @@ public class VerticalMissileLauncher {
         public RenderShape getRenderShape(BlockState blockState) {
             return blockState.getValue(ASSEMBLED) ? RenderShape.ENTITYBLOCK_ANIMATED : RenderShape.MODEL;
         }
+
+        @Override
+        public boolean hasDynamicShape() {
+            return true;
+        }
+
+        @Override
+        public VoxelShape getShape(BlockState blockState, @NotNull BlockGetter blockGetter, @NotNull BlockPos blockPos, @NotNull CollisionContext collisionContext) {
+            if (blockState.getValue(ASSEMBLED)) {
+                if (blockState.getValue(SHAPE_TYPE) == ShapeType.FULL) {
+                    return box(0, 0, 0, 16, 16, 16);
+                }
+
+                if (blockState.getValue(SHAPE_TYPE) == ShapeType.TOP) {
+                    return box(0, 0, 0, 0, 0, 0);
+
+                }
+                if (blockState.getValue(SHAPE_TYPE) == ShapeType.BOTTOM) {
+                    return box(0, 0, 0, 16, 8, 16);
+                }
+
+                if (blockState.getValue(SHAPE_TYPE) == ShapeType.NO_COLLISION) {
+                    return box(0, 0, 0, 0, 0, 0);
+                }
+            }
+            return box(0, 0, 0, 16, 16, 16);
+        }
+
+//        @Override
+//        protected @NotNull ImmutableMap<BlockState, VoxelShape> getShapeForEachState(@NotNull Function<BlockState, VoxelShape> p_152459_) {
+//            HashMap<BlockState, VoxelShape> map = new HashMap<>();
+//            for (BlockState blockState : this.stateDefinition.getPossibleStates()) {
+//                if (blockState.getValue(ASSEMBLED)) {
+//                    if (blockState.getValue(SHAPE_TYPE) == ShapeType.FULL) {
+//                        map.put(blockState, box(0, 0, 0, 16, 16, 16));
+//                        continue;
+//                    }
+//
+//                    if (blockState.getValue(SHAPE_TYPE) == ShapeType.TOP) {
+//                        map.put(blockState, box(0, 0, 0, 0, 0, 0));
+//                        continue;
+//
+//                    }
+//                    if (blockState.getValue(SHAPE_TYPE) == ShapeType.BOTTOM) {
+//                        map.put(blockState, box(0, 0, 0, 16, 8, 16));
+//                        continue;
+//                    }
+//
+//                    if (blockState.getValue(SHAPE_TYPE) == ShapeType.NO_COLLISION) {
+//                        map.put(blockState, box(0, 0, 0, 0, 0, 0));
+//                        continue;
+//                    }
+//                    map.put(blockState, box(0, 0, 0, 16, 16, 16));
+//                } else {
+//                    map.put(blockState, box(0, 0, 0, 16, 16, 16));
+//                }
+//            }
+//            return (ImmutableMap<BlockState, VoxelShape>) Collections.unmodifiableMap(map);
+//        }
 
         @Override
         public void onPlace(BlockState blockState, Level level, BlockPos blockPos, BlockState p_60569_, boolean p_60570_) {
@@ -165,7 +227,7 @@ public class VerticalMissileLauncher {
 
         private <E extends BlockEntity & IAnimatable> PlayState predicate(AnimationEvent<E> event) {
             AnimationController<E> controller = event.getController();
-            controller.setAnimation(new AnimationBuilder().addAnimation("open", ILoopType.EDefaultLoopTypes.LOOP));
+            controller.setAnimation(new AnimationBuilder().addAnimation("open", ILoopType.EDefaultLoopTypes.PLAY_ONCE));
             return PlayState.CONTINUE;
         }
 
@@ -310,7 +372,20 @@ public class VerticalMissileLauncher {
                         Tile currentTile = (Tile) level.getBlockEntity(currentPos);
                         assert currentTile != null;
                         currentTile.setCenterPos(centerPos);
-                        BlockState newState = currentState.setValue(Block.ASSEMBLED, true);
+                        BlockState newState;
+                        if (centerPos.equals(currentPos)) {
+                            newState = currentState.setValue(Block.ASSEMBLED, true).setValue(Block.SHAPE_TYPE, Block.ShapeType.BOTTOM);
+                        } else if (centerPos.offset(0, 1, 0).equals(currentPos)) {
+                            newState = currentState.setValue(Block.ASSEMBLED, true).setValue(Block.SHAPE_TYPE, Block.ShapeType.NO_COLLISION);
+                        } else if (centerPos.offset(0, 2, 0).equals(currentPos)) {
+                            newState = currentState.setValue(Block.ASSEMBLED, true).setValue(Block.SHAPE_TYPE, Block.ShapeType.NO_COLLISION);
+                        } else if (centerPos.offset(0, 3, 0).equals(currentPos)) {
+                            newState = currentState.setValue(Block.ASSEMBLED, true).setValue(Block.SHAPE_TYPE, Block.ShapeType.NO_COLLISION);
+                        } else if (centerPos.offset(0, 4, 0).equals(currentPos)) {
+                            newState = currentState.setValue(Block.ASSEMBLED, true).setValue(Block.SHAPE_TYPE, Block.ShapeType.TOP);
+                        } else {
+                            newState = currentState.setValue(Block.ASSEMBLED, true).setValue(Block.SHAPE_TYPE, Block.ShapeType.FULL);
+                        }
                         level.setBlockAndUpdate(currentPos, newState);
                         level.sendBlockUpdated(currentPos, newState, newState, 2);
                     }
