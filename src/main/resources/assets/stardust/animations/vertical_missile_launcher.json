@@ -1,0 +1,203 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"open": {
+			"loop": "hold_on_last_frame",
+			"animation_length": 2.75,
+			"bones": {
+				"right_door": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"1.9167": {
+							"vector": [0, 0, 90]
+						}
+					}
+				},
+				"left_door_mechanism": {
+					"position": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"1.9167": {
+							"vector": [-1, 0, 0]
+						}
+					}
+				},
+				"right_door_mechanism": {
+					"position": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"1.9167": {
+							"vector": [1, 0, 0]
+						}
+					}
+				},
+				"left_door": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"1.9167": {
+							"vector": [0, 0, -90]
+						}
+					}
+				},
+				"red_light": {
+					"position": {
+						"vector": [0, 1, 0]
+					}
+				},
+				"blue_light": {
+					"scale": {
+						"vector": [0, 0, 0]
+					}
+				},
+				"missile_launcher_doors": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"1.9167": {
+							"vector": [0, 22.5, 0]
+						}
+					}
+				}
+			},
+			"sound_effects": {
+				"0.0": {
+					"effect": "missile_door.mp3"
+				}
+			}
+		},
+		"close": {
+			"loop": "hold_on_last_frame",
+			"animation_length": 2.5,
+			"bones": {
+				"red_light": {
+					"position": {
+						"0.0": {
+							"vector": [0, 1, 0]
+						},
+						"1.875": {
+							"vector": [0, 1, 0]
+						},
+						"1.9167": {
+							"vector": [0, 0, 0]
+						}
+					}
+				},
+				"blue_light": {
+					"position": {
+						"0.0": {
+							"vector": [0, -2, 0]
+						},
+						"1.875": {
+							"vector": [0, -2, 0]
+						},
+						"1.9167": {
+							"vector": [0, 0, 0]
+						}
+					}
+				},
+				"right_door": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 90]
+						},
+						"1.9167": {
+							"vector": [0, 0, 0]
+						}
+					}
+				},
+				"left_door": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, -90]
+						},
+						"1.9167": {
+							"vector": [0, 0, 0]
+						}
+					}
+				},
+				"left_door_mechanism": {
+					"position": {
+						"0.0": {
+							"vector": [-1, 0, 0]
+						},
+						"1.9167": {
+							"vector": [0, 0, 0]
+						}
+					}
+				},
+				"right_door_mechanism": {
+					"position": {
+						"0.0": {
+							"vector": [1, 0, 0]
+						},
+						"1.9167": {
+							"vector": [0, 0, 0]
+						}
+					}
+				},
+				"missile_launcher_doors": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 22.5, 0]
+						},
+						"1.9167": {
+							"vector": [0, 0, 0]
+						}
+					}
+				}
+			},
+			"sound_effects": {
+				"0.0": {
+					"effect": "missile_door.mp3"
+				}
+			}
+		}
+	},
+	"keep": {
+		"loop": true,
+		"bones": {
+			"red_light": {
+				"position": {
+					"vector": [0, 1, 0]
+				}
+			},
+			"blue_light": {
+				"scale": {
+					"vector": [0, 0, 0]
+				}
+			},
+			"left_door_mechanism": {
+				"position": {
+					"vector": [-1, 0, 0]
+				}
+			},
+			"right_door_mechanism": {
+				"position": {
+					"vector": [1, 0, 0]
+				}
+			},
+			"missile_launcher_doors": {
+				"rotation": {
+					"vector": [0, 22.5, 0]
+				}
+			},
+			"right_door": {
+				"rotation": {
+					"vector": [0, 0, 90]
+				}
+			},
+			"left_door": {
+				"rotation": {
+					"vector": [0, 0, -90]
+				}
+			}
+		}
+	}
+}

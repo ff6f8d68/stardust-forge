@@ -1,6 +1,7 @@
 package cool.ender.stardust.missile.launcher;
 
 import cool.ender.stardust.Stardust;
+import cool.ender.stardust.control.Computer;
 import cool.ender.stardust.registry.TileRegistry;
 import cool.ender.stardust.turret.AbstractTurret;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -25,13 +26,20 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.material.Material;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib3.core.IAnimatable;
+import software.bernie.geckolib3.core.PlayState;
+import software.bernie.geckolib3.core.builder.AnimationBuilder;
+import software.bernie.geckolib3.core.builder.ILoopType;
+import software.bernie.geckolib3.core.controller.AnimationController;
+import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
@@ -97,6 +105,7 @@ public class VerticalMissileLauncher {
     public static class Tile extends BlockEntity implements IAnimatable {
 
         BlockPos centerPos;
+        boolean opened;
         public AnimationFactory factory = GeckoLibUtil.createFactory(this);
 
         public Tile(BlockPos p_155229_, BlockState p_155230_) {
@@ -104,7 +113,7 @@ public class VerticalMissileLauncher {
         }
 
         @Override
-        protected void saveAdditional(CompoundTag tag) {
+        protected void saveAdditional(@NotNull CompoundTag tag) {
             super.saveAdditional(tag);
             if (this.centerPos != null) {
                 tag.putInt("center_x", centerPos.getX());
@@ -117,6 +126,11 @@ public class VerticalMissileLauncher {
             if (this.centerPos == null) return null;
             assert level != null;
             return (Tile) level.getBlockEntity(centerPos);
+        }
+
+        @Override
+        public AABB getRenderBoundingBox() {
+            return new AABB(this.getBlockPos().offset(-1, 0, -1), this.getBlockPos().offset(1, 5, 1));
         }
 
         @Override
@@ -135,7 +149,7 @@ public class VerticalMissileLauncher {
         }
 
         @Override
-        public void load(CompoundTag tag) {
+        public void load(@NotNull CompoundTag tag) {
             super.load(tag);
             this.centerPos = new BlockPos(tag.getInt("center_x"), tag.getInt("center_y"), tag.getInt("center_z"));
         }
@@ -146,6 +160,13 @@ public class VerticalMissileLauncher {
 
         @Override
         public void registerControllers(AnimationData data) {
+            data.addAnimationController(new AnimationController(this, "controller", 5, this::predicate));
+        }
+
+        private <E extends BlockEntity & IAnimatable> PlayState predicate(AnimationEvent<E> event) {
+            AnimationController<E> controller = event.getController();
+            controller.setAnimation(new AnimationBuilder().addAnimation("open", ILoopType.EDefaultLoopTypes.LOOP));
+            return PlayState.CONTINUE;
         }
 
         @Override
@@ -160,9 +181,14 @@ public class VerticalMissileLauncher {
         }
 
         @Override
-        public boolean shouldRender(BlockEntity blockEntity, Vec3 vec3) {
+        public boolean shouldRender(BlockEntity blockEntity, @NotNull Vec3 vec3) {
             BlockState blockstate = blockEntity.getBlockState();
             return blockstate.getValue(Block.CENTERED);
+        }
+
+        @Override
+        public boolean shouldRenderOffScreen(BlockEntity p_112306_) {
+            return true;
         }
     }
 
@@ -179,7 +205,7 @@ public class VerticalMissileLauncher {
 
         @Override
         public ResourceLocation getAnimationFileLocation(Tile animatable) {
-            return null;
+            return new ResourceLocation(Stardust.MOD_ID, "animations/vertical_missile_launcher.json");
         }
 
         @Override
