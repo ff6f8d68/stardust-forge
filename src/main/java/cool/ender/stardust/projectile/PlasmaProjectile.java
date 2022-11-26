@@ -47,7 +47,6 @@ public class PlasmaProjectile extends AbstractProjectile {
         public Entity(double x, double y, double z, double to_x, double to_y, double to_z, Level level, AbstractTurret.Tile owner) {
             this(EntityRegistry.PLASMA_PROJECTILE_ENTITY.get(), level);
             this.owner = owner;
-            Stardust.LOGGER.info(owner);
             this.moveTo(x, y, z, this.getYRot(), this.getXRot());
             this.reapplyPosition();
             double d0 = Math.sqrt(to_x * to_x + to_y * to_y + to_z * to_z);
@@ -56,7 +55,6 @@ public class PlasmaProjectile extends AbstractProjectile {
                 this.yPower = to_y / d0;
                 this.zPower = to_z / d0;
             }
-
         }
 
         @Override

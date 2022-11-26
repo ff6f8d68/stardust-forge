@@ -6,6 +6,7 @@ import cool.ender.stardust.projectile.Missile;
 import cool.ender.stardust.registry.SoundRegistry;
 import cool.ender.stardust.registry.TileRegistry;
 import cool.ender.stardust.turret.AbstractTurret;
+import cool.ender.stardust.turret.small.RailGun1Small;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -89,6 +90,19 @@ public class VerticalMissileLauncher {
         }
 
         @Override
+        public void neighborChanged(BlockState blockState, Level level, BlockPos selfBlock, net.minecraft.world.level.block.Block block, BlockPos neighborBlock, boolean p_60514_) {
+            if (level.hasNeighborSignal(selfBlock)) {
+                Tile tile = (Tile) level.getBlockEntity(selfBlock);
+                if (tile != null) {
+                    Tile centerTile = tile.getCenterTile();
+                    if (centerTile != null) {
+                        centerTile.shoot();
+                    }
+                }
+            }
+        }
+
+        @Override
         public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand hand, BlockHitResult result) {
             if (!blockState.getValue(ASSEMBLED)) {
                 return super.use(blockState, level, blockPos, player, hand, result);
@@ -100,9 +114,6 @@ public class VerticalMissileLauncher {
                 if (tile != null) {
                     Tile centerTile = tile.getCenterTile();
                     if (centerTile != null) {
-
-                        level.addFreshEntity(new Missile.Entity(blockPos.getX(), blockPos.getY(), blockPos.getZ(), 0, 10, 0, level));
-
                         centerTile.switchState();
                     }
                 }
@@ -171,6 +182,7 @@ public class VerticalMissileLauncher {
     public static class Tile extends BlockEntity implements IAnimatable {
 
         BlockPos centerPos;
+        int coolDownTick = 0;
         public AnimationFactory factory = GeckoLibUtil.createFactory(this);
 
         public Tile(BlockPos p_155229_, BlockState p_155230_) {
@@ -187,10 +199,24 @@ public class VerticalMissileLauncher {
             }
         }
 
+        void shoot() {
+            if (this.centerPos != null && this.centerPos.equals(this.getBlockPos()) && this.getBlockState().getValue(Block.OPEN) && this.coolDownTick == 0) {
+                this.level.addFreshEntity(new Missile.Entity(this.centerPos.getX() + 0.5, this.centerPos.getY() + 1, this.centerPos.getZ() + 0.5, level));
+            }
+        }
+
         public Tile getCenterTile() {
             if (this.centerPos == null) return null;
             assert level != null;
             return (Tile) level.getBlockEntity(centerPos);
+        }
+
+        public void setCoolDownTick(int coolDownTick) {
+            this.coolDownTick = coolDownTick;
+        }
+
+        public int getCoolDownTick() {
+            return coolDownTick;
         }
 
         @Override

@@ -6,6 +6,7 @@ import cool.ender.stardust.turret.AbstractTurret;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -21,29 +22,63 @@ import software.bernie.geckolib3.util.GeckoLibUtil;
 
 public class Missile {
     public static class Entity extends AbstractHurtingProjectile implements IAnimatable {
+        int age = 0;
         public AnimationFactory factory = GeckoLibUtil.createFactory(this);
+
         public Entity(EntityType<? extends AbstractHurtingProjectile> p_36833_, Level p_36834_) {
             super(p_36833_, p_36834_);
         }
 
+        @Override
+        public void addAdditionalSaveData(CompoundTag tag) {
+            tag.putInt("age", age);
+            super.addAdditionalSaveData(tag);
+        }
 
-        public Entity(double x0, double y0, double z0, double x1, double y1, double z1, Level level) {
-            super(EntityRegistry.MISSILE_ENTITY.get(), x0, y0, z0, x1, y1, z1, level);
+        @Override
+        public void readAdditionalSaveData(CompoundTag tag) {
+            super.readAdditionalSaveData(tag);
+            age = tag.getInt("age");
+        }
+
+        public Entity(double x0, double y0, double z0, Level level) {
+            this(EntityRegistry.MISSILE_ENTITY.get(), level);
+            this.moveTo(x0, y0, z0, 0, 0);
+            this.reapplyPosition();
+            this.xPower = 0;
+            this.yPower = 0.5;
+            this.zPower = 0;
+
         }
 
         @Override
         public void tick() {
             super.tick();
+            if (!this.level.isClientSide) {
+                this.age++;
+                if (this.age < 20) {
+                    this.yPower = this.yPower - 0.05;
+                    Stardust.LOGGER.info(this.yPower);
+                }
+                if (this.age == 20) {
+                    this.yPower = 2;
+                }
+            }
+        }
+
+        @Override
+        public float getXRot() {
+            return 0;
+        }
+
+        @Override
+        public float getYRot() {
+            return 0;
         }
 
         @Override
         protected ParticleOptions getTrailParticle() {
-            return ParticleTypes.SOUL_FIRE_FLAME;
-        }
-
-        @Override
-        public void setDeltaMovement(Vec3 p_20257_) {
-
+            return this.age <= 10 ? ParticleTypes.ASH : ParticleTypes.DRIPPING_LAVA;
         }
 
         @Override
