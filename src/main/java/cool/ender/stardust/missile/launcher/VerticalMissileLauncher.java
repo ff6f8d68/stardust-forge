@@ -2,6 +2,7 @@ package cool.ender.stardust.missile.launcher;
 
 import cool.ender.stardust.Stardust;
 import cool.ender.stardust.control.Computer;
+import cool.ender.stardust.projectile.Missile;
 import cool.ender.stardust.registry.SoundRegistry;
 import cool.ender.stardust.registry.TileRegistry;
 import cool.ender.stardust.turret.AbstractTurret;
@@ -70,6 +71,7 @@ public class VerticalMissileLauncher {
         public static final BooleanProperty OPEN = BooleanProperty.create("open");
 
         public static final BooleanProperty IDLE = BooleanProperty.create("idle");
+
         public Block() {
             super(Properties.of(Material.METAL).emissiveRendering((BlockState p_61036_, BlockGetter p_61037_, BlockPos p_61038_) -> true));
             this.registerDefaultState(this.stateDefinition.any().setValue(ASSEMBLED, false).setValue(CENTERED, false).setValue(SHAPE_TYPE, ShapeType.FULL).setValue(OPEN, false).setValue(IDLE, false));
@@ -98,6 +100,9 @@ public class VerticalMissileLauncher {
                 if (tile != null) {
                     Tile centerTile = tile.getCenterTile();
                     if (centerTile != null) {
+
+                        level.addFreshEntity(new Missile.Entity(blockPos.getX(), blockPos.getY(), blockPos.getZ(), 0, 10, 0, level));
+
                         centerTile.switchState();
                     }
                 }

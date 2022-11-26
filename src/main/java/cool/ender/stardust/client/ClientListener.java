@@ -4,12 +4,16 @@ import cool.ender.stardust.Stardust;
 import cool.ender.stardust.particle.ExplosionFrameParticle;
 import cool.ender.stardust.particle.ExplosionParticle;
 import cool.ender.stardust.particle.LightingParticle;
+import cool.ender.stardust.projectile.Missile;
+import cool.ender.stardust.projectile.PlasmaProjectile;
 import cool.ender.stardust.registry.BlockRegistry;
+import cool.ender.stardust.registry.EntityRegistry;
 import cool.ender.stardust.registry.ParticleRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -31,5 +35,11 @@ public class ClientListener {
     @SubscribeEvent
     public static void onRenderTypeSetup(FMLClientSetupEvent event) {
         ItemBlockRenderTypes.setRenderLayer(BlockRegistry.SHIELD_BLOCK.get(), RenderType.translucent());
+    }
+
+    @SubscribeEvent
+    public static void registerRenderers(final EntityRenderersEvent.RegisterRenderers event) {
+        event.registerEntityRenderer(EntityRegistry.PLASMA_PROJECTILE_ENTITY.get(), PlasmaProjectile.Renderer::new);
+        event.registerEntityRenderer(EntityRegistry.MISSILE_ENTITY.get(), Missile.Renderer::new);
     }
 }
