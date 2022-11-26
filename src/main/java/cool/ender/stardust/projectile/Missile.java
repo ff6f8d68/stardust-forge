@@ -87,6 +87,11 @@ public class Missile {
         }
 
         @Override
+        public boolean isOnFire() {
+            return false;
+        }
+
+        @Override
         public AnimationFactory getFactory() {
             return factory;
         }

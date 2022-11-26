@@ -3,6 +3,7 @@ package cool.ender.stardust.missile.launcher;
 import cool.ender.stardust.Stardust;
 import cool.ender.stardust.control.Computer;
 import cool.ender.stardust.projectile.Missile;
+import cool.ender.stardust.registry.BlockRegistry;
 import cool.ender.stardust.registry.SoundRegistry;
 import cool.ender.stardust.registry.TileRegistry;
 import cool.ender.stardust.turret.AbstractTurret;
@@ -138,26 +139,29 @@ public class VerticalMissileLauncher {
 
         @Override
         public VoxelShape getShape(BlockState blockState, @NotNull BlockGetter blockGetter, @NotNull BlockPos blockPos, @NotNull CollisionContext collisionContext) {
-            if (blockState.getValue(ASSEMBLED)) {
-                if (blockState.getValue(SHAPE_TYPE) == ShapeType.FULL) {
-                    return box(0, 0, 0, 16, 16, 16);
-                }
-
-                if (blockState.getValue(SHAPE_TYPE) == ShapeType.TOP) {
-                    BlockState centerState = blockGetter.getBlockState(blockPos.offset(0, -4, 0));
-                    if (centerState.getValue(OPEN)) {
-                        return box(0, 0, 0, 0, 0, 0);
-                    } else {
-                        return box(0, 8, 0, 16, 16, 16);
+            if (blockState.getBlock() == BlockRegistry.VERTICAL_MISSILE_LAUNCHER_BLOCK.get()) {
+                if (blockState.getValue(ASSEMBLED)) {
+                    if (blockState.getValue(SHAPE_TYPE) == ShapeType.FULL) {
+                        return box(0, 0, 0, 16, 16, 16);
                     }
 
-                }
-                if (blockState.getValue(SHAPE_TYPE) == ShapeType.BOTTOM) {
-                    return box(0, 0, 0, 16, 8, 16);
-                }
+                    if (blockState.getValue(SHAPE_TYPE) == ShapeType.TOP) {
+                        BlockState centerState = blockGetter.getBlockState(blockPos.offset(0, -4, 0));
+                        if (centerState.getBlock() == BlockRegistry.VERTICAL_MISSILE_LAUNCHER_BLOCK.get()) {
+                            if (centerState.getValue(OPEN)) {
+                                return box(0, 0, 0, 0, 0, 0);
+                            } else {
+                                return box(0, 8, 0, 16, 16, 16);
+                            }
+                        }
+                    }
+                    if (blockState.getValue(SHAPE_TYPE) == ShapeType.BOTTOM) {
+                        return box(0, 0, 0, 16, 8, 16);
+                    }
 
-                if (blockState.getValue(SHAPE_TYPE) == ShapeType.NO_COLLISION) {
-                    return box(0, 0, 0, 0, 0, 0);
+                    if (blockState.getValue(SHAPE_TYPE) == ShapeType.NO_COLLISION) {
+                        return box(0, 0, 0, 0, 0, 0);
+                    }
                 }
             }
             return box(0, 0, 0, 16, 16, 16);
@@ -182,7 +186,7 @@ public class VerticalMissileLauncher {
     public static class Tile extends BlockEntity implements IAnimatable {
 
         BlockPos centerPos;
-        int coolDownTick = 0;
+        long coolDownTick = 0;
         public AnimationFactory factory = GeckoLibUtil.createFactory(this);
 
         public Tile(BlockPos p_155229_, BlockState p_155230_) {
@@ -197,10 +201,18 @@ public class VerticalMissileLauncher {
                 tag.putInt("center_y", centerPos.getY());
                 tag.putInt("center_z", centerPos.getZ());
             }
+            tag.putLong("cd", this.coolDownTick);
+        }
+
+        @Override
+        public void load(@NotNull CompoundTag tag) {
+            super.load(tag);
+            this.centerPos = new BlockPos(tag.getInt("center_x"), tag.getInt("center_y"), tag.getInt("center_z"));
+            this.coolDownTick = tag.getLong("cd");
         }
 
         void shoot() {
-            if (this.centerPos != null && this.centerPos.equals(this.getBlockPos()) && this.getBlockState().getValue(Block.OPEN) && this.coolDownTick == 0) {
+            if (this.centerPos != null && this.centerPos.equals(this.getBlockPos()) && this.getBlockState().getValue(Block.OPEN) && this.getCoolDown() <= 0) {
                 this.level.addFreshEntity(new Missile.Entity(this.centerPos.getX() + 0.5, this.centerPos.getY() + 1, this.centerPos.getZ() + 0.5, level));
             }
         }
@@ -211,12 +223,12 @@ public class VerticalMissileLauncher {
             return (Tile) level.getBlockEntity(centerPos);
         }
 
-        public void setCoolDownTick(int coolDownTick) {
-            this.coolDownTick = coolDownTick;
+        public void setCoolDown(int coolDown) {
+            this.coolDownTick = this.level.getGameTime() + coolDown;
         }
 
-        public int getCoolDownTick() {
-            return coolDownTick;
+        public long getCoolDown() {
+            return coolDownTick - this.level.getGameTime();
         }
 
         @Override
@@ -237,12 +249,6 @@ public class VerticalMissileLauncher {
                     }
                 }
             }
-        }
-
-        @Override
-        public void load(@NotNull CompoundTag tag) {
-            super.load(tag);
-            this.centerPos = new BlockPos(tag.getInt("center_x"), tag.getInt("center_y"), tag.getInt("center_z"));
         }
 
         public void setCenterPos(BlockPos blockPos) {
