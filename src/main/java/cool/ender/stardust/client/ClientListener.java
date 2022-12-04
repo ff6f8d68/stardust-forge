@@ -4,7 +4,7 @@ import cool.ender.stardust.Stardust;
 import cool.ender.stardust.particle.ExplosionFrameParticle;
 import cool.ender.stardust.particle.ExplosionParticle;
 import cool.ender.stardust.particle.LightingParticle;
-import cool.ender.stardust.projectile.Missile;
+import cool.ender.stardust.missile.Missile;
 import cool.ender.stardust.projectile.PlasmaProjectile;
 import cool.ender.stardust.registry.BlockRegistry;
 import cool.ender.stardust.registry.EntityRegistry;

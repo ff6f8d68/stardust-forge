@@ -1,13 +1,11 @@
 package cool.ender.stardust.missile.launcher;
 
 import cool.ender.stardust.Stardust;
-import cool.ender.stardust.control.Computer;
-import cool.ender.stardust.projectile.Missile;
+import cool.ender.stardust.missile.Missile;
 import cool.ender.stardust.registry.BlockRegistry;
 import cool.ender.stardust.registry.SoundRegistry;
 import cool.ender.stardust.registry.TileRegistry;
 import cool.ender.stardust.turret.AbstractTurret;
-import cool.ender.stardust.turret.small.RailGun1Small;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

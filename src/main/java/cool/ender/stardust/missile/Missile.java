@@ -1,4 +1,4 @@
-package cool.ender.stardust.projectile;
+package cool.ender.stardust.missile;
 
 import cool.ender.stardust.Stardust;
 import cool.ender.stardust.registry.EntityRegistry;
@@ -59,21 +59,32 @@ public class Missile {
                 if (this.age < 20) {
                     this.yPower = this.yPower - 0.05;
                     Stardust.LOGGER.info(this.yPower);
-                }
-                if (this.age == 20) {
+                } else if (this.age == 20) {
                     this.yPower = 2;
+                } else {
+                    Vec3 speedVecDifference = getToTargetVec().subtract(new Vec3(this.xPower, this.yPower, this.zPower).normalize());
                 }
+
+
             }
+        }
+
+        public Vec3 getTargetPos() {
+            return new Vec3(0, 0, 0);
+        }
+
+        private Vec3 getToTargetVec() {
+            return getTargetPos().subtract(this.position());
         }
 
         @Override
         public float getXRot() {
-            return 0;
+            return this.age < 20 ? 0 : super.getXRot();
         }
 
         @Override
         public float getYRot() {
-            return 0;
+            return this.age < 20 ? 0 : super.getYRot();
         }
 
         @Override
