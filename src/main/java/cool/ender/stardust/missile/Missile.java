@@ -62,7 +62,13 @@ public class Missile {
                 } else if (this.age == 20) {
                     this.yPower = 2;
                 } else {
-                    Vec3 speedVecDifference = getToTargetVec().subtract(new Vec3(this.xPower, this.yPower, this.zPower).normalize());
+                    Vec3 vec0 = this.getEyePosition();
+                    Vec3 vec1 = this.getTargetPos();
+                    Vec3 vec2 = this.getDeltaMovement();
+                    Vec3 vec3 = vec2.normalize().subtract(vec1.subtract(vec0).normalize());
+                    this.xPower = vec3.x / 10;
+                    this.yPower = vec3.y / 10;
+                    this.zPower = vec3.z / 10;
                 }
 
 
@@ -77,15 +83,15 @@ public class Missile {
             return getTargetPos().subtract(this.position());
         }
 
-        @Override
-        public float getXRot() {
-            return this.age < 20 ? 0 : super.getXRot();
-        }
-
-        @Override
-        public float getYRot() {
-            return this.age < 20 ? 0 : super.getYRot();
-        }
+//        @Override
+//        public float getXRot() {
+//            return this.age < 20 ? 0 : super.getXRot();
+//        }
+//
+//        @Override
+//        public float getYRot() {
+//            return this.age < 20 ? 0 : super.getYRot();
+//        }
 
         @Override
         protected ParticleOptions getTrailParticle() {
