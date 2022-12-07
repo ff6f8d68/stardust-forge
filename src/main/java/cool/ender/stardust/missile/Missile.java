@@ -56,7 +56,10 @@ public class Missile {
 
         @Override
         public void tick() {
-
+            if (getLife() == this.age) {
+                this.remove(RemovalReason.DISCARDED);
+                return;
+            }
             net.minecraft.world.entity.Entity entity = this.getOwner();
             if (this.level.isClientSide || (entity == null || !entity.isRemoved()) && this.level.hasChunkAt(this.blockPosition())) {
                 super.tick();
@@ -85,7 +88,6 @@ public class Missile {
                 }
 
                 this.setDeltaMovement(vec3.add(this.xPower, this.yPower, this.zPower).scale((double)f));
-                this.level.addParticle(this.getTrailParticle(), d0, d1 + 0.5D, d2, 0.0D, 0.0D, 0.0D);
                 this.setPos(d0, d1, d2);
             } else {
                 this.discard();
@@ -96,15 +98,15 @@ public class Missile {
                 if (this.age < 20) {
                     this.yPower = this.yPower - 0.05;
                 } else if (this.age == 20) {
-                    this.yPower = 0.5;
+                    this.yPower = 0.1;
                 } else {
-                    Vec3 vec0 = this.getEyePosition();
-                    Vec3 vec1 = this.getTargetPos();
-                    Vec3 vec2 = this.getDeltaMovement();
-                    Vec3 vec3 = vec2.normalize().subtract(vec1.subtract(vec0).normalize());
-                    this.xPower = vec3.x / 10;
-                    this.yPower = vec3.y / 10;
-                    this.zPower = vec3.z / 10;
+//                    Vec3 vec0 = this.getEyePosition();
+//                    Vec3 vec1 = this.getTargetPos();
+//                    Vec3 vec2 = this.getDeltaMovement();
+//                    Vec3 vec3 = vec2.normalize().subtract(vec1.subtract(vec0).normalize());
+//                    this.xPower = vec3.x / 10;
+//                    this.yPower = vec3.y / 10;
+//                    this.zPower = vec3.z / 10;
                 }
 
 
@@ -124,6 +126,10 @@ public class Missile {
         @Override
         protected ParticleOptions getTrailParticle() {
             return this.age <= 10 ? ParticleTypes.ASH : ParticleTypes.DRIPPING_LAVA;
+        }
+
+        public int getLife() {
+            return 100;
         }
 
         @Override
