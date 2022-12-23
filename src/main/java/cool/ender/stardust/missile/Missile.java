@@ -59,7 +59,7 @@ public class Missile {
         public void tick() {
             super.tick();
 
-            if (this.getLife() == this.age) {
+            if (this.getLife() >= this.age) {
                 this.remove(RemovalReason.DISCARDED);
                 return;
             }
