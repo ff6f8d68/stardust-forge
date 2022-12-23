@@ -17,6 +17,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import software.bernie.geckolib3.core.IAnimatable;
+import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
@@ -49,78 +50,41 @@ public class Missile {
             this.moveTo(x0, y0, z0, 0, 0);
             this.reapplyPosition();
             this.xPower = 0;
-            this.yPower = 0.5;
+            this.yPower = 0.01;
             this.zPower = 0;
 
         }
 
         @Override
         public void tick() {
-            if (getLife() == this.age) {
-                this.remove(RemovalReason.DISCARDED);
-                return;
-            }
-            net.minecraft.world.entity.Entity entity = this.getOwner();
-            if (this.level.isClientSide || (entity == null || !entity.isRemoved()) && this.level.hasChunkAt(this.blockPosition())) {
-                super.tick();
-                if (this.shouldBurn()) {
-                    this.setSecondsOnFire(1);
-                }
+            super.tick();
 
-                HitResult hitresult = ProjectileUtil.getHitResult(this, this::canHitEntity);
-                if (hitresult.getType() != HitResult.Type.MISS && !net.minecraftforge.event.ForgeEventFactory.onProjectileImpact(this, hitresult)) {
-                    this.onHit(hitresult);
-                }
-
-                this.checkInsideBlocks();
-                Vec3 vec3 = this.getDeltaMovement();
-                double d0 = this.getX() + vec3.x;
-                double d1 = this.getY() + vec3.y;
-                double d2 = this.getZ() + vec3.z;
-                float f = this.getInertia();
-                if (this.isInWater()) {
-                    for(int i = 0; i < 4; ++i) {
-                        float f1 = 0.25F;
-                        this.level.addParticle(ParticleTypes.BUBBLE, d0 - vec3.x * 0.25D, d1 - vec3.y * 0.25D, d2 - vec3.z * 0.25D, vec3.x, vec3.y, vec3.z);
-                    }
-
-                    f = 0.8F;
-                }
-
-                this.setDeltaMovement(vec3.add(this.xPower, this.yPower, this.zPower).scale((double)f));
-                this.setPos(d0, d1, d2);
-            } else {
-                this.discard();
-            }
-
-            if (!this.level.isClientSide) {
-                this.age++;
-                if (this.age < 20) {
-                    this.yPower = this.yPower - 0.05;
-                } else if (this.age == 20) {
-                    this.yPower = 0.1;
-                } else {
-//                    Vec3 vec0 = this.getEyePosition();
-//                    Vec3 vec1 = this.getTargetPos();
-//                    Vec3 vec2 = this.getDeltaMovement();
-//                    Vec3 vec3 = vec2.normalize().subtract(vec1.subtract(vec0).normalize());
-//                    this.xPower = vec3.x / 10;
-//                    this.yPower = vec3.y / 10;
-//                    this.zPower = vec3.z / 10;
-                }
-
-
-            }
+//            if (!this.level.isClientSide) {
+//                this.age++;
+//                if (this.age < 20) {
+//                    this.yPower = this.yPower - 0.05;
+//                } else if (this.age == 20) {
+//                    this.yPower = 0.1;
+//                } else {
+////                    Vec3 vec0 = this.getEyePosition();
+////                    Vec3 vec1 = this.getTargetPos();
+////                    Vec3 vec2 = this.getDeltaMovement();
+////                    Vec3 vec3 = vec2.normalize().subtract(vec1.subtract(vec0).normalize());
+////                    this.xPower = vec3.x / 10;
+////                    this.yPower = vec3.y / 10;
+////                    this.zPower = vec3.z / 10;
+//                }
+//            }
         }
 
         public Vec3 getTargetPos() {
             return new Vec3(0, 0, 0);
         }
 
-        @Override
-        public float getXRot() {
-            return (float) (super.getXRot() - Math.PI / 2);
-        }
+//        @Override
+//        public float getXRot() {
+//            return (float) (super.getXRot() - Math.PI / 2);
+//        }
 
 
         @Override
@@ -164,6 +128,12 @@ public class Missile {
         @Override
         public ResourceLocation getAnimationFileLocation(Entity animatable) {
             return null;
+        }
+
+        @Override
+        public void setCustomAnimations(Entity animatable, int instanceId, AnimationEvent animationEvent) {
+            super.setCustomAnimations(animatable, instanceId, animationEvent);
+            this.getAnimationProcessor().getBone("hell_bringer_nuclear").setRotationZ((float) Math.PI / 2);
         }
     }
 
