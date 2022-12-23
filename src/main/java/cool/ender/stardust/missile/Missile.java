@@ -50,7 +50,7 @@ public class Missile {
             this.moveTo(x0, y0, z0, 0, 0);
             this.reapplyPosition();
             this.xPower = 0;
-            this.yPower = 0.01;
+            this.yPower = 0.5;
             this.zPower = 0;
 
         }
@@ -59,33 +59,32 @@ public class Missile {
         public void tick() {
             super.tick();
 
-//            if (!this.level.isClientSide) {
-//                this.age++;
-//                if (this.age < 20) {
-//                    this.yPower = this.yPower - 0.05;
-//                } else if (this.age == 20) {
-//                    this.yPower = 0.1;
-//                } else {
-////                    Vec3 vec0 = this.getEyePosition();
-////                    Vec3 vec1 = this.getTargetPos();
-////                    Vec3 vec2 = this.getDeltaMovement();
-////                    Vec3 vec3 = vec2.normalize().subtract(vec1.subtract(vec0).normalize());
-////                    this.xPower = vec3.x / 10;
-////                    this.yPower = vec3.y / 10;
-////                    this.zPower = vec3.z / 10;
-//                }
-//            }
+            if (this.getLife() == this.age) {
+                this.remove(RemovalReason.DISCARDED);
+                return;
+            }
+
+            if (!this.level.isClientSide) {
+                this.age++;
+                if (this.age < 20) {
+                    this.yPower = this.yPower - 0.05;
+                } else if (this.age == 20) {
+                    this.yPower = 0.1;
+                } else {
+                    Vec3 vec0 = this.getEyePosition();
+                    Vec3 vec1 = this.getTargetPos();
+                    Vec3 vec2 = this.getDeltaMovement();
+                    Vec3 vec3 = vec2.normalize().subtract(vec1.subtract(vec0).normalize());
+                    this.xPower = vec3.x / 10;
+                    this.yPower = vec3.y / 10;
+                    this.zPower = vec3.z / 10;
+                }
+            }
         }
 
         public Vec3 getTargetPos() {
             return new Vec3(0, 0, 0);
         }
-
-//        @Override
-//        public float getXRot() {
-//            return (float) (super.getXRot() - Math.PI / 2);
-//        }
-
 
         @Override
         protected ParticleOptions getTrailParticle() {
