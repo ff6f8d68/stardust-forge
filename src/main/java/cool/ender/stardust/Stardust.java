@@ -2,6 +2,9 @@ package cool.ender.stardust;
 
 import cool.ender.stardust.registry.*;
 import cool.ender.stardust.world.dimension.EarthOuterSpaceDimension;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
@@ -15,11 +18,18 @@ public class Stardust {
     public static final Logger LOGGER = LogManager.getLogger();
 
     public static final String MOD_ID = "stardust";
-
+    public static CreativeModeTab stardustCreativeGroup;
     public Stardust() {
         LOGGER.info("Stardust Loaded");
 
         MinecraftForge.EVENT_BUS.register(this);
+
+        stardustCreativeGroup = new CreativeModeTab(CreativeModeTab.getGroupCountSafe(), "stardust_items") {
+            @Override
+            public ItemStack makeIcon() {
+                return new ItemStack(Items.TNT);
+            }
+        };
 
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
         BlockRegistry.BLOCKS.register(bus);
