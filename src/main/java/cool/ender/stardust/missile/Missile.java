@@ -12,10 +12,12 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.AbstractHurtingProjectile;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
@@ -25,11 +27,14 @@ import software.bernie.geckolib3.renderers.geo.GeoProjectilesRenderer;
 import software.bernie.geckolib3.util.GeckoLibUtil;
 
 public class Missile {
-    public static class Entity extends AbstractHurtingProjectile implements IAnimatable {
+    public static class Entity extends Projectile implements IAnimatable {
         int age = 0;
+        public double xPower;
+        public double yPower;
+        public double zPower;
         public AnimationFactory factory = GeckoLibUtil.createFactory(this);
 
-        public Entity(EntityType<? extends AbstractHurtingProjectile> p_36833_, Level p_36834_) {
+        public Entity(EntityType<? extends Projectile> p_36833_, Level p_36834_) {
             super(p_36833_, p_36834_);
         }
 
@@ -40,7 +45,7 @@ public class Missile {
         }
 
         @Override
-        public void readAdditionalSaveData(CompoundTag tag) {
+        public void readAdditionalSaveData(@NotNull CompoundTag tag) {
             super.readAdditionalSaveData(tag);
             age = tag.getInt("age");
         }
@@ -49,48 +54,81 @@ public class Missile {
             this(EntityRegistry.MISSILE_ENTITY.get(), level);
             this.moveTo(x0, y0, z0, 0, 0);
             this.reapplyPosition();
+            this.setDeltaMovement(0, 3, 0);
             this.xPower = 0;
-            this.yPower = 0.5;
+            this.yPower = -0.16;
             this.zPower = 0;
+        }
+
+        @Override
+        protected void defineSynchedData() {
 
         }
 
         @Override
         public void tick() {
-            super.tick();
-
-            if (this.getLife() <= this.age) {
-                this.remove(RemovalReason.DISCARDED);
-                return;
-            }
 
             if (!this.level.isClientSide) {
+                // self-destruction
                 this.age++;
-                if (this.age < 20) {
-                    this.yPower = this.yPower - 0.05;
-                } else if (this.age == 20) {
-                    this.yPower = 0.1;
-                } else {
-                    Vec3 vec0 = this.getForward();
-                    Vec3 vec1 = this.getEyePosition();
-                    Vec3 vec2 = this.getTargetPos();
-                    Vec3 vec3 = vec2.subtract(vec1);
-                    Vec3 vec4 = vec3.subtract(vec0);
-                    Vec3 vec5 = vec4.normalize();
-                    this.xPower += vec5.x / 10;
-                    this.yPower += vec5.y / 10;
-                    this.zPower += vec5.z / 10;
+                if (this.getLife() <= this.age) {
+                    this.discard();
+                }
+                //custom movement
+
+                if (this.age == 20) {
+                    this.xPower = 0;
+                    this.yPower = 0;
+                    this.zPower = 0;
+                }
+                if (this.age > 20) {
+//                    Vec3 vec_0 = this.getForward();
+//                    Vec3 vec_1 = this.position();
+//                    Vec3 vec_2 = this.getTargetPos();
+//                    Vec3 vec_3 = vec_2.subtract(vec_1);
+//                    Vec3 vec_4 = vec_3.subtract(vec_0);
+//                    Vec3 vec_5 = vec_4.normalize();
+//                    this.xPower += vec_5.x / 20;
+//                    this.yPower += vec_5.y / 20;
+//                    this.zPower += vec_5.z / 20;
+
+                    float f = 1.0f;
+                    Vec3 toward = this.getTargetPos().subtract(this.position()).normalize();
+                    this.setDeltaMovement(toward.scale(f));
                 }
             }
+            net.minecraft.world.entity.Entity entity = this.getOwner();
+            if (this.level.isClientSide || (entity == null || !entity.isRemoved()) && this.level.hasChunkAt(this.blockPosition())) {
+                HitResult hitresult = ProjectileUtil.getHitResult(this, this::canHitEntity);
+                if (hitresult.getType() != HitResult.Type.MISS && !net.minecraftforge.event.ForgeEventFactory.onProjectileImpact(this, hitresult)) {
+                    this.onHit(hitresult);
+                }
+
+                this.checkInsideBlocks();
+                Vec3 vec3 = this.getDeltaMovement();
+                double d0 = this.getX() + vec3.x;
+                double d1 = this.getY() + vec3.y;
+                double d2 = this.getZ() + vec3.z;
+//                ProjectileUtil.rotateTowardsMovement(this, 1.0F);
+                if (this.isInWater()) {
+                    for (int i = 0; i < 4; ++i) {
+                        this.level.addParticle(ParticleTypes.BUBBLE, d0 - vec3.x * 0.25D, d1 - vec3.y * 0.25D, d2 - vec3.z * 0.25D, vec3.x, vec3.y, vec3.z);
+                    }
+
+                }
+
+                this.setDeltaMovement(vec3.add(this.xPower, this.yPower, this.zPower));
+                this.setPos(d0, d1, d2);
+
+            } else {
+                this.discard();
+            }
+
+
         }
 
         public Vec3 getTargetPos() {
             return new Vec3(0, 0, 0);
-        }
-
-        @Override
-        protected ParticleOptions getTrailParticle() {
-            return this.age <= 10 ? ParticleTypes.ASH : ParticleTypes.DRIPPING_LAVA;
         }
 
         public int getLife() {
@@ -100,11 +138,6 @@ public class Missile {
         @Override
         public void registerControllers(AnimationData data) {
 
-        }
-
-        @Override
-        public boolean isOnFire() {
-            return false;
         }
 
         @Override
