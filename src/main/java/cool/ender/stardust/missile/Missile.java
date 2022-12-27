@@ -71,13 +71,15 @@ public class Missile {
                 } else if (this.age == 20) {
                     this.yPower = 0.1;
                 } else {
-                    Vec3 vec0 = this.getEyePosition();
-                    Vec3 vec1 = this.getTargetPos();
-                    Vec3 vec2 = this.getDeltaMovement();
-                    Vec3 vec3 = vec2.normalize().subtract(vec1.subtract(vec0).normalize());
-                    this.xPower = vec3.x / 10;
-                    this.yPower = vec3.y / 10;
-                    this.zPower = vec3.z / 10;
+                    Vec3 vec0 = this.getForward();
+                    Vec3 vec1 = this.getEyePosition();
+                    Vec3 vec2 = this.getTargetPos();
+                    Vec3 vec3 = vec2.subtract(vec1);
+                    Vec3 vec4 = vec3.subtract(vec0);
+                    Vec3 vec5 = vec4.normalize();
+                    this.xPower += vec5.x / 10;
+                    this.yPower += vec5.y / 10;
+                    this.zPower += vec5.z / 10;
                 }
             }
         }
