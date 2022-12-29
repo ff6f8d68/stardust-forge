@@ -16,6 +16,7 @@ import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib3.core.IAnimatable;
@@ -75,26 +76,29 @@ public class Missile {
                     this.discard();
                 }
                 //custom movement
-
                 if (this.age == 20) {
                     this.xPower = 0;
                     this.yPower = 0;
                     this.zPower = 0;
                 }
                 if (this.age > 20) {
-//                    Vec3 vec_0 = this.getForward();
-//                    Vec3 vec_1 = this.position();
-//                    Vec3 vec_2 = this.getTargetPos();
-//                    Vec3 vec_3 = vec_2.subtract(vec_1);
-//                    Vec3 vec_4 = vec_3.subtract(vec_0);
-//                    Vec3 vec_5 = vec_4.normalize();
-//                    this.xPower += vec_5.x / 20;
-//                    this.yPower += vec_5.y / 20;
-//                    this.zPower += vec_5.z / 20;
+                    // fetch normalized current and target speed vector
+                    Vec3 currentSpeedVec = this.getDeltaMovement().normalize();
+                    Vec3 targetSpeedVec = this.getTargetPos().subtract(this.position()).normalize();
+                    // calc rotation angle of 3 axis
+                    double xAngle = Math.acos(new Vec2((float) currentSpeedVec.y, (float) currentSpeedVec.z).dot(new Vec2((float) targetSpeedVec.y, (float) targetSpeedVec.z)));
+                    double yAngle = Math.acos(new Vec2((float) currentSpeedVec.x, (float) currentSpeedVec.z).dot(new Vec2((float) targetSpeedVec.x, (float) targetSpeedVec.z)));
+                    double zAngle = Math.acos(new Vec2((float) currentSpeedVec.y, (float) currentSpeedVec.x).dot(new Vec2((float) targetSpeedVec.y, (float) targetSpeedVec.x)));
+                    // scale the rotation angle by angular velocity and velocity of the missile
+                    double angle = Math.acos(currentSpeedVec.dot(targetSpeedVec) / currentSpeedVec.length() * targetSpeedVec.length());
+                    Vec3 rotationAngleVec = new Vec3(xAngle, yAngle, zAngle);
+                    if (angle > this.getAngularVelocity()) {
+                        rotationAngleVec = new Vec3(xAngle, yAngle, zAngle).scale(this.getAngularVelocity() / angle);
+                    }
+                    Vec3 setToVec = currentSpeedVec.xRot((float) rotationAngleVec.x).yRot((float) rotationAngleVec.y).zRot((float) rotationAngleVec.z).scale(this.getVelocity());
 
-                    float f = 1.0f;
-                    Vec3 toward = this.getTargetPos().subtract(this.position()).normalize();
-                    this.setDeltaMovement(toward.scale(f));
+                    // apply new speed vec
+                    this.setDeltaMovement(setToVec);
                 }
             }
             net.minecraft.world.entity.Entity entity = this.getOwner();
@@ -133,6 +137,14 @@ public class Missile {
 
         public int getLife() {
             return 100;
+        }
+
+        public double getVelocity() {
+            return 1.0;
+        }
+
+        public double getAngularVelocity() {
+            return Math.PI / 16;
         }
 
         @Override
