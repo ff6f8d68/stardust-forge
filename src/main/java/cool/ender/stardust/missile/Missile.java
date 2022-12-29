@@ -85,17 +85,13 @@ public class Missile {
                     // fetch normalized current and target speed vector
                     Vec3 currentSpeedVec = this.getDeltaMovement().normalize();
                     Vec3 targetSpeedVec = this.getTargetPos().subtract(this.position()).normalize();
-                    // calc rotation angle of 3 axis
-                    double xAngle = Math.acos(new Vec2((float) currentSpeedVec.y, (float) currentSpeedVec.z).dot(new Vec2((float) targetSpeedVec.y, (float) targetSpeedVec.z)));
-                    double yAngle = Math.acos(new Vec2((float) currentSpeedVec.x, (float) currentSpeedVec.z).dot(new Vec2((float) targetSpeedVec.x, (float) targetSpeedVec.z)));
-                    double zAngle = Math.acos(new Vec2((float) currentSpeedVec.y, (float) currentSpeedVec.x).dot(new Vec2((float) targetSpeedVec.y, (float) targetSpeedVec.x)));
                     // scale the rotation angle by angular velocity and velocity of the missile
                     double angle = Math.acos(currentSpeedVec.dot(targetSpeedVec) / currentSpeedVec.length() * targetSpeedVec.length());
-                    Vec3 rotationAngleVec = new Vec3(xAngle, yAngle, zAngle);
+                    Vec3 rotationAngleVec = targetSpeedVec.subtract(currentSpeedVec);
                     if (angle > this.getAngularVelocity()) {
-                        rotationAngleVec = new Vec3(xAngle, yAngle, zAngle).scale(this.getAngularVelocity() / angle);
+                        rotationAngleVec = rotationAngleVec.scale(this.getAngularVelocity() / angle);
                     }
-                    Vec3 setToVec = currentSpeedVec.xRot((float) rotationAngleVec.x).yRot((float) rotationAngleVec.y).zRot((float) rotationAngleVec.z).scale(this.getVelocity());
+                    Vec3 setToVec = currentSpeedVec.add(rotationAngleVec).scale(this.getVelocity());
 
                     // apply new speed vec
                     this.setDeltaMovement(setToVec);
@@ -113,7 +109,7 @@ public class Missile {
                 double d0 = this.getX() + vec3.x;
                 double d1 = this.getY() + vec3.y;
                 double d2 = this.getZ() + vec3.z;
-//                ProjectileUtil.rotateTowardsMovement(this, 1.0F);
+                ProjectileUtil.rotateTowardsMovement(this, 1.0F);
                 if (this.isInWater()) {
                     for (int i = 0; i < 4; ++i) {
                         this.level.addParticle(ParticleTypes.BUBBLE, d0 - vec3.x * 0.25D, d1 - vec3.y * 0.25D, d2 - vec3.z * 0.25D, vec3.x, vec3.y, vec3.z);
@@ -144,7 +140,7 @@ public class Missile {
         }
 
         public double getAngularVelocity() {
-            return Math.PI / 16;
+            return Math.PI / 32;
         }
 
         @Override
@@ -179,7 +175,9 @@ public class Missile {
         @Override
         public void setCustomAnimations(Entity animatable, int instanceId, AnimationEvent animationEvent) {
             super.setCustomAnimations(animatable, instanceId, animationEvent);
-            this.getAnimationProcessor().getBone("hell_bringer_nuclear").setRotationZ((float) Math.PI / 2);
+            this.getAnimationProcessor().getBone("hell_bringer_nuclear").setRotationZ(-this.getAnimationProcessor().getBone("hell_bringer_nuclear").getRotationZ());
+            this.getAnimationProcessor().getBone("hell_bringer_nuclear").setRotationY(-this.getAnimationProcessor().getBone("hell_bringer_nuclear").getRotationY());
+            this.getAnimationProcessor().getBone("hell_bringer_nuclear").setRotationX(-this.getAnimationProcessor().getBone("hell_bringer_nuclear").getRotationX());
         }
     }
 
