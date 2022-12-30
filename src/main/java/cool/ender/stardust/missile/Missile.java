@@ -2,21 +2,15 @@ package cool.ender.stardust.missile;
 
 import cool.ender.stardust.Stardust;
 import cool.ender.stardust.registry.EntityRegistry;
-import cool.ender.stardust.turret.AbstractTurret;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.projectile.AbstractHurtingProjectile;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.HitResult;
-import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib3.core.IAnimatable;
@@ -67,20 +61,32 @@ public class Missile {
         }
 
         @Override
+        protected void onHit(HitResult p_37260_) {
+            super.onHit(p_37260_);
+
+            if (!this.level.isClientSide) {
+                this.end();
+            }
+        }
+
+        @Override
         public void tick() {
 
             if (!this.level.isClientSide) {
                 // self-destruction
                 this.age++;
                 if (this.getLife() <= this.age) {
-                    this.discard();
+                    this.end();
                 }
                 //custom movement
+                //fire
                 if (this.age == 20) {
                     this.xPower = 0;
                     this.yPower = 0;
                     this.zPower = 0;
+                    this.setDeltaMovement(0, 1, 0);
                 }
+                //flight
                 if (this.age > 20) {
                     // fetch normalized current and target speed vector
                     Vec3 currentSpeedVec = this.getDeltaMovement().normalize();
@@ -110,6 +116,7 @@ public class Missile {
                 double d1 = this.getY() + vec3.y;
                 double d2 = this.getZ() + vec3.z;
                 ProjectileUtil.rotateTowardsMovement(this, 1.0F);
+
                 if (this.isInWater()) {
                     for (int i = 0; i < 4; ++i) {
                         this.level.addParticle(ParticleTypes.BUBBLE, d0 - vec3.x * 0.25D, d1 - vec3.y * 0.25D, d2 - vec3.z * 0.25D, vec3.x, vec3.y, vec3.z);
@@ -127,6 +134,15 @@ public class Missile {
 
         }
 
+        public void explode() {
+
+        }
+
+        public void end() {
+            this.explode();
+            this.discard();
+        }
+
         public Vec3 getTargetPos() {
             return new Vec3(0, 0, 0);
         }
@@ -136,13 +152,13 @@ public class Missile {
         }
 
         public double getVelocity() {
-            return 1.0;
+            return 3;
         }
 
         public double getAngularVelocity() {
             return Math.PI / 32;
         }
-
+        
         @Override
         public void registerControllers(AnimationData data) {
 
@@ -175,9 +191,8 @@ public class Missile {
         @Override
         public void setCustomAnimations(Entity animatable, int instanceId, AnimationEvent animationEvent) {
             super.setCustomAnimations(animatable, instanceId, animationEvent);
-            this.getAnimationProcessor().getBone("hell_bringer_nuclear").setRotationZ(-this.getAnimationProcessor().getBone("hell_bringer_nuclear").getRotationZ());
-            this.getAnimationProcessor().getBone("hell_bringer_nuclear").setRotationY(-this.getAnimationProcessor().getBone("hell_bringer_nuclear").getRotationY());
-            this.getAnimationProcessor().getBone("hell_bringer_nuclear").setRotationX(-this.getAnimationProcessor().getBone("hell_bringer_nuclear").getRotationX());
+            this.getAnimationProcessor().getBone("hell_bringer_nuclear").setRotationZ((float) Math.PI / 2);
+//            this.getAnimationProcessor().getBone("hell_bringer_nuclear").setRotationY((float) Math.PI / 2);
         }
     }
 
