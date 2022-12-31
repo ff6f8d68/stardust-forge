@@ -5,5 +5,16 @@
   "key.stardust.release": "离开炮塔",
   "message.stardust.to3rd": "切换到第三人称视角模式",
   "message.stardust.to1st": "切换到第一人称视角模式",
-  "gui.stardust.vertical_launcher": "垂直发射器控制面板"
+  "gui.stardust.vertical_launcher": "垂直发射器控制面板",
+  "gui.stardust.coordinates_input": "Coordinate Input",
+  "gui.stardust.coordinates_input.x": "坐标输入X",
+  "gui.stardust.coordinates_input.y": "坐标输入Y",
+  "gui.stardust.coordinates_input.z": "坐标输入Z",
+  "gui.stardust.vertical_launcher.title": "垂直发射系统控制面板",
+  "gui.stardust.vertical_launcher.control_mode": "控制模式",
+  "gui.stardust.vertical_launcher.control_mode.programmable": "可编程",
+  "gui.stardust.vertical_launcher.control_mode.video": "视频制导",
+  "gui.stardust.vertical_launcher.control_mode.coordinate": "坐标制导",
+  "gui.stardust.vertical_launcher.control_mode.laser": "激光制导",
+  "gui.stardust.vertical_launcher.control_mode.radar": "雷达制导"
 }

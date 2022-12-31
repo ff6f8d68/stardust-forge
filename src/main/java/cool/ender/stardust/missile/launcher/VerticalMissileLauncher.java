@@ -1,5 +1,6 @@
 package cool.ender.stardust.missile.launcher;
 
+import com.google.common.collect.ImmutableList;
 import cool.ender.stardust.Stardust;
 import cool.ender.stardust.client.gui.VerticalLauncherScreen;
 import cool.ender.stardust.missile.Missile;
@@ -57,6 +58,57 @@ import software.bernie.geckolib3.util.GeckoLibUtil;
 import java.util.*;
 
 public class VerticalMissileLauncher {
+    public enum ControlMode {
+        PROGRAMMABLE, VIDEO, COORDINATE, LASER, RADAR;
+
+        public TranslatableComponent getComponent() {
+            switch (this) {
+                case PROGRAMMABLE -> {
+                    return new TranslatableComponent("gui.stardust.vertical_launcher.control_mode.programmable");
+                }
+                case VIDEO -> {
+                    return new TranslatableComponent("gui.stardust.vertical_launcher.control_mode.video");
+                }
+                case COORDINATE -> {
+                    return new TranslatableComponent("gui.stardust.vertical_launcher.control_mode.coordinate");
+                }
+
+                case RADAR -> {
+                    return new TranslatableComponent("gui.stardust.vertical_launcher.control_mode.radar");
+                }
+                case LASER -> {
+                    return new TranslatableComponent("gui.stardust.vertical_launcher.control_mode.laser");
+                }
+            }
+            return null;
+        }
+
+        public ControlMode getNext() {
+            switch (this) {
+                case PROGRAMMABLE -> {
+                    return VIDEO;
+                }
+                case VIDEO -> {
+                    return COORDINATE;
+                }
+                case COORDINATE -> {
+                    return LASER;
+                }
+                case LASER -> {
+                    return RADAR;
+                }
+                case RADAR -> {
+                    return PROGRAMMABLE;
+                }
+
+            }
+            return null;
+        }
+
+        public static final ImmutableList<ControlMode> CONTROL_MODES = ImmutableList.of(PROGRAMMABLE, VIDEO, COORDINATE, LASER, RADAR);
+
+    }
+
     public static class Block extends BaseEntityBlock {
 
         enum ShapeType implements StringRepresentable {
@@ -71,7 +123,6 @@ public class VerticalMissileLauncher {
         public static final BooleanProperty ASSEMBLED = BooleanProperty.create("assembled");
         public static final BooleanProperty CENTERED = BooleanProperty.create("centered");
         public static final EnumProperty<ShapeType> SHAPE_TYPE = new EnumProperty<>("shape_type", ShapeType.class, List.of(ShapeType.values()));
-
         public static final BooleanProperty OPEN = BooleanProperty.create("open");
 
         public static final BooleanProperty IDLE = BooleanProperty.create("idle");
@@ -110,11 +161,17 @@ public class VerticalMissileLauncher {
             if (!blockState.getValue(ASSEMBLED)) {
                 return super.use(blockState, level, blockPos, player, hand, result);
             }
+            Tile tile = (Tile) level.getBlockEntity(blockPos);
             if (level.isClientSide) {
-                Minecraft.getInstance().setScreen(new VerticalLauncherScreen(new TranslatableComponent("gui.stardust.vertical_launcher")));
+                Stardust.LOGGER.debug(tile.centerPos);
+                if (tile != null) {
+                    Tile centerTile = tile.getCenterTile();
+                    if (centerTile != null) {
+                        Minecraft.getInstance().setScreen(new VerticalLauncherScreen(new TranslatableComponent("gui.stardust.vertical_launcher"), centerTile));
+                    }
+                }
                 return InteractionResult.SUCCESS;
             } else {
-                Tile tile = (Tile) level.getBlockEntity(blockPos);
                 if (tile != null) {
                     Tile centerTile = tile.getCenterTile();
                     if (centerTile != null) {
@@ -190,6 +247,8 @@ public class VerticalMissileLauncher {
 
         BlockPos centerPos;
         long coolDownTick = 0;
+
+        public ControlMode controlMode = ControlMode.COORDINATE;
         public AnimationFactory factory = GeckoLibUtil.createFactory(this);
 
         public Tile(BlockPos p_155229_, BlockState p_155230_) {
@@ -203,6 +262,7 @@ public class VerticalMissileLauncher {
                 tag.putInt("center_x", centerPos.getX());
                 tag.putInt("center_y", centerPos.getY());
                 tag.putInt("center_z", centerPos.getZ());
+                tag.putString("control_mode", this.controlMode.toString());
             }
             tag.putLong("cd", this.coolDownTick);
         }
@@ -212,6 +272,7 @@ public class VerticalMissileLauncher {
             super.load(tag);
             this.centerPos = new BlockPos(tag.getInt("center_x"), tag.getInt("center_y"), tag.getInt("center_z"));
             this.coolDownTick = tag.getLong("cd");
+            this.controlMode = ControlMode.valueOf(tag.getString("control_mode"));
         }
 
         void shoot() {
@@ -289,6 +350,12 @@ public class VerticalMissileLauncher {
                 this.level.setBlock(this.getBlockPos(), this.getBlockState().setValue(Block.OPEN, true), 2);
                 this.level.setBlock(this.getBlockPos(), this.getBlockState().setValue(Block.IDLE, false), 2);
             }
+        }
+
+        public void switchControlMode() {
+            this.controlMode = this.controlMode.getNext();
+            assert level != null;
+            level.setBlockAndUpdate(this.getBlockPos(), this.getBlockState());
         }
     }
 

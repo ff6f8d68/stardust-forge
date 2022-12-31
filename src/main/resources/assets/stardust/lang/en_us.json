@@ -5,5 +5,16 @@
   "key.stardust.release": "Leave turret",
   "message.stardust.to3rd": "Switch to 3rd camera mode",
   "message.stardust.to1st": "Switch to 1st camera mode",
-  "gui.stardust.vertical_launcher": "Vertical Launcher System Control"
+  "gui.stardust.vertical_launcher": "Vertical Launcher System Control",
+  "gui.stardust.coordinates_input": "Coordinate Input",
+  "gui.stardust.coordinates_input.x": "Coordinate Input X",
+  "gui.stardust.coordinates_input.y": "Coordinate Input Y",
+  "gui.stardust.coordinates_input.z": "Coordinate Input Z",
+  "gui.stardust.vertical_launcher.title": "Vertical Launcher System Control",
+  "gui.stardust.vertical_launcher.control_mode": "Control Mode",
+  "gui.stardust.vertical_launcher.control_mode.programmable": "Programmable",
+  "gui.stardust.vertical_launcher.control_mode.video": "Video",
+  "gui.stardust.vertical_launcher.control_mode.coordinate": "Coordinate",
+  "gui.stardust.vertical_launcher.control_mode.laser": "Laser",
+  "gui.stardust.vertical_launcher.control_mode.radar": "Radar"
 }
