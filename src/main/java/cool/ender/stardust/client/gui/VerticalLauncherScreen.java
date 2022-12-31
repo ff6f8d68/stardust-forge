@@ -10,7 +10,12 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
@@ -41,6 +46,15 @@ public class VerticalLauncherScreen extends Screen {
 
         this.controlMode = new Button(this.width / 2 - 100, 91, 200, 20, new TranslatableComponent("gui.stardust.vertical_launcher.control_mode").append(new TextComponent(":")), (button) -> {
             bindedTile.switchControlMode();
+            if (bindedTile.controlMode != VerticalMissileLauncher.ControlMode.COORDINATE) {
+                coordinateX.setEditable(false);
+                coordinateY.setEditable(false);
+                coordinateZ.setEditable(false);
+            } else {
+                coordinateX.setEditable(true);
+                coordinateY.setEditable(true);
+                coordinateZ.setEditable(true);
+            }
             button.setMessage(new TranslatableComponent("gui.stardust.vertical_launcher.control_mode").append(new TextComponent(":").append(Objects.requireNonNull(bindedTile.controlMode.getComponent()))));
         });
 

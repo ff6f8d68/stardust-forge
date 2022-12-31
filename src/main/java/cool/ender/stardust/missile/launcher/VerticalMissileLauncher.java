@@ -163,7 +163,6 @@ public class VerticalMissileLauncher {
             }
             Tile tile = (Tile) level.getBlockEntity(blockPos);
             if (level.isClientSide) {
-                Stardust.LOGGER.debug(tile.centerPos);
                 if (tile != null) {
                     Tile centerTile = tile.getCenterTile();
                     if (centerTile != null) {
@@ -172,12 +171,6 @@ public class VerticalMissileLauncher {
                 }
                 return InteractionResult.SUCCESS;
             } else {
-                if (tile != null) {
-                    Tile centerTile = tile.getCenterTile();
-                    if (centerTile != null) {
-                        centerTile.switchState();
-                    }
-                }
                 return InteractionResult.CONSUME;
             }
         }
@@ -245,10 +238,12 @@ public class VerticalMissileLauncher {
 
     public static class Tile extends BlockEntity implements IAnimatable {
 
-        BlockPos centerPos;
+        BlockPos centerPos = null;
         long coolDownTick = 0;
 
         public ControlMode controlMode = ControlMode.COORDINATE;
+
+        public boolean explodeOnDiscard = false;
         public AnimationFactory factory = GeckoLibUtil.createFactory(this);
 
         public Tile(BlockPos p_155229_, BlockState p_155230_) {
@@ -262,8 +257,9 @@ public class VerticalMissileLauncher {
                 tag.putInt("center_x", centerPos.getX());
                 tag.putInt("center_y", centerPos.getY());
                 tag.putInt("center_z", centerPos.getZ());
-                tag.putString("control_mode", this.controlMode.toString());
             }
+            tag.putBoolean("explode_on_discard", this.explodeOnDiscard);
+            tag.putString("control_mode", this.controlMode.toString());
             tag.putLong("cd", this.coolDownTick);
         }
 
@@ -273,10 +269,33 @@ public class VerticalMissileLauncher {
             this.centerPos = new BlockPos(tag.getInt("center_x"), tag.getInt("center_y"), tag.getInt("center_z"));
             this.coolDownTick = tag.getLong("cd");
             this.controlMode = ControlMode.valueOf(tag.getString("control_mode"));
+            this.explodeOnDiscard = tag.getBoolean("explode_on_discard");
+        }
+
+        @Override
+        public CompoundTag getUpdateTag() {
+            CompoundTag tag =  super.getUpdateTag();
+            if (this.centerPos != null) {
+                tag.putInt("center_x", centerPos.getX());
+                tag.putInt("center_y", centerPos.getY());
+                tag.putInt("center_z", centerPos.getZ());
+            }
+            tag.putBoolean("explode_on_discard", this.explodeOnDiscard);
+            tag.putString("control_mode", this.controlMode.toString());
+            return tag;
+        }
+
+        @Override
+        public void handleUpdateTag(CompoundTag tag) {
+            super.handleUpdateTag(tag);
+            this.centerPos = new BlockPos(tag.getInt("center_x"), tag.getInt("center_y"), tag.getInt("center_z"));
+            this.controlMode = ControlMode.valueOf(tag.getString("control_mode"));
+            this.explodeOnDiscard = tag.getBoolean("explode_on_discard");
         }
 
         void shoot() {
             if (this.centerPos != null && this.centerPos.equals(this.getBlockPos()) && this.getBlockState().getValue(Block.OPEN) && this.getCoolDown() <= 0) {
+                assert this.level != null;
                 this.level.addFreshEntity(new Missile.Entity(this.centerPos.getX() + 0.5, this.centerPos.getY() + 1, this.centerPos.getZ() + 0.5, level));
             }
         }
