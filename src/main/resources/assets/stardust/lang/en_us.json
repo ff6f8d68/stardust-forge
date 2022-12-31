@@ -1,6 +1,8 @@
 {
   "message.stardust.debug": "debug",
   "message.stardust.release": "You have left the turret",
+  "message.stardust.yes": "Yes",
+  "message.stardust.no": "No",
   "key.stardust": "Stardust",
   "key.stardust.release": "Leave turret",
   "message.stardust.to3rd": "Switch to 3rd camera mode",
@@ -13,8 +15,10 @@
   "gui.stardust.vertical_launcher.title": "Vertical Launcher System Control",
   "gui.stardust.vertical_launcher.control_mode": "Control Mode",
   "gui.stardust.vertical_launcher.control_mode.programmable": "Programmable",
-  "gui.stardust.vertical_launcher.control_mode.video": "Video",
+  "gui.stardust.vertical_launcher.control_mode.television": "Television",
   "gui.stardust.vertical_launcher.control_mode.coordinate": "Coordinate",
   "gui.stardust.vertical_launcher.control_mode.laser": "Laser",
-  "gui.stardust.vertical_launcher.control_mode.radar": "Radar"
+  "gui.stardust.vertical_launcher.control_mode.radar": "Radar",
+  "gui.stardust.vertical_launcher.explode_on_discard": "Explode On Discard",
+  "gui.stardust.vertical_launcher.enter_television": "Enter Television"
 }

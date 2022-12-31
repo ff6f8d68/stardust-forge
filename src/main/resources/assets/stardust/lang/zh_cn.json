@@ -1,6 +1,8 @@
 {
   "message.stardust.debug": "调试",
   "message.stardust.release": "你已经离开炮塔",
+  "message.stardust.yes": "是",
+  "message.stardust.no": "否",
   "key.stardust": "万星归尘",
   "key.stardust.release": "离开炮塔",
   "message.stardust.to3rd": "切换到第三人称视角模式",
@@ -13,8 +15,10 @@
   "gui.stardust.vertical_launcher.title": "垂直发射系统控制面板",
   "gui.stardust.vertical_launcher.control_mode": "控制模式",
   "gui.stardust.vertical_launcher.control_mode.programmable": "可编程",
-  "gui.stardust.vertical_launcher.control_mode.video": "视频制导",
+  "gui.stardust.vertical_launcher.control_mode.television": "电视制导",
   "gui.stardust.vertical_launcher.control_mode.coordinate": "坐标制导",
   "gui.stardust.vertical_launcher.control_mode.laser": "激光制导",
-  "gui.stardust.vertical_launcher.control_mode.radar": "雷达制导"
+  "gui.stardust.vertical_launcher.control_mode.radar": "雷达制导",
+  "gui.stardust.vertical_launcher.explode_on_discard": "自毁时强制引爆",
+  "gui.stardust.vertical_launcher.enter_television": "进入电视制导"
 }

@@ -25,6 +25,9 @@ public class VerticalLauncherScreen extends Screen {
     EditBox coordinateZ;
 
     Button controlMode;
+    Button enterTelevision;
+
+    Button explodeOption;
 
     VerticalMissileLauncher.Tile bindedTile;
 
@@ -44,8 +47,8 @@ public class VerticalLauncherScreen extends Screen {
         coordinateInputOffsetX += 70;
         this.coordinateZ = new EditBox(this.font, this.width / 2 - 100 + coordinateInputOffsetX, 66, 60, 20, new TranslatableComponent("gui.stardust.coordinates_input.z"));
 
-        this.controlMode = new Button(this.width / 2 - 100, 91, 200, 20, new TranslatableComponent("gui.stardust.vertical_launcher.control_mode").append(new TextComponent(":")), (button) -> {
-            bindedTile.switchControlMode();
+        this.controlMode = new Button(this.width / 2 - 100, 91, 200, 20, new TranslatableComponent("gui.stardust.vertical_launcher.control_mode").append(new TextComponent(":").append(Objects.requireNonNull(bindedTile.controlMode.getComponent()))), (button) -> {
+            this.bindedTile.switchControlMode();
             if (bindedTile.controlMode != VerticalMissileLauncher.ControlMode.COORDINATE) {
                 coordinateX.setEditable(false);
                 coordinateY.setEditable(false);
@@ -57,23 +60,40 @@ public class VerticalLauncherScreen extends Screen {
             }
             button.setMessage(new TranslatableComponent("gui.stardust.vertical_launcher.control_mode").append(new TextComponent(":").append(Objects.requireNonNull(bindedTile.controlMode.getComponent()))));
         });
-
+        this.explodeOption = new Button(this.width / 2 - 100, 116, 200, 20, new TranslatableComponent("gui.stardust.vertical_launcher.explode_on_discard").append(new TextComponent(":").append(bindedTile.explodeOnDiscard ? new TranslatableComponent("message.stardust.yes") : new TranslatableComponent("message.stardust.no"))), (button) -> {
+            this.bindedTile.switchExplodeOption();
+            button.setMessage(new TranslatableComponent("gui.stardust.vertical_launcher.explode_on_discard").append(new TextComponent(":").append(bindedTile.explodeOnDiscard ? new TranslatableComponent("message.stardust.yes") : new TranslatableComponent("message.stardust.no"))));
+        });
+        this.enterTelevision = new Button(this.width / 2 - 100, 66, 200, 20, new TranslatableComponent("gui.stardust.vertical_launcher.enter_television"), (button) -> {
+            this.onClose();
+            // TODO: television code
+        });
         this.addRenderableWidget(this.coordinateX);
         this.addRenderableWidget(this.coordinateY);
         this.addRenderableWidget(this.coordinateZ);
-        this.addRenderableWidget(controlMode);
+        this.addRenderableWidget(this.controlMode);
+        this.addRenderableWidget(this.explodeOption);
+        this.addRenderableWidget(this.enterTelevision);
     }
 
     @Override
     public void render(@NotNull PoseStack poseStack, int mouseX, int mouseY, float particleTick) {
+        if (this.bindedTile.controlMode == VerticalMissileLauncher.ControlMode.COORDINATE) {
+            drawString(poseStack, this.font, new TextComponent("X:"), this.width / 2 - 120 + 10, 71, 16777215);
+            drawString(poseStack, this.font, new TextComponent("Y:"), this.width / 2 - 50 + 10, 71, 16777215);
+            drawString(poseStack, this.font, new TextComponent("Z:"), this.width / 2 + 20 + 10, 71, 16777215);
 
-        drawString(poseStack, this.font, new TextComponent("X:"), this.width / 2 - 120 + 10, 71, 16777215);
-        drawString(poseStack, this.font, new TextComponent("Y:"), this.width / 2 - 50 + 10, 71, 16777215);
-        drawString(poseStack, this.font, new TextComponent("Z:"), this.width / 2 + 20 + 10, 71, 16777215);
-        this.coordinateX.render(poseStack, mouseX, mouseY, particleTick);
-        this.coordinateY.render(poseStack, mouseX, mouseY, particleTick);
-        this.coordinateZ.render(poseStack, mouseX, mouseY, particleTick);
+            this.coordinateX.render(poseStack, mouseX, mouseY, particleTick);
+            this.coordinateY.render(poseStack, mouseX, mouseY, particleTick);
+            this.coordinateZ.render(poseStack, mouseX, mouseY, particleTick);
+        }
+
+        if (this.bindedTile.controlMode == VerticalMissileLauncher.ControlMode.TELEVISION) {
+            this.enterTelevision.render(poseStack, mouseX, mouseY, particleTick);
+        }
+
         this.controlMode.render(poseStack, mouseX, mouseY, particleTick);
+        this.explodeOption.render(poseStack, mouseX, mouseY, particleTick);
 
 
     }

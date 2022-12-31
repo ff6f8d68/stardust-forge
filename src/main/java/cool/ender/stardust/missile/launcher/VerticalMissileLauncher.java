@@ -13,7 +13,6 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundSource;
@@ -59,15 +58,15 @@ import java.util.*;
 
 public class VerticalMissileLauncher {
     public enum ControlMode {
-        PROGRAMMABLE, VIDEO, COORDINATE, LASER, RADAR;
+        PROGRAMMABLE, TELEVISION, COORDINATE, LASER, RADAR;
 
         public TranslatableComponent getComponent() {
             switch (this) {
                 case PROGRAMMABLE -> {
                     return new TranslatableComponent("gui.stardust.vertical_launcher.control_mode.programmable");
                 }
-                case VIDEO -> {
-                    return new TranslatableComponent("gui.stardust.vertical_launcher.control_mode.video");
+                case TELEVISION -> {
+                    return new TranslatableComponent("gui.stardust.vertical_launcher.control_mode.television");
                 }
                 case COORDINATE -> {
                     return new TranslatableComponent("gui.stardust.vertical_launcher.control_mode.coordinate");
@@ -86,9 +85,9 @@ public class VerticalMissileLauncher {
         public ControlMode getNext() {
             switch (this) {
                 case PROGRAMMABLE -> {
-                    return VIDEO;
+                    return TELEVISION;
                 }
-                case VIDEO -> {
+                case TELEVISION -> {
                     return COORDINATE;
                 }
                 case COORDINATE -> {
@@ -105,7 +104,7 @@ public class VerticalMissileLauncher {
             return null;
         }
 
-        public static final ImmutableList<ControlMode> CONTROL_MODES = ImmutableList.of(PROGRAMMABLE, VIDEO, COORDINATE, LASER, RADAR);
+        public static final ImmutableList<ControlMode> CONTROL_MODES = ImmutableList.of(PROGRAMMABLE, TELEVISION, COORDINATE, LASER, RADAR);
 
     }
 
@@ -373,6 +372,12 @@ public class VerticalMissileLauncher {
 
         public void switchControlMode() {
             this.controlMode = this.controlMode.getNext();
+            assert level != null;
+            level.setBlockAndUpdate(this.getBlockPos(), this.getBlockState());
+        }
+
+        public void switchExplodeOption() {
+            this.explodeOnDiscard = !this.explodeOnDiscard;
             assert level != null;
             level.setBlockAndUpdate(this.getBlockPos(), this.getBlockState());
         }
