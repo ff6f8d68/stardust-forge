@@ -4,5 +4,6 @@
   "key.stardust": "Stardust",
   "key.stardust.release": "Leave turret",
   "message.stardust.to3rd": "Switch to 3rd camera mode",
-  "message.stardust.to1st": "Switch to 1st camera mode"
+  "message.stardust.to1st": "Switch to 1st camera mode",
+  "gui.stardust.vertical_launcher": "Vertical Launcher System Control"
 }

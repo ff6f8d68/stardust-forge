@@ -49,6 +49,10 @@ public class Missile {
             this(EntityRegistry.MISSILE_ENTITY.get(), level);
             this.moveTo(x0, y0, z0, 0, 0);
             this.reapplyPosition();
+        }
+
+        public void shoot() {
+            this.hasBeenShot = true;
             this.setDeltaMovement(0, 3, 0);
             this.xPower = 0;
             this.yPower = -0.16;
@@ -71,66 +75,65 @@ public class Missile {
 
         @Override
         public void tick() {
-
-            if (!this.level.isClientSide) {
-                // self-destruction
-                this.age++;
-                if (this.getLife() <= this.age) {
-                    this.end();
-                }
-                //custom movement
-                //fire
-                if (this.age == 20) {
-                    this.xPower = 0;
-                    this.yPower = 0;
-                    this.zPower = 0;
-                    this.setDeltaMovement(0, 1, 0);
-                }
-                //flight
-                if (this.age > 20) {
-                    // fetch normalized current and target speed vector
-                    Vec3 currentSpeedVec = this.getDeltaMovement().normalize();
-                    Vec3 targetSpeedVec = this.getTargetPos().subtract(this.position()).normalize();
-                    // scale the rotation angle by angular velocity and velocity of the missile
-                    double angle = Math.acos(currentSpeedVec.dot(targetSpeedVec) / currentSpeedVec.length() * targetSpeedVec.length());
-                    Vec3 rotationAngleVec = targetSpeedVec.subtract(currentSpeedVec);
-                    if (angle > this.getAngularVelocity()) {
-                        rotationAngleVec = rotationAngleVec.scale(this.getAngularVelocity() / angle);
+            if (this.hasBeenShot) {
+                if (!this.level.isClientSide) {
+                    // self-destruction
+                    this.age++;
+                    if (this.getLife() <= this.age) {
+                        this.end();
                     }
-                    Vec3 setToVec = currentSpeedVec.add(rotationAngleVec).scale(this.getVelocity());
+                    //custom movement
+                    //fire
+                    if (this.age == 20) {
+                        this.xPower = 0;
+                        this.yPower = 0;
+                        this.zPower = 0;
+                        this.setDeltaMovement(0, 1, 0);
+                    }
+                    //flight
+                    if (this.age > 20) {
+                        // fetch normalized current and target speed vector
+                        Vec3 currentSpeedVec = this.getDeltaMovement().normalize();
+                        Vec3 targetSpeedVec = this.getTargetPos().subtract(this.position()).normalize();
+                        // scale the rotation angle by angular velocity and velocity of the missile
+                        double angle = Math.acos(currentSpeedVec.dot(targetSpeedVec) / currentSpeedVec.length() * targetSpeedVec.length());
+                        Vec3 rotationAngleVec = targetSpeedVec.subtract(currentSpeedVec);
+                        if (angle > this.getAngularVelocity()) {
+                            rotationAngleVec = rotationAngleVec.scale(this.getAngularVelocity() / angle);
+                        }
+                        Vec3 setToVec = currentSpeedVec.add(rotationAngleVec).scale(this.getVelocity());
 
-                    // apply new speed vec
-                    this.setDeltaMovement(setToVec);
+                        // apply new speed vec
+                        this.setDeltaMovement(setToVec);
+                    }
                 }
-            }
-            net.minecraft.world.entity.Entity entity = this.getOwner();
-            if (this.level.isClientSide || (entity == null || !entity.isRemoved()) && this.level.hasChunkAt(this.blockPosition())) {
-                HitResult hitresult = ProjectileUtil.getHitResult(this, this::canHitEntity);
-                if (hitresult.getType() != HitResult.Type.MISS && !net.minecraftforge.event.ForgeEventFactory.onProjectileImpact(this, hitresult)) {
-                    this.onHit(hitresult);
-                }
-
-                this.checkInsideBlocks();
-                Vec3 vec3 = this.getDeltaMovement();
-                double d0 = this.getX() + vec3.x;
-                double d1 = this.getY() + vec3.y;
-                double d2 = this.getZ() + vec3.z;
-                ProjectileUtil.rotateTowardsMovement(this, 1.0F);
-
-                if (this.isInWater()) {
-                    for (int i = 0; i < 4; ++i) {
-                        this.level.addParticle(ParticleTypes.BUBBLE, d0 - vec3.x * 0.25D, d1 - vec3.y * 0.25D, d2 - vec3.z * 0.25D, vec3.x, vec3.y, vec3.z);
+                net.minecraft.world.entity.Entity entity = this.getOwner();
+                if (this.level.isClientSide || (entity == null || !entity.isRemoved()) && this.level.hasChunkAt(this.blockPosition())) {
+                    HitResult hitresult = ProjectileUtil.getHitResult(this, this::canHitEntity);
+                    if (hitresult.getType() != HitResult.Type.MISS && !net.minecraftforge.event.ForgeEventFactory.onProjectileImpact(this, hitresult)) {
+                        this.onHit(hitresult);
                     }
 
+                    this.checkInsideBlocks();
+                    Vec3 vec3 = this.getDeltaMovement();
+                    double d0 = this.getX() + vec3.x;
+                    double d1 = this.getY() + vec3.y;
+                    double d2 = this.getZ() + vec3.z;
+                    ProjectileUtil.rotateTowardsMovement(this, 1.0F);
+                    if (this.isInWater()) {
+                        for (int i = 0; i < 4; ++i) {
+                            this.level.addParticle(ParticleTypes.BUBBLE, d0 - vec3.x * 0.25D, d1 - vec3.y * 0.25D, d2 - vec3.z * 0.25D, vec3.x, vec3.y, vec3.z);
+                        }
+
+                    }
+
+                    this.setDeltaMovement(vec3.add(this.xPower, this.yPower, this.zPower));
+                    this.setPos(d0, d1, d2);
+
+                } else {
+                    this.discard();
                 }
-
-                this.setDeltaMovement(vec3.add(this.xPower, this.yPower, this.zPower));
-                this.setPos(d0, d1, d2);
-
-            } else {
-                this.discard();
             }
-
 
         }
 
@@ -158,7 +161,7 @@ public class Missile {
         public double getAngularVelocity() {
             return Math.PI / 32;
         }
-        
+
         @Override
         public void registerControllers(AnimationData data) {
 
@@ -191,8 +194,6 @@ public class Missile {
         @Override
         public void setCustomAnimations(Entity animatable, int instanceId, AnimationEvent animationEvent) {
             super.setCustomAnimations(animatable, instanceId, animationEvent);
-            this.getAnimationProcessor().getBone("hell_bringer_nuclear").setRotationZ((float) Math.PI / 2);
-//            this.getAnimationProcessor().getBone("hell_bringer_nuclear").setRotationY((float) Math.PI / 2);
         }
     }
 

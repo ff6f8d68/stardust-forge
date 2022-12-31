@@ -1,15 +1,19 @@
 package cool.ender.stardust.missile.launcher;
 
 import cool.ender.stardust.Stardust;
+import cool.ender.stardust.client.gui.VerticalLauncherScreen;
 import cool.ender.stardust.missile.Missile;
 import cool.ender.stardust.registry.BlockRegistry;
 import cool.ender.stardust.registry.SoundRegistry;
 import cool.ender.stardust.registry.TileRegistry;
 import cool.ender.stardust.turret.AbstractTurret;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.StringRepresentable;
@@ -107,6 +111,7 @@ public class VerticalMissileLauncher {
                 return super.use(blockState, level, blockPos, player, hand, result);
             }
             if (level.isClientSide) {
+                Minecraft.getInstance().setScreen(new VerticalLauncherScreen(new TranslatableComponent("gui.stardust.vertical_launcher")));
                 return InteractionResult.SUCCESS;
             } else {
                 Tile tile = (Tile) level.getBlockEntity(blockPos);
