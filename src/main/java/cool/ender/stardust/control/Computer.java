@@ -2,6 +2,7 @@ package cool.ender.stardust.control;
 
 import cool.ender.stardust.Stardust;
 import cool.ender.stardust.registry.TileRegistry;
+import cool.ender.stardust.tube.TubeConnectable;
 import cool.ender.stardust.turret.AbstractTurret;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.BlockPos;
@@ -47,7 +48,7 @@ import java.util.Objects;
 import java.util.Random;
 
 public class Computer {
-    public static class Block extends BaseEntityBlock {
+    public static class Block extends BaseEntityBlock implements TubeConnectable {
 
         public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
         public static final BooleanProperty OPEN = BooleanProperty.create("open");
@@ -131,6 +132,11 @@ public class Computer {
         @Override
         public BlockEntity newBlockEntity(@NotNull BlockPos blockPos, @NotNull BlockState blockState) {
             return new Computer.Tile(blockPos, blockState);
+        }
+
+        @Override
+        public boolean getConnectable(Direction direction) {
+            return true;
         }
     }
 

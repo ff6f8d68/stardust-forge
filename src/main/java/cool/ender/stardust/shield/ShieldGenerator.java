@@ -4,6 +4,7 @@ import cool.ender.stardust.Stardust;
 import cool.ender.stardust.registry.BlockRegistry;
 import cool.ender.stardust.registry.SoundRegistry;
 import cool.ender.stardust.registry.TileRegistry;
+import cool.ender.stardust.tube.TubeConnectable;
 import cool.ender.stardust.turret.AbstractTurret;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -31,7 +32,7 @@ import java.util.*;
 import static net.minecraft.world.level.block.DirectionalBlock.FACING;
 
 public class ShieldGenerator {
-    public static class Block extends BaseEntityBlock {
+    public static class Block extends BaseEntityBlock implements TubeConnectable {
         public static final BooleanProperty ACTIVATED = BooleanProperty.create("activated");
 
         public Block() {
@@ -108,6 +109,11 @@ public class ShieldGenerator {
                 }
 
             }
+        }
+
+        @Override
+        public boolean getConnectable(Direction direction) {
+            return true;
         }
     }
 

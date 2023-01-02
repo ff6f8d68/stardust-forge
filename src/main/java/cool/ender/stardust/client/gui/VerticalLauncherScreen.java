@@ -24,7 +24,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
-public class VerticalLauncherScreen extends Screen {
+public class VerticalLauncherScreen extends ComputerGuiScreen {
     EditBox coordinateX;
     EditBox coordinateY;
     EditBox coordinateZ;
@@ -37,8 +37,6 @@ public class VerticalLauncherScreen extends Screen {
 
     VerticalMissileLauncher.Tile bindedTile;
 
-    public static final ResourceLocation COMPUTER_GUI = new ResourceLocation("stardust", "textures/gui/computer_gui.png");
-
     public VerticalLauncherScreen(Component p_96550_, VerticalMissileLauncher.Tile tile) {
         super(p_96550_);
         this.bindedTile = tile;
@@ -46,8 +44,7 @@ public class VerticalLauncherScreen extends Screen {
 
     @Override
     protected void init() {
-        assert this.minecraft != null;
-        this.minecraft.keyboardHandler.setSendRepeatsToGui(true);
+        super.init();
         int topBaseHeight = (this.height - AllGuiTextures.COMPUTER_GUI.height) / 2;
         int coordinateInputOffsetX = 0;
         this.coordinateX = new EditBox(this.font, this.width / 2 - 100 + coordinateInputOffsetX, topBaseHeight + 40, 60, 20, new TranslatableComponent("gui.stardust.coordinates_input.x"));
@@ -87,7 +84,7 @@ public class VerticalLauncherScreen extends Screen {
 
     @Override
     public void render(@NotNull PoseStack poseStack, int mouseX, int mouseY, float particleTick) {
-        AllGuiTextures.COMPUTER_GUI.render(poseStack, (this.width - AllGuiTextures.COMPUTER_GUI.width) / 2, (this.height - AllGuiTextures.COMPUTER_GUI.height) / 2);
+        super.render(poseStack, mouseX, mouseY, particleTick);
         if (this.bindedTile.controlMode == VerticalMissileLauncher.ControlMode.COORDINATE) {
             drawString(poseStack, this.font, new TextComponent("X:"), this.width / 2 - 120 + 10, (this.height - AllGuiTextures.COMPUTER_GUI.height) / 2 + 45, 16777215);
             drawString(poseStack, this.font, new TextComponent("Y:"), this.width / 2 - 50 + 10, (this.height - AllGuiTextures.COMPUTER_GUI.height) / 2 + 45, 16777215);

@@ -7,6 +7,7 @@ import cool.ender.stardust.missile.Missile;
 import cool.ender.stardust.registry.BlockRegistry;
 import cool.ender.stardust.registry.SoundRegistry;
 import cool.ender.stardust.registry.TileRegistry;
+import cool.ender.stardust.tube.TubeConnectable;
 import cool.ender.stardust.turret.AbstractTurret;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -108,7 +109,12 @@ public class VerticalMissileLauncher {
 
     }
 
-    public static class Block extends BaseEntityBlock {
+    public static class Block extends BaseEntityBlock implements TubeConnectable {
+
+        @Override
+        public boolean getConnectable(Direction direction) {
+            return true;
+        }
 
         enum ShapeType implements StringRepresentable {
             NO_COLLISION, TOP, BOTTOM, FULL;
