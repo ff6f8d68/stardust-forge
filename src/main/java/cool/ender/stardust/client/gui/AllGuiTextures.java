@@ -10,7 +10,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 public enum AllGuiTextures {
 
-    COMPUTER_GUI("computer_gui", 283, 102);
+    COMPUTER_GUI("computer_gui", 232, 164);
 
     public static final int FONT_COLOR = 0x575F7A;
 

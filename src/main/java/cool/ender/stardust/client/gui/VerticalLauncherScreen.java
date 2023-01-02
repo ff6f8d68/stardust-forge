@@ -34,8 +34,6 @@ public class VerticalLauncherScreen extends Screen {
 
     Button explodeOption;
 
-    int imageHeight = 256;
-    int imageWidth = 256;
 
     VerticalMissileLauncher.Tile bindedTile;
 
@@ -50,7 +48,7 @@ public class VerticalLauncherScreen extends Screen {
     protected void init() {
         assert this.minecraft != null;
         this.minecraft.keyboardHandler.setSendRepeatsToGui(true);
-        int topBaseHeight = (this.height - this.imageHeight) / 2;
+        int topBaseHeight = (this.height - AllGuiTextures.COMPUTER_GUI.height) / 2;
         int coordinateInputOffsetX = 0;
         this.coordinateX = new EditBox(this.font, this.width / 2 - 100 + coordinateInputOffsetX, topBaseHeight + 40, 60, 20, new TranslatableComponent("gui.stardust.coordinates_input.x"));
         coordinateInputOffsetX += 70;
@@ -89,18 +87,11 @@ public class VerticalLauncherScreen extends Screen {
 
     @Override
     public void render(@NotNull PoseStack poseStack, int mouseX, int mouseY, float particleTick) {
-        this.renderBackground(poseStack);
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShaderTexture(0, COMPUTER_GUI);
-        int i = (this.width - this.imageWidth) / 2;
-        int j = (this.height - this.imageHeight) / 2;
-        this.blit(poseStack, i, j, 0, 0, this.imageWidth, this.imageHeight);
-
+        AllGuiTextures.COMPUTER_GUI.render(poseStack, (this.width - AllGuiTextures.COMPUTER_GUI.width) / 2, (this.height - AllGuiTextures.COMPUTER_GUI.height) / 2);
         if (this.bindedTile.controlMode == VerticalMissileLauncher.ControlMode.COORDINATE) {
-            drawString(poseStack, this.font, new TextComponent("X:"), this.width / 2 - 120 + 10, (this.height - this.imageHeight) / 2 + 45, 16777215);
-            drawString(poseStack, this.font, new TextComponent("Y:"), this.width / 2 - 50 + 10, (this.height - this.imageHeight) / 2 + 45, 16777215);
-            drawString(poseStack, this.font, new TextComponent("Z:"), this.width / 2 + 20 + 10, (this.height - this.imageHeight) / 2 + 45, 16777215);
+            drawString(poseStack, this.font, new TextComponent("X:"), this.width / 2 - 120 + 10, (this.height - AllGuiTextures.COMPUTER_GUI.height) / 2 + 45, 16777215);
+            drawString(poseStack, this.font, new TextComponent("Y:"), this.width / 2 - 50 + 10, (this.height - AllGuiTextures.COMPUTER_GUI.height) / 2 + 45, 16777215);
+            drawString(poseStack, this.font, new TextComponent("Z:"), this.width / 2 + 20 + 10, (this.height - AllGuiTextures.COMPUTER_GUI.height) / 2 + 45, 16777215);
 
             this.coordinateX.render(poseStack, mouseX, mouseY, particleTick);
             this.coordinateY.render(poseStack, mouseX, mouseY, particleTick);
