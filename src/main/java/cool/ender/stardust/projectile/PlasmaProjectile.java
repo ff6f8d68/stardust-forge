@@ -122,7 +122,7 @@ public class PlasmaProjectile extends AbstractProjectile {
         }
 
         @Override
-        public boolean shouldRender(AbstractProjectile.@NotNull Entity p_114491_, @NotNull Frustum p_114492_, double p_114493_, double p_114494_, double p_114495_) {
+        public boolean shouldRender(AbstractProjectile.Entity p_114491_, @NotNull Frustum p_114492_, double p_114493_, double p_114494_, double p_114495_) {
             return false;
         }
     }
