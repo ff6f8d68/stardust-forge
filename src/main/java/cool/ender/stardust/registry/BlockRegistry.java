@@ -5,6 +5,7 @@ import cool.ender.stardust.control.Computer;
 import cool.ender.stardust.missile.launcher.VerticalMissileLauncher;
 import cool.ender.stardust.shield.Shield;
 import cool.ender.stardust.shield.ShieldGenerator;
+import cool.ender.stardust.thruster.Thruster;
 import cool.ender.stardust.tube.Tube;
 import cool.ender.stardust.turret.AbstractTurret;
 import cool.ender.stardust.turret.medium.RailGun1Medium;
@@ -25,7 +26,7 @@ public class BlockRegistry {
 
     public static final RegistryObject<Tube.Block> TUBE_BLOCK = BLOCKS.register(new Tube().getRegisterName(), Tube.Block::new);
     public static final RegistryObject<VerticalMissileLauncher.Block> VERTICAL_MISSILE_LAUNCHER_BLOCK = BLOCKS.register("vertical_missile_launcher_block", VerticalMissileLauncher.Block::new);
-
+    public static final RegistryObject<Thruster.Block> THRUSTER_BLOCK = BLOCKS.register("thruster_block", Thruster.Block::new);
 
 
 }
