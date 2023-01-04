@@ -81,14 +81,14 @@ public class RailGun1Small extends AbstractTurret {
             if (level.isClientSide) {
                 return InteractionResult.SUCCESS;
             } else {
-                ((Tile) level.getBlockEntity(blockPos)).shoot();
+//                ((Tile) level.getBlockEntity(blockPos)).shoot();
                 return InteractionResult.CONSUME;
             }
         }
 
-        public int getAnalogOutputSignal(BlockState p_52689_, Level p_52690_, BlockPos p_52691_) {
-            return AbstractContainerMenu.getRedstoneSignalFromBlockEntity(p_52690_.getBlockEntity(p_52691_));
-        }
+//        public int getAnalogOutputSignal(BlockState p_52689_, Level p_52690_, BlockPos p_52691_) {
+//            return AbstractContainerMenu.getRedstoneSignalFromBlockEntity(p_52690_.getBlockEntity(p_52691_));
+//        }
 
         @Nullable
         @Override
