@@ -26,6 +26,7 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -110,7 +111,6 @@ public class RailGun1Small extends AbstractTurret {
         protected void createBlockStateDefinition(StateDefinition.Builder<net.minecraft.world.level.block.Block, BlockState> p_52719_) {
             p_52719_.add(CANNON_FACING);
         }
-
         @NotNull
         public RenderShape getRenderShape(@NotNull BlockState state) {
             return RenderShape.ENTITYBLOCK_ANIMATED;
