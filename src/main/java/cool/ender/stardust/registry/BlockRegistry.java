@@ -2,6 +2,7 @@ package cool.ender.stardust.registry;
 
 import cool.ender.stardust.Stardust;
 import cool.ender.stardust.control.Computer;
+import cool.ender.stardust.control.Wheel;
 import cool.ender.stardust.missile.launcher.VerticalMissileLauncher;
 import cool.ender.stardust.shield.Shield;
 import cool.ender.stardust.shield.ShieldGenerator;
@@ -26,6 +27,5 @@ public class BlockRegistry {
     public static final RegistryObject<Tube.Block> TUBE_BLOCK = BLOCKS.register(new Tube().getRegisterName(), Tube.Block::new);
     public static final RegistryObject<VerticalMissileLauncher.Block> VERTICAL_MISSILE_LAUNCHER_BLOCK = BLOCKS.register("vertical_missile_launcher_block", VerticalMissileLauncher.Block::new);
 
-
-
+    public static final RegistryObject<Wheel.Block> WHEEL_BLOCK = BLOCKS.register("wheel_block", Wheel.Block::new);
 }
