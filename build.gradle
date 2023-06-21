@@ -12,6 +12,10 @@ buildscript {
 plugins {
     id 'eclipse'
     id 'maven-publish'
+    id 'org.jetbrains.kotlin.jvm' version '1.8.0'
+    // OPTIONAL Kotlin Serialization plugin
+    id 'org.jetbrains.kotlin.plugin.serialization' version '1.8.0'
+
 }
 apply plugin: 'net.minecraftforge.gradle'
 
@@ -22,6 +26,7 @@ archivesBaseName = 'stardust'
 
 // Mojang ships Java 17 to end users in 1.18+, so your mod should target Java 17.
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+
 
 println "Java: ${System.getProperty 'java.version'}, JVM: ${System.getProperty 'java.vm.version'} (${System.getProperty 'java.vendor'}), Arch: ${System.getProperty 'os.arch'}"
 minecraft {
@@ -63,7 +68,8 @@ minecraft {
 
             // Comma-separated list of namespaces to load gametests from. Empty = all namespaces.
             property 'forge.enabledGameTestNamespaces', 'stardust'
-
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
             mods {
                 stardust {
                     source sourceSets.main
@@ -149,6 +155,12 @@ repositories {
     // }
     maven { url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/' }
     maven { url 'https://maven.valkyrienskies.org/' }
+    // Add KFF Maven repository
+
+    maven {
+        name = 'Kotlin for Forge'
+        url = 'https://thedarkcolour.github.io/KotlinForForge/'
+    }
 }
 
 dependencies {
@@ -157,7 +169,13 @@ dependencies {
     // The userdev artifact is a special name and will get all sorts of transformations applied to it.
     minecraft 'net.minecraftforge:forge:1.18.2-40.2.0'
     implementation fg.deobf('software.bernie.geckolib:geckolib-forge-1.18:3.0.56')
-//    implementation fg.deobf('org.valkyrienskies:valkyrienskies-118-forge:2.1.0-beta8+64b2c086e8') { transitive = false }
+
+    implementation fg.deobf('org.valkyrienskies:valkyrienskies-118-forge:2.1.0-beta8+387fda1589') { transitive = false }
+    implementation("org.valkyrienskies.core:api:1.1.0+854f172484") { transitive = false }
+
+
+    // Adds KFF as dependency and Kotlin libs
+    implementation 'thedarkcolour:kotlinforforge:3.9.1'
     // Real mod deobf dependency examples - these get remapped to your current mappings
     // compileOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}:api") // Adds JEI API as a compile dependency
     // runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}") // Adds the full JEI mod as a runtime dependency
