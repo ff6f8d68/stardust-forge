@@ -6,4 +6,11 @@ public abstract class SandboxEvent {
      * */
     public abstract String getCode();
 
+    /**
+     * the max executing time limit to execute this event's code.
+     * @return a time interval in unix timestamp format.
+     * */
+    public Long getMaxTime() {
+        return 49L;
+    }
 }

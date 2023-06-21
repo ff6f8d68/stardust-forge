@@ -7,13 +7,15 @@ import javax.script.ScriptException;
 public class ScriptSystem {
     public static ScriptEngineManager manager = new ScriptEngineManager();
     public ScriptEngine engine;
+    String language;
 
     public ScriptSystem() {
-        engine = manager.getEngineByName("javascript");
+        this("javascript");
     }
 
     public ScriptSystem(String language) {
-        engine = manager.getEngineByName(language);
+        this.engine = manager.getEngineByName(language);
+        this.language = language;
     }
 
     /**
@@ -34,7 +36,8 @@ public class ScriptSystem {
      * get a global var from sandbox
      * */
     public <T> T getValue(String varName, Class<T> type) {
-        return (T) this.engine.get(varName);
+        Object obj = this.engine.get(varName);
+        return (T) obj;
     }
 
 
