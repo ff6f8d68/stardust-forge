@@ -172,7 +172,7 @@ dependencies {
 
     implementation fg.deobf('org.valkyrienskies:valkyrienskies-118-forge:2.1.0-beta.13+3450e9e705') { transitive = false }
     implementation("org.valkyrienskies.core:api:1.1.0+c92814e9b7") { transitive = false }
-
+    implementation "org.joml:joml:1.10.5"
 
     // Adds KFF as dependency and Kotlin libs
     implementation 'thedarkcolour:kotlinforforge:3.9.1'

@@ -2,6 +2,7 @@ package cool.ender.stardust.control;
 
 import cool.ender.stardust.registry.TileRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -16,6 +17,11 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
+
+import org.valkyrienskies.core.api.ships.ServerShip;
+import org.valkyrienskies.core.impl.datastructures.DenseBlockPosSet;
+import org.valkyrienskies.core.impl.game.ships.PhysShipImpl;
+import org.valkyrienskies.mod.common.assembly.ShipAssemblyKt;
 
 public class Wheel {
     public static class Block extends BaseEntityBlock {
@@ -35,7 +41,9 @@ public class Wheel {
             if (level.isClientSide) {
                 return InteractionResult.SUCCESS;
             } else {
-
+                DenseBlockPosSet blocks = new DenseBlockPosSet();
+                blocks.add(blockPos.getX(), blockPos.getY(), blockPos.getZ());
+                ServerShip ship = ShipAssemblyKt.createNewShipWithBlocks(blockPos, blocks, (ServerLevel) level);
                 return InteractionResult.CONSUME;
             }
         }
@@ -50,7 +58,6 @@ public class Wheel {
             this(TileRegistry.WHEEL_TILE.get(), blockPos, blockState);
         }
     }
-
 
 
 }
