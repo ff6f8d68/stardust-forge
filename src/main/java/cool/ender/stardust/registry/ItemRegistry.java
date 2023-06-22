@@ -8,7 +8,6 @@ import net.minecraft.world.item.Item;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
-import software.bernie.example.GeckoLibMod;
 
 import static cool.ender.stardust.turret.AbstractTurret.REGISTRY_TYPE.ITEM;
 
@@ -20,5 +19,5 @@ public class ItemRegistry {
     public static final RegistryObject<BlockItem> TUBE = ITEMS.register(new Tube().getRegisterName(),() -> new BlockItem(BlockRegistry.TUBE_BLOCK.get(), new Item.Properties().tab(Stardust.stardustCreativeGroup)));
     public static final RegistryObject<BlockItem> VERTICAL_MISSILE_LAUNCHER = ITEMS.register("vertical_missile_launcher",() -> new BlockItem(BlockRegistry.VERTICAL_MISSILE_LAUNCHER_BLOCK.get(), new Item.Properties().tab(Stardust.stardustCreativeGroup)));
 
-    public static final RegistryObject<BlockItem> WHEEL = ITEMS.register("wheel", () -> new BlockItem(BlockRegistry.WHEEL_BLOCK.get(), new Item.Properties().tab(Stardust.stardustCreativeGroup)));
+    public static final RegistryObject<BlockItem> HELM = ITEMS.register("helm", () -> new BlockItem(BlockRegistry.HELM.get(), new Item.Properties().tab(Stardust.stardustCreativeGroup)));
 }

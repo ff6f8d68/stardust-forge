@@ -1,9 +1,8 @@
 package cool.ender.stardust.registry;
 
-import com.mojang.datafixers.types.Type;
 import cool.ender.stardust.Stardust;
 import cool.ender.stardust.control.Computer;
-import cool.ender.stardust.control.Wheel;
+import cool.ender.stardust.control.Helm;
 import cool.ender.stardust.missile.launcher.VerticalMissileLauncher;
 import cool.ender.stardust.shield.Shield;
 import cool.ender.stardust.shield.ShieldGenerator;
@@ -12,10 +11,6 @@ import cool.ender.stardust.tube.Tube;
 import cool.ender.stardust.turret.AbstractTurret;
 import cool.ender.stardust.turret.medium.RailGun1Medium;
 import cool.ender.stardust.turret.small.RailGun1Small;
-import net.minecraft.Util;
-import net.minecraft.core.Registry;
-import net.minecraft.util.datafix.fixes.References;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -32,6 +27,6 @@ public class TileRegistry {
     public static final RegistryObject<BlockEntityType<Tube.Tile>> TUBE_TILE = TILES.register("tube_tile", () -> BlockEntityType.Builder.of(Tube.Tile::new, BlockRegistry.TUBE_BLOCK.get()).build(null));
     public static final RegistryObject<BlockEntityType<VerticalMissileLauncher.Tile>> VERTICAL_MISSILE_LAUNCHER_TILE = TILES.register("vertical_missile_launcher_tile", () -> BlockEntityType.Builder.of(VerticalMissileLauncher.Tile::new, BlockRegistry.VERTICAL_MISSILE_LAUNCHER_BLOCK.get()).build(null));
     public static final RegistryObject<BlockEntityType<Thruster.Tile>> THRUSTER_TILE = TILES.register("thruster_tile", () -> BlockEntityType.Builder.of(Thruster.Tile::new, BlockRegistry.THRUSTER_BLOCK.get()).build(null));
-    public static final RegistryObject<BlockEntityType<Wheel.Tile>> WHEEL_TILE = TILES.register("wheel_tile", () -> BlockEntityType.Builder.of(Wheel.Tile::new, BlockRegistry.WHEEL_BLOCK.get()).build(null));
+    public static final RegistryObject<BlockEntityType<Helm.Tile>> HELM = TILES.register("helm", () -> BlockEntityType.Builder.of(Helm.Tile::new, BlockRegistry.HELM.get()).build(null));
 
 }

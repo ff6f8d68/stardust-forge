@@ -1,6 +1,8 @@
 package cool.ender.stardust.control;
 
 import cool.ender.stardust.registry.TileRegistry;
+import cool.ender.stardust.sandbox.Sandbox;
+import cool.ender.stardust.sandbox.SandboxManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
@@ -16,14 +18,11 @@ import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Objects;
-
 import org.valkyrienskies.core.api.ships.ServerShip;
 import org.valkyrienskies.core.impl.datastructures.DenseBlockPosSet;
-import org.valkyrienskies.core.impl.game.ships.PhysShipImpl;
 import org.valkyrienskies.mod.common.assembly.ShipAssemblyKt;
 
-public class Wheel {
+public class Helm {
     public static class Block extends BaseEntityBlock {
 
         public Block() {
@@ -44,18 +43,36 @@ public class Wheel {
                 DenseBlockPosSet blocks = new DenseBlockPosSet();
                 blocks.add(blockPos.getX(), blockPos.getY(), blockPos.getZ());
                 ServerShip ship = ShipAssemblyKt.createNewShipWithBlocks(blockPos, blocks, (ServerLevel) level);
+
+
                 return InteractionResult.CONSUME;
             }
         }
     }
 
     public static class Tile extends BlockEntity {
+
+        private Sandbox scriptSandbox = null;
         public Tile(BlockEntityType<?> tile, BlockPos blockPos, BlockState blockState) {
             super(tile, blockPos, blockState);
         }
 
         public Tile(BlockPos blockPos, BlockState blockState) {
-            this(TileRegistry.WHEEL_TILE.get(), blockPos, blockState);
+            this(TileRegistry.HELM.get(), blockPos, blockState);
+        }
+
+        /**
+         * turn to script, this will change gui.
+         * */
+        public void switchToScriptControl() {
+            this.scriptSandbox = new Sandbox();
+            SandboxManager.manager.add(this, this.scriptSandbox);
+        }
+
+        public void switchToCommonControl() {
+        }
+
+        public void openGui() {
         }
     }
 

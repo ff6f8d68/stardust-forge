@@ -10,6 +10,11 @@ public class Sandbox {
     public Executor executor = new Executor();
 
     public final ScriptSystem scriptSystem = new ScriptSystem();
+
+    public Sandbox() {
+        this.executor.start();
+    }
+
     /**
      * tick in sandbox, synced with minecraft event tick loop.
      * */
@@ -41,12 +46,12 @@ public class Sandbox {
         @Override
         public void run() {
             while (true) {
-                this.sandbox.tick();
                 try {
                     sleep(Long.MAX_VALUE);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
+                this.sandbox.tick();
             }
         }
     }
