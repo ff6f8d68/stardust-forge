@@ -5,6 +5,7 @@ import cool.ender.stardust.sandbox.Sandbox;
 import cool.ender.stardust.sandbox.SandboxManager;
 import cool.ender.stardust.tube.ITubeConnectable;
 import cool.ender.stardust.tube.TubeGraph;
+import cool.ender.stardust.util.ShipAssembler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -22,6 +23,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import org.valkyrienskies.core.api.ships.ServerShip;
+import org.valkyrienskies.core.api.world.ShipWorld;
 import org.valkyrienskies.core.impl.datastructures.DenseBlockPosSet;
 import org.valkyrienskies.mod.common.assembly.ShipAssemblyKt;
 
@@ -35,7 +37,7 @@ public class Helm {
         @Nullable
         @Override
         public BlockEntity newBlockEntity(@NotNull BlockPos blockPos, @NotNull BlockState blockState) {
-            return null;
+            return new Tile(blockPos, blockState);
         }
 
         @Override
@@ -43,9 +45,10 @@ public class Helm {
             if (level.isClientSide) {
                 return InteractionResult.SUCCESS;
             } else {
-                DenseBlockPosSet blocks = new DenseBlockPosSet();
-                blocks.add(blockPos.getX(), blockPos.getY(), blockPos.getZ());
-                ServerShip ship = ShipAssemblyKt.createNewShipWithBlocks(blockPos, blocks, (ServerLevel) level);
+                Tile tile = (Tile) level.getBlockEntity(blockPos);
+                if (tile != null) {
+                    tile.assemble();
+                }
                 return InteractionResult.CONSUME;
             }
         }
@@ -62,6 +65,8 @@ public class Helm {
 
         private TubeGraph connected;
 
+        private ServerShip ship = null;
+
         public Tile(BlockEntityType<?> tile, BlockPos blockPos, BlockState blockState) {
             super(tile, blockPos, blockState);
         }
@@ -72,7 +77,7 @@ public class Helm {
 
         /**
          * turn to script, this will change gui.
-         * */
+         */
         public void switchToScriptControl() {
             if (this.scriptSandbox == null) {
                 this.scriptSandbox = new Sandbox();
@@ -89,10 +94,11 @@ public class Helm {
         public void openGui() {
         }
 
-        private void bfs() {
-        }
-
         public void assemble() {
+            if (ship == null) {
+                ShipAssembler assembler = new ShipAssembler(this.getBlockPos(), this.getLevel());
+                this.ship = assembler.assemble();
+            }
         }
     }
 

@@ -4,6 +4,7 @@ import cool.ender.stardust.Stardust;
 import cool.ender.stardust.projectile.PlasmaProjectile;
 import cool.ender.stardust.registry.SoundRegistry;
 import cool.ender.stardust.registry.TileRegistry;
+import cool.ender.stardust.sandbox.IWeapon;
 import cool.ender.stardust.turret.AbstractTurret;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.BlockPos;
@@ -47,6 +48,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
+
+import java.util.List;
 
 import static cool.ender.stardust.turret.small.RailGun1Small.Block.CANNON_FACING;
 
@@ -127,7 +130,7 @@ public class RailGun1Small extends AbstractTurret {
         }
     }
 
-    public static class Tile extends AbstractTurret.Tile {
+    public static class Tile extends AbstractTurret.Tile implements IWeapon {
         protected Tile(BlockEntityType<?> entityType, BlockPos p_155229_, BlockState p_155230_) {
             super(entityType, p_155229_, p_155230_);
         }
@@ -149,6 +152,51 @@ public class RailGun1Small extends AbstractTurret {
             assert this.level != null;
             this.level.addFreshEntity(projectile);
             level.playSound(null, centerVec.x, centerVec.y, centerVec.z, SoundRegistry.X_WING_SHOOTING_SOUND.get(), SoundSource.BLOCKS, 1.0f, 1.0f);
+        }
+
+        @Override
+        public String getTypeName() {
+            return this.getClass().toString();
+        }
+
+        @Override
+        public String getUniqueId() {
+            return null;
+        }
+
+        @Override
+        public List<String> getCommandList() {
+            return List.of("fire");
+        }
+
+        @Override
+        public boolean sendCommand(String command, String data) {
+            return false;
+        }
+
+        @Override
+        public boolean isConnected() {
+            return false;
+        }
+
+        @Override
+        public boolean isDisabled() {
+            return false;
+        }
+
+        @Override
+        public boolean charge() {
+            return false;
+        }
+
+        @Override
+        public boolean fire() {
+            return false;
+        }
+
+        @Override
+        public int getAmmo() {
+            return 0;
         }
     }
 
