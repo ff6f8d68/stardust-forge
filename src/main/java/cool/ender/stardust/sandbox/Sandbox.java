@@ -26,6 +26,20 @@ public class Sandbox {
                 throw new RuntimeException(e);
             }
         }
+        updateConnectivity();
+        pollCommands();
+    }
+
+    /**
+     * update block connectivity data
+     * */
+    private void updateConnectivity() {
+    }
+
+    /**
+     * Read commands from script sandbox and execute them using api provided by tiles.
+     * */
+    private void pollCommands() {
     }
 
     public void addEvent(SandboxEvent event) {

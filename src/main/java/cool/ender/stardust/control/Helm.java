@@ -3,7 +3,10 @@ package cool.ender.stardust.control;
 import cool.ender.stardust.registry.TileRegistry;
 import cool.ender.stardust.sandbox.Sandbox;
 import cool.ender.stardust.sandbox.SandboxManager;
+import cool.ender.stardust.tube.ITubeConnectable;
+import cool.ender.stardust.tube.TubeGraph;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -23,7 +26,7 @@ import org.valkyrienskies.core.impl.datastructures.DenseBlockPosSet;
 import org.valkyrienskies.mod.common.assembly.ShipAssemblyKt;
 
 public class Helm {
-    public static class Block extends BaseEntityBlock {
+    public static class Block extends BaseEntityBlock implements ITubeConnectable {
 
         public Block() {
             super(Properties.of(Material.STONE));
@@ -43,16 +46,22 @@ public class Helm {
                 DenseBlockPosSet blocks = new DenseBlockPosSet();
                 blocks.add(blockPos.getX(), blockPos.getY(), blockPos.getZ());
                 ServerShip ship = ShipAssemblyKt.createNewShipWithBlocks(blockPos, blocks, (ServerLevel) level);
-
-
                 return InteractionResult.CONSUME;
             }
+        }
+
+        @Override
+        public boolean isConnectable(Direction direction) {
+            return true;
         }
     }
 
     public static class Tile extends BlockEntity {
 
         private Sandbox scriptSandbox = null;
+
+        private TubeGraph connected;
+
         public Tile(BlockEntityType<?> tile, BlockPos blockPos, BlockState blockState) {
             super(tile, blockPos, blockState);
         }
@@ -65,14 +74,25 @@ public class Helm {
          * turn to script, this will change gui.
          * */
         public void switchToScriptControl() {
-            this.scriptSandbox = new Sandbox();
-            SandboxManager.manager.add(this, this.scriptSandbox);
+            if (this.scriptSandbox == null) {
+                this.scriptSandbox = new Sandbox();
+                SandboxManager.manager.add(this, this.scriptSandbox);
+            } else {
+                SandboxManager.manager.unmute(this.scriptSandbox);
+            }
         }
 
         public void switchToCommonControl() {
+            SandboxManager.manager.mute(this.scriptSandbox);
         }
 
         public void openGui() {
+        }
+
+        private void bfs() {
+        }
+
+        public void assemble() {
         }
     }
 

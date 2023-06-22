@@ -2,15 +2,11 @@ package cool.ender.stardust.thruster;
 
 import cool.ender.stardust.Stardust;
 import cool.ender.stardust.registry.TileRegistry;
-import cool.ender.stardust.tube.Tube;
-import cool.ender.stardust.tube.TubeConnectable;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.BaseEntityBlock;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
 import net.minecraftforge.api.distmarker.Dist;

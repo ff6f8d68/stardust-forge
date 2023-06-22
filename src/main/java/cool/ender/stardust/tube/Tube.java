@@ -29,7 +29,7 @@ import software.bernie.geckolib3.util.GeckoLibUtil;
 
 public class Tube {
 
-    public static class Block extends BaseEntityBlock implements TubeConnectable{
+    public static class Block extends BaseEntityBlock implements ITubeConnectable {
 
         public static final BooleanProperty NORTH = BooleanProperty.create("north");
         public static final BooleanProperty EAST = BooleanProperty.create("east");
@@ -49,7 +49,7 @@ public class Tube {
         }
 
         public void neighborChanged ( BlockState blockState, Level level, BlockPos selfBlock, net.minecraft.world.level.block.Block block, BlockPos neighborBlock, boolean p_62514_ ) {
-            if (level.getBlockState(neighborBlock).getBlock() instanceof TubeConnectable) {
+            if (level.getBlockState(neighborBlock).getBlock() instanceof ITubeConnectable) {
                 if (selfBlock.north().equals(neighborBlock)) {
                     level.setBlock(selfBlock, blockState.setValue(NORTH, true), 2);
                 }
@@ -95,22 +95,22 @@ public class Tube {
         public BlockState getStateForPlacement ( BlockPlaceContext context ) {
             BlockPos placePos = context.getClickedPos();
             BlockState defaultState = this.defaultBlockState();
-            if (context.getLevel().getBlockState(placePos.north()).getBlock() instanceof TubeConnectable) {
+            if (context.getLevel().getBlockState(placePos.north()).getBlock() instanceof ITubeConnectable) {
                 defaultState = defaultState.setValue(NORTH, true);
             }
-            if (context.getLevel().getBlockState(placePos.south()).getBlock() instanceof TubeConnectable) {
+            if (context.getLevel().getBlockState(placePos.south()).getBlock() instanceof ITubeConnectable) {
                 defaultState = defaultState.setValue(SOUTH, true);
             }
-            if (context.getLevel().getBlockState(placePos.east()).getBlock() instanceof TubeConnectable) {
+            if (context.getLevel().getBlockState(placePos.east()).getBlock() instanceof ITubeConnectable) {
                 defaultState = defaultState.setValue(EAST, true);
             }
-            if (context.getLevel().getBlockState(placePos.west()).getBlock() instanceof TubeConnectable) {
+            if (context.getLevel().getBlockState(placePos.west()).getBlock() instanceof ITubeConnectable) {
                 defaultState = defaultState.setValue(WEST, true);
             }
-            if (context.getLevel().getBlockState(placePos.above()).getBlock() instanceof TubeConnectable) {
+            if (context.getLevel().getBlockState(placePos.above()).getBlock() instanceof ITubeConnectable) {
                 defaultState = defaultState.setValue(UP, true);
             }
-            if (context.getLevel().getBlockState(placePos.below()).getBlock() instanceof TubeConnectable) {
+            if (context.getLevel().getBlockState(placePos.below()).getBlock() instanceof ITubeConnectable) {
                 defaultState = defaultState.setValue(DOWN, true);
             }
 
@@ -123,7 +123,7 @@ public class Tube {
         }
 
         @Override
-        public boolean getConnectable(Direction direction) {
+        public boolean isConnectable(Direction direction) {
             return true;
         }
     }

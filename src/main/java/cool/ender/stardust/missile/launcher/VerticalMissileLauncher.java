@@ -7,7 +7,7 @@ import cool.ender.stardust.missile.Missile;
 import cool.ender.stardust.registry.BlockRegistry;
 import cool.ender.stardust.registry.SoundRegistry;
 import cool.ender.stardust.registry.TileRegistry;
-import cool.ender.stardust.tube.TubeConnectable;
+import cool.ender.stardust.tube.ITubeConnectable;
 import cool.ender.stardust.turret.AbstractTurret;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -109,10 +109,10 @@ public class VerticalMissileLauncher {
 
     }
 
-    public static class Block extends BaseEntityBlock implements TubeConnectable {
+    public static class Block extends BaseEntityBlock implements ITubeConnectable {
 
         @Override
-        public boolean getConnectable(Direction direction) {
+        public boolean isConnectable(Direction direction) {
             return true;
         }
 

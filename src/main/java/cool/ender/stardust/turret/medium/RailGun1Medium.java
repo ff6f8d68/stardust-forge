@@ -2,7 +2,7 @@ package cool.ender.stardust.turret.medium;
 
 import cool.ender.stardust.Stardust;
 import cool.ender.stardust.registry.TileRegistry;
-import cool.ender.stardust.tube.TubeConnectable;
+import cool.ender.stardust.tube.ITubeConnectable;
 import cool.ender.stardust.turret.AbstractTurret;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.BlockPos;
@@ -21,7 +21,7 @@ import software.bernie.geckolib3.core.manager.AnimationData;
 public class RailGun1Medium extends AbstractTurret {
 
 
-    public static class Block extends AbstractTurret.Block implements TubeConnectable {
+    public static class Block extends AbstractTurret.Block implements ITubeConnectable {
 
         public Block() {
             super(Properties.of(Material.STONE).noOcclusion());
@@ -32,7 +32,7 @@ public class RailGun1Medium extends AbstractTurret {
         }
 
         @Override
-        public boolean getConnectable(Direction direction) {
+        public boolean isConnectable(Direction direction) {
             return true;
         }
     }
