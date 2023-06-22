@@ -15,6 +15,8 @@ import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Objects;
+
 public class Wheel {
     public static class Block extends BaseEntityBlock {
 
@@ -29,9 +31,13 @@ public class Wheel {
         }
 
         @Override
-        public InteractionResult use(BlockState p_60503_, Level p_60504_, BlockPos p_60505_, Player p_60506_, InteractionHand p_60507_, BlockHitResult p_60508_) {
-            //TODO: put ship assemble code here
-            return super.use(p_60503_, p_60504_, p_60505_, p_60506_, p_60507_, p_60508_);
+        public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand hand, BlockHitResult blockHitResult) {
+            if (level.isClientSide) {
+                return InteractionResult.SUCCESS;
+            } else {
+
+                return InteractionResult.CONSUME;
+            }
         }
     }
 

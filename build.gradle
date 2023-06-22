@@ -170,8 +170,8 @@ dependencies {
     minecraft 'net.minecraftforge:forge:1.18.2-40.2.0'
     implementation fg.deobf('software.bernie.geckolib:geckolib-forge-1.18:3.0.56')
 
-    implementation fg.deobf('org.valkyrienskies:valkyrienskies-118-forge:2.1.0-beta8+387fda1589') { transitive = false }
-    implementation("org.valkyrienskies.core:api:1.1.0+854f172484") { transitive = false }
+    implementation fg.deobf('org.valkyrienskies:valkyrienskies-118-forge:2.1.0-beta.13+3450e9e705') { transitive = false }
+    implementation("org.valkyrienskies.core:api:1.1.0+c92814e9b7") { transitive = false }
 
 
     // Adds KFF as dependency and Kotlin libs
