@@ -22,13 +22,18 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.NotNull;
@@ -50,15 +55,30 @@ import software.bernie.geckolib3.util.GeckoLibUtil;
 
 public class Helm {
     public static class Block extends BaseEntityBlock implements ITubeConnectable {
-
+        public static final DirectionProperty HORIZONTAL_FACING = HorizontalDirectionalBlock.FACING;
         public Block() {
             super(Properties.of(Material.STONE).noOcclusion());
+            registerDefaultState(this.stateDefinition.any().setValue(HORIZONTAL_FACING, Direction.NORTH));
         }
 
         @Nullable
         @Override
         public BlockEntity newBlockEntity(@NotNull BlockPos blockPos, @NotNull BlockState blockState) {
             return new Tile(blockPos, blockState);
+        }
+
+        @Override
+        protected void createBlockStateDefinition(StateDefinition.Builder<net.minecraft.world.level.block.Block, BlockState> p_48725_) {
+            p_48725_.add(HORIZONTAL_FACING);
+        }
+        @Override
+        public BlockState rotate(BlockState p_48722_, Rotation p_48723_) {
+            return p_48722_.setValue(HORIZONTAL_FACING, p_48723_.rotate(p_48722_.getValue(HORIZONTAL_FACING)));
+        }
+
+        @Override
+        public BlockState getStateForPlacement(BlockPlaceContext p_48689_) {
+            return this.defaultBlockState().setValue(HORIZONTAL_FACING, p_48689_.getHorizontalDirection().getOpposite());
         }
 
         @Override
@@ -84,6 +104,8 @@ public class Helm {
         public @NotNull RenderShape getRenderShape(@NotNull BlockState p_49232_) {
             return RenderShape.ENTITYBLOCK_ANIMATED;
         }
+
+
     }
 
     public static class Tile extends BlockEntity implements IAnimatable {

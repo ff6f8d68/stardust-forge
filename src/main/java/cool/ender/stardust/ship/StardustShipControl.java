@@ -1,5 +1,6 @@
 package cool.ender.stardust.ship;
 
+import cool.ender.stardust.ship.algorithm.ControlAlgorithm;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3d;
@@ -13,6 +14,10 @@ import org.valkyrienskies.core.impl.api.Ticked;
 public class StardustShipControl implements ShipForcesInducer, ServerShipUser, Ticked {
 
     ServerShip ship;
+
+    ControlAlgorithm algorithm;
+
+
 
     public StardustShipControl(ServerShip ship) {
         this.ship = ship;
@@ -31,11 +36,9 @@ public class StardustShipControl implements ShipForcesInducer, ServerShipUser, T
 
     @Override
     public void applyForces(@NotNull PhysShip physShip) {
-        physShip.applyInvariantForce(new Vector3d(0, 10000, 0));
     }
 
     @Override
     public void tick() {
-
     }
 }
