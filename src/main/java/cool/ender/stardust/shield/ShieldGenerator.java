@@ -112,7 +112,7 @@ public class ShieldGenerator {
         }
 
         @Override
-        public boolean isConnectable(Direction direction) {
+        public boolean isConnectable(Direction direction, BlockState self) {
             return true;
         }
     }

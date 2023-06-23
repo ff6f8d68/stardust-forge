@@ -9,6 +9,7 @@ import cool.ender.stardust.registry.TileRegistry;
 import cool.ender.stardust.sandbox.Sandbox;
 import cool.ender.stardust.sandbox.SandboxManager;
 import cool.ender.stardust.ship.StardustShipControl;
+import cool.ender.stardust.thruster.Thruster;
 import cool.ender.stardust.tube.ITubeConnectable;
 import cool.ender.stardust.tube.TubeGraph;
 import cool.ender.stardust.util.ShipAssembler;
@@ -53,6 +54,8 @@ import software.bernie.geckolib3.model.AnimatedGeoModel;
 import software.bernie.geckolib3.renderers.geo.GeoBlockRenderer;
 import software.bernie.geckolib3.util.GeckoLibUtil;
 
+import java.util.HashSet;
+
 public class Helm {
     public static class Block extends BaseEntityBlock implements ITubeConnectable {
         public static final DirectionProperty HORIZONTAL_FACING = HorizontalDirectionalBlock.FACING;
@@ -96,7 +99,7 @@ public class Helm {
         }
 
         @Override
-        public boolean isConnectable(Direction direction) {
+        public boolean isConnectable(Direction direction, BlockState self) {
             return true;
         }
 
@@ -150,7 +153,13 @@ public class Helm {
                 ShipAssembler assembler = new ShipAssembler(this.getBlockPos(), this.getLevel());
                 this.ship = assembler.assemble();
                 if (ship != null) {
-                    this.ship.saveAttachment(StardustShipControl.class, new StardustShipControl(ship));
+                    StardustShipControl control = StardustShipControl.getOrCreate(ship);
+                    HashSet<BlockEntity> devices = assembler.getDevices();
+                    for (BlockEntity entity : devices) {
+                        if (entity instanceof Thruster.Tile) {
+                            control.thrusters.add((Thruster.Tile) entity);
+                        }
+                    }
                 }
             }
         }
@@ -185,19 +194,6 @@ public class Helm {
             return RenderType.entityTranslucent(getTextureLocation(animatable));
         }
 
-//        @Override
-//        public void render(BlockEntity tile, float partialTicks, PoseStack poseStack, MultiBufferSource bufferSource,
-//                           int packedLight, int packedOverlay) {
-//            VertexConsumer vertexConsumer = VertexMultiConsumer.create(bufferSource.getBuffer(RenderType.glintDirect()), bufferSource.getBuffer(RenderType.solid()));
-//
-//            BlockState blockState = BlockRegistry.HELM.get().defaultBlockState();
-//            Level level = tile.getLevel();
-//
-//            BakedModel model = this.blockRenderer.getBlockModel(blockState);
-//            this.modelRenderer.tesselateBlock(level, model, blockState, blockEntity.getBlockPos(), poseStack, vertexConsumer, false, level.getRandom(), 0, packedOverlay);
-//
-//            super.render((Tile) tile, partialTick, poseStack, bufferSource, 15, packedOverlay);
-//        }
     }
 
     public static class Model extends AnimatedGeoModel<Tile> {

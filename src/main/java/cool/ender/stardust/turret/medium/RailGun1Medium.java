@@ -32,7 +32,7 @@ public class RailGun1Medium extends AbstractTurret {
         }
 
         @Override
-        public boolean isConnectable(Direction direction) {
+        public boolean isConnectable(Direction direction, BlockState self) {
             return true;
         }
     }

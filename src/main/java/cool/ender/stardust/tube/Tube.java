@@ -13,6 +13,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.material.Material;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
@@ -95,23 +96,18 @@ public class Tube {
         public BlockState getStateForPlacement ( BlockPlaceContext context ) {
             BlockPos placePos = context.getClickedPos();
             BlockState defaultState = this.defaultBlockState();
-            if (context.getLevel().getBlockState(placePos.north()).getBlock() instanceof ITubeConnectable) {
-                defaultState = defaultState.setValue(NORTH, true);
-            }
-            if (context.getLevel().getBlockState(placePos.south()).getBlock() instanceof ITubeConnectable) {
-                defaultState = defaultState.setValue(SOUTH, true);
-            }
-            if (context.getLevel().getBlockState(placePos.east()).getBlock() instanceof ITubeConnectable) {
-                defaultState = defaultState.setValue(EAST, true);
-            }
-            if (context.getLevel().getBlockState(placePos.west()).getBlock() instanceof ITubeConnectable) {
-                defaultState = defaultState.setValue(WEST, true);
-            }
-            if (context.getLevel().getBlockState(placePos.above()).getBlock() instanceof ITubeConnectable) {
-                defaultState = defaultState.setValue(UP, true);
-            }
-            if (context.getLevel().getBlockState(placePos.below()).getBlock() instanceof ITubeConnectable) {
-                defaultState = defaultState.setValue(DOWN, true);
+
+            for (Direction direction : Direction.values()) {
+                BlockPos neighbor = placePos.relative(direction);
+                BlockState blockState = context.getLevel().getBlockState(neighbor);
+                net.minecraft.world.level.block.Block block = blockState.getBlock();
+                if (block instanceof ITubeConnectable && ((ITubeConnectable) block).isConnectable(direction.getOpposite(), blockState)) {
+                    for (Property property : defaultState.getProperties()) {
+                        if (property.getName().equals(direction.getName())) {
+                            defaultState = defaultState.setValue(property, true);
+                        }
+                    }
+                }
             }
 
             return defaultState;
@@ -123,7 +119,7 @@ public class Tube {
         }
 
         @Override
-        public boolean isConnectable(Direction direction) {
+        public boolean isConnectable(Direction direction, BlockState self) {
             return true;
         }
     }

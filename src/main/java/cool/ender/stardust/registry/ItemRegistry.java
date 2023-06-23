@@ -18,6 +18,6 @@ public class ItemRegistry {
     public static final RegistryObject<BlockItem> SHIELD_GENERATOR_ITEM = ITEMS.register("shield_generator_item", () -> new BlockItem(BlockRegistry.SHIELD_GENERATOR_BLOCK.get(), new Item.Properties().tab(Stardust.stardustCreativeGroup)));
     public static final RegistryObject<BlockItem> TUBE = ITEMS.register(new Tube().getRegisterName(),() -> new BlockItem(BlockRegistry.TUBE_BLOCK.get(), new Item.Properties().tab(Stardust.stardustCreativeGroup)));
     public static final RegistryObject<BlockItem> VERTICAL_MISSILE_LAUNCHER = ITEMS.register("vertical_missile_launcher",() -> new BlockItem(BlockRegistry.VERTICAL_MISSILE_LAUNCHER_BLOCK.get(), new Item.Properties().tab(Stardust.stardustCreativeGroup)));
-
+    public static final RegistryObject<BlockItem> THRUSTER = ITEMS.register("thruster", () -> new BlockItem(BlockRegistry.THRUSTER_BLOCK.get(), new Item.Properties().tab(Stardust.stardustCreativeGroup)));
     public static final RegistryObject<BlockItem> HELM = ITEMS.register("helm", () -> new BlockItem(BlockRegistry.HELM.get(), new Item.Properties().tab(Stardust.stardustCreativeGroup)));
 }

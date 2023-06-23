@@ -112,7 +112,7 @@ public class VerticalMissileLauncher {
     public static class Block extends BaseEntityBlock implements ITubeConnectable {
 
         @Override
-        public boolean isConnectable(Direction direction) {
+        public boolean isConnectable(Direction direction, BlockState self) {
             return true;
         }
 
