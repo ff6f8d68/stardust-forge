@@ -54,7 +54,7 @@ public class Computer {
         public static final BooleanProperty OPEN = BooleanProperty.create("open");
 
         public Block() {
-            super(Properties.of(Material.GLASS));
+            super(Properties.of(Material.GLASS).noOcclusion());
             this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.SOUTH).setValue(OPEN, false));
         }
 
@@ -94,16 +94,6 @@ public class Computer {
         @Override
         public BlockState getStateForPlacement(BlockPlaceContext p_48689_) {
             return this.defaultBlockState().setValue(FACING, p_48689_.getHorizontalDirection().getOpposite());
-        }
-
-        @Override
-        public int getLightBlock(BlockState p_60585_, BlockGetter p_60586_, BlockPos p_60587_) {
-            return 15;
-        }
-
-        @Override
-        public int getLightEmission(BlockState state, BlockGetter level, BlockPos pos) {
-            return 15;
         }
 
         @Override

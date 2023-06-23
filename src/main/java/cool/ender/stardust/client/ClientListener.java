@@ -1,6 +1,8 @@
 package cool.ender.stardust.client;
 
 import cool.ender.stardust.Stardust;
+import cool.ender.stardust.control.Computer;
+import cool.ender.stardust.control.Helm;
 import cool.ender.stardust.particle.ExplosionFrameParticle;
 import cool.ender.stardust.particle.ExplosionParticle;
 import cool.ender.stardust.particle.LightingParticle;
@@ -9,6 +11,7 @@ import cool.ender.stardust.projectile.PlasmaProjectile;
 import cool.ender.stardust.registry.BlockRegistry;
 import cool.ender.stardust.registry.EntityRegistry;
 import cool.ender.stardust.registry.ParticleRegistry;
+import cool.ender.stardust.registry.TileRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
@@ -41,5 +44,6 @@ public class ClientListener {
     public static void registerRenderers(final EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(EntityRegistry.PLASMA_PROJECTILE_ENTITY.get(), PlasmaProjectile.Renderer::new);
         event.registerEntityRenderer(EntityRegistry.MISSILE_ENTITY.get(), Missile.Renderer::new);
+        event.registerBlockEntityRenderer(TileRegistry.HELM.get(), Helm.Renderer::new);
     }
 }

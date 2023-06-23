@@ -36,7 +36,7 @@ public class ShieldGenerator {
         public static final BooleanProperty ACTIVATED = BooleanProperty.create("activated");
 
         public Block() {
-            super(Properties.of(Material.METAL).emissiveRendering((BlockState blockState, BlockGetter p_61037_, BlockPos p_61038_) -> blockState.getValue(ACTIVATED)));
+            super(Properties.of(Material.METAL).noOcclusion().emissiveRendering((BlockState blockState, BlockGetter p_61037_, BlockPos p_61038_) -> blockState.getValue(ACTIVATED)));
             this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.SOUTH).setValue(ACTIVATED, false));
         }
 
