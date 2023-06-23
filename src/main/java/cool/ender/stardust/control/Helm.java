@@ -3,6 +3,7 @@ package cool.ender.stardust.control;
 import cool.ender.stardust.registry.TileRegistry;
 import cool.ender.stardust.sandbox.Sandbox;
 import cool.ender.stardust.sandbox.SandboxManager;
+import cool.ender.stardust.ship.StardustShipControl;
 import cool.ender.stardust.tube.ITubeConnectable;
 import cool.ender.stardust.tube.TubeGraph;
 import cool.ender.stardust.util.ShipAssembler;
@@ -49,6 +50,7 @@ public class Helm {
                 if (tile != null) {
                     tile.assemble();
                 }
+
                 return InteractionResult.CONSUME;
             }
         }
@@ -98,6 +100,7 @@ public class Helm {
             if (ship == null) {
                 ShipAssembler assembler = new ShipAssembler(this.getBlockPos(), this.getLevel());
                 this.ship = assembler.assemble();
+                this.ship.saveAttachment(StardustShipControl.class, new StardustShipControl(ship));
             }
         }
     }
