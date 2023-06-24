@@ -58,10 +58,10 @@ public class Thruster {
         protected void createBlockStateDefinition(StateDefinition.Builder<net.minecraft.world.level.block.Block, BlockState> p_48725_) {
             p_48725_.add(FACING);
         }
-        @Override
-        public BlockState rotate(BlockState p_48722_, Rotation p_48723_) {
-            return p_48722_.setValue(FACING, p_48723_.rotate(p_48722_.getValue(FACING)));
-        }
+//        @Override
+//        public BlockState rotate(BlockState p_48722_, Rotation p_48723_) {
+//            return p_48722_.setValue(FACING, p_48723_.rotate(p_48722_.getValue(FACING)));
+//        }
 
         @Override
         public BlockState getStateForPlacement(BlockPlaceContext p_48689_) {
@@ -88,7 +88,7 @@ public class Thruster {
         }
 
         public Vector3d getMaxForceVec() {
-            Vec3i vec = this.getBlockState().getValue(Block.FACING).getNormal().multiply(100000);
+            Vec3i vec = this.getBlockState().getValue(Block.FACING).getOpposite().getNormal().multiply(100000);
             return new Vector3d(vec.getX(), vec.getY(), vec.getZ());
         }
     }

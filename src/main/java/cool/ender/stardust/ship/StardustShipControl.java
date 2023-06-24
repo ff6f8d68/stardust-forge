@@ -55,13 +55,14 @@ public class StardustShipControl implements ShipForcesInducer, ServerShipUser, T
 
     @Override
     public void applyForces(@NotNull PhysShip physShip) {
+        PhysShipImpl impl = (PhysShipImpl) physShip;
         if (!this.algorithm.isPhysShipExists()) {
-            algorithm.setPhysShip((PhysShipImpl) physShip);
+            algorithm.setPhysShip(impl);
         }
         if (algorithm != null) {
             for (Thruster.Tile tile : thrusters) {
                 BlockPos blockPos = tile.getBlockPos();
-                physShip.applyInvariantForceToPos(tile.getMaxForceVec().mul(algorithm.getThrustingPercentage(tile)), new Vector3d(blockPos.getX(), blockPos.getY(), blockPos.getZ()));
+                physShip.applyInvariantForceToPos(impl.getTransform().getShipToWorldRotation().transform(tile.getMaxForceVec().mul(algorithm.getThrustingPercentage(tile))), new Vector3d(blockPos.getX() + 0.5, blockPos.getY() + 0.5, blockPos.getZ() + 0.5).sub(impl.getPoseVel().getPos()));
             }
         }
     }
