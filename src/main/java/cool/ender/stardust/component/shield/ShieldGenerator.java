@@ -1,11 +1,11 @@
-package cool.ender.stardust.shield;
+package cool.ender.stardust.component.shield;
 
 import cool.ender.stardust.Stardust;
 import cool.ender.stardust.registry.BlockRegistry;
 import cool.ender.stardust.registry.SoundRegistry;
 import cool.ender.stardust.registry.TileRegistry;
-import cool.ender.stardust.tube.ITubeConnectable;
-import cool.ender.stardust.turret.AbstractTurret;
+import cool.ender.stardust.component.tube.ITubeConnectable;
+import cool.ender.stardust.component.turret.AbstractTurret;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;

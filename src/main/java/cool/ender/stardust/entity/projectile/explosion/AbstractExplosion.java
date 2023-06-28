@@ -1,4 +1,4 @@
-package cool.ender.stardust.projectile.explosion;
+package cool.ender.stardust.entity.projectile.explosion;
 
 
 import net.minecraft.core.BlockPos;

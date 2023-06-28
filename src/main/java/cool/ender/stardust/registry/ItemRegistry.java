@@ -1,15 +1,15 @@
 package cool.ender.stardust.registry;
 
 import cool.ender.stardust.Stardust;
-import cool.ender.stardust.tube.Tube;
-import cool.ender.stardust.turret.small.RailGun1Small;
+import cool.ender.stardust.component.tube.Tube;
+import cool.ender.stardust.component.turret.small.RailGun1Small;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
-import static cool.ender.stardust.turret.AbstractTurret.REGISTRY_TYPE.ITEM;
+import static cool.ender.stardust.component.turret.AbstractTurret.REGISTRY_TYPE.ITEM;
 
 public class ItemRegistry {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, Stardust.MOD_ID);

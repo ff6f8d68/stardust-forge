@@ -1,4 +1,4 @@
-package cool.ender.stardust.missile;
+package cool.ender.stardust.component.missile;
 
 import cool.ender.stardust.Stardust;
 import cool.ender.stardust.registry.EntityRegistry;

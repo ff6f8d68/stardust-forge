@@ -2,19 +2,18 @@ package cool.ender.stardust.ship;
 
 import cool.ender.stardust.ship.algorithm.ControlAlgorithm;
 import cool.ender.stardust.ship.algorithm.TestAlgorithm;
-import cool.ender.stardust.thruster.Thruster;
+import cool.ender.stardust.component.thruster.Thruster;
 import net.minecraft.core.BlockPos;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3d;
-import org.joml.Vector3dc;
 import org.valkyrienskies.core.api.ships.PhysShip;
 import org.valkyrienskies.core.api.ships.ServerShip;
 import org.valkyrienskies.core.impl.api.ServerShipUser;
 import org.valkyrienskies.core.impl.api.ShipForcesInducer;
 import org.valkyrienskies.core.impl.api.Ticked;
 import org.valkyrienskies.core.impl.game.ships.PhysShipImpl;
-import java.util.HashMap;
+
 import java.util.HashSet;
 
 public class StardustShipControl implements ShipForcesInducer, ServerShipUser, Ticked {

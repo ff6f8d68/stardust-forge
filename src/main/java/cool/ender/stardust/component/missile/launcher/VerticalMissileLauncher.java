@@ -1,14 +1,14 @@
-package cool.ender.stardust.missile.launcher;
+package cool.ender.stardust.component.missile.launcher;
 
 import com.google.common.collect.ImmutableList;
 import cool.ender.stardust.Stardust;
 import cool.ender.stardust.client.gui.VerticalLauncherScreen;
-import cool.ender.stardust.missile.Missile;
+import cool.ender.stardust.component.missile.Missile;
 import cool.ender.stardust.registry.BlockRegistry;
 import cool.ender.stardust.registry.SoundRegistry;
 import cool.ender.stardust.registry.TileRegistry;
-import cool.ender.stardust.tube.ITubeConnectable;
-import cool.ender.stardust.turret.AbstractTurret;
+import cool.ender.stardust.component.tube.ITubeConnectable;
+import cool.ender.stardust.component.turret.AbstractTurret;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.BlockPos;

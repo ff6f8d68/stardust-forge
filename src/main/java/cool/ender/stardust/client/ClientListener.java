@@ -1,13 +1,12 @@
 package cool.ender.stardust.client;
 
 import cool.ender.stardust.Stardust;
-import cool.ender.stardust.control.Computer;
 import cool.ender.stardust.control.Helm;
 import cool.ender.stardust.particle.ExplosionFrameParticle;
 import cool.ender.stardust.particle.ExplosionParticle;
 import cool.ender.stardust.particle.LightingParticle;
-import cool.ender.stardust.missile.Missile;
-import cool.ender.stardust.projectile.PlasmaProjectile;
+import cool.ender.stardust.component.missile.Missile;
+import cool.ender.stardust.entity.projectile.PlasmaProjectile;
 import cool.ender.stardust.registry.BlockRegistry;
 import cool.ender.stardust.registry.EntityRegistry;
 import cool.ender.stardust.registry.ParticleRegistry;

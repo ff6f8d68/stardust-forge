@@ -1,6 +1,6 @@
 package cool.ender.stardust.ship.algorithm;
 
-import cool.ender.stardust.thruster.Thruster;
+import cool.ender.stardust.component.thruster.Thruster;
 import org.valkyrienskies.core.impl.game.ships.PhysShipImpl;
 
 import java.util.List;

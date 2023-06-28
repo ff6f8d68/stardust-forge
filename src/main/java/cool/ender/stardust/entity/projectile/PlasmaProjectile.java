@@ -1,12 +1,10 @@
-package cool.ender.stardust.projectile;
+package cool.ender.stardust.entity.projectile;
 
 import cool.ender.stardust.Stardust;
-import cool.ender.stardust.projectile.explosion.AbstractExplosion;
-import cool.ender.stardust.projectile.explosion.PlasmaExplosion;
 import cool.ender.stardust.registry.EntityRegistry;
 import cool.ender.stardust.registry.ParticleRegistry;
 import cool.ender.stardust.registry.SoundRegistry;
-import cool.ender.stardust.turret.AbstractTurret;
+import cool.ender.stardust.component.turret.AbstractTurret;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.core.particles.ParticleOptions;
@@ -19,7 +17,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;

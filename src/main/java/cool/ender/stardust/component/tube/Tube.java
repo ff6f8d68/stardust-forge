@@ -1,4 +1,4 @@
-package cool.ender.stardust.tube;
+package cool.ender.stardust.component.tube;
 
 import cool.ender.stardust.Stardust;
 import cool.ender.stardust.registry.TileRegistry;

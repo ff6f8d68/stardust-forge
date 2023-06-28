@@ -1,4 +1,4 @@
-package cool.ender.stardust.turret;
+package cool.ender.stardust.component.turret;
 
 import cool.ender.stardust.Stardust;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;

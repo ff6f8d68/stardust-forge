@@ -1,20 +1,17 @@
-package cool.ender.stardust.shield;
+package cool.ender.stardust.component.shield;
 
-import cool.ender.stardust.Stardust;
 import cool.ender.stardust.registry.BlockRegistry;
 import cool.ender.stardust.registry.TileRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
@@ -23,11 +20,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.plaf.PanelUI;
-
 import java.util.Random;
-
-import static net.minecraft.world.level.block.DirectionalBlock.FACING;
 
 public class Shield {
     public static class Block extends GlassBlock implements EntityBlock {

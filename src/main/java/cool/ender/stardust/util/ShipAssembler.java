@@ -1,7 +1,7 @@
 package cool.ender.stardust.util;
 
-import cool.ender.stardust.tube.ITubeConnectable;
-import cool.ender.stardust.tube.Tube;
+import cool.ender.stardust.component.tube.ITubeConnectable;
+import cool.ender.stardust.component.tube.Tube;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;

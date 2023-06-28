@@ -1,9 +1,9 @@
-package cool.ender.stardust.turret.medium;
+package cool.ender.stardust.component.turret.medium;
 
 import cool.ender.stardust.Stardust;
+import cool.ender.stardust.component.tube.ITubeConnectable;
+import cool.ender.stardust.component.turret.AbstractTurret;
 import cool.ender.stardust.registry.TileRegistry;
-import cool.ender.stardust.tube.ITubeConnectable;
-import cool.ender.stardust.turret.AbstractTurret;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
