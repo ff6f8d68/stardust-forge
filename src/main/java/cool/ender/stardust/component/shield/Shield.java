@@ -42,7 +42,7 @@ public class Shield {
 
         public void activeShield(Level level, BlockPos blockPos){
             if (!level.isClientSide) {
-                level.setBlock(blockPos, BlockRegistry.SHIELD_BLOCK.get().defaultBlockState().setValue(Shield.Block.POWERED, true), 2);
+                level.setBlock(blockPos, BlockRegistry.SHIELD.get().defaultBlockState().setValue(Shield.Block.POWERED, true), 2);
                 level.scheduleTick(blockPos, this, 1);
             }
         }
@@ -90,7 +90,7 @@ public class Shield {
         public void tick(BlockState blockState, ServerLevel level, BlockPos blockPos, Random random) {
             int r = random.nextInt(1, 20);
             if (r == 5) {
-                level.setBlock(blockPos, BlockRegistry.SHIELD_BLOCK.get().defaultBlockState(), 2);
+                level.setBlock(blockPos, BlockRegistry.SHIELD.get().defaultBlockState(), 2);
             } else {
                 level.scheduleTick(blockPos, this, 1);
             }
@@ -107,7 +107,7 @@ public class Shield {
         public float getExplosionResistance(BlockState state, BlockGetter level, BlockPos pos, Explosion explosion) {
             Level serverLevel = explosion.level;
             if (!serverLevel.isClientSide) {
-                serverLevel.setBlock(pos, BlockRegistry.SHIELD_BLOCK.get().defaultBlockState().setValue(Shield.Block.POWERED, true), 2);
+                serverLevel.setBlock(pos, BlockRegistry.SHIELD.get().defaultBlockState().setValue(Shield.Block.POWERED, true), 2);
                 serverLevel.scheduleTick(pos, this, 1);
             }
             return super.getExplosionResistance(state, level, pos, explosion);
@@ -118,7 +118,7 @@ public class Shield {
         BlockPos owner;
 
         public Tile(BlockPos p_155229_, BlockState p_155230_) {
-            super(TileRegistry.SHIELD_TILE.get(), p_155229_, p_155230_);
+            super(TileRegistry.SHIELD.get(), p_155229_, p_155230_);
         }
 
         public void setOwner(BlockPos owner) {

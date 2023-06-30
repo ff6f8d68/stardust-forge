@@ -36,7 +36,7 @@ public class ClientListener {
     }
     @SubscribeEvent
     public static void onRenderTypeSetup(FMLClientSetupEvent event) {
-        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.SHIELD_BLOCK.get(), RenderType.translucent());
+        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.SHIELD.get(), RenderType.translucent());
     }
 
     @SubscribeEvent

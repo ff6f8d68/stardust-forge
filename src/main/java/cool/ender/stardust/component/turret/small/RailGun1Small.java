@@ -125,7 +125,7 @@ public class RailGun1Small extends AbstractTurret {
         }
 
         public Tile(BlockPos p_155229_, BlockState p_155230_) {
-            this(TileRegistry.RAIL_GUN_1_SMALL_TILE.get(), p_155229_, p_155230_);
+            this(TileRegistry.RAIL_GUN_1_SMALL.get(), p_155229_, p_155230_);
         }
 
         @Override
@@ -253,7 +253,7 @@ public class RailGun1Small extends AbstractTurret {
         public abstract static class ClientListener extends AbstractTurret.Listener.ClientListener {
             @SubscribeEvent
             public static void registerRenderers(final EntityRenderersEvent.RegisterRenderers event) {
-                event.registerBlockEntityRenderer(TileRegistry.RAIL_GUN_1_SMALL_TILE.get(), RailGun1Small.Renderer::new);
+                event.registerBlockEntityRenderer(TileRegistry.RAIL_GUN_1_SMALL.get(), RailGun1Small.Renderer::new);
             }
         }
     }

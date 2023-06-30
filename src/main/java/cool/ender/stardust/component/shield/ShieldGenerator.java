@@ -122,7 +122,7 @@ public class ShieldGenerator {
         ShieldGeneratingTask generatingTask;
 
         public Tile(BlockPos p_155229_, BlockState p_155230_) {
-            super(TileRegistry.SHIELD_GENERATOR_TILE.get(), p_155229_, p_155230_);
+            super(TileRegistry.SHIELD_GENERATOR.get(), p_155229_, p_155230_);
         }
 
         public void scan() {
@@ -179,7 +179,7 @@ public class ShieldGenerator {
         void popShieldBlocks() {
             while (!generationQueue.isEmpty()) {
                 BlockPos shieldPos = generationQueue.poll();
-                this.level.setBlock(shieldPos, BlockRegistry.SHIELD_BLOCK.get().defaultBlockState(), 2);
+                this.level.setBlock(shieldPos, BlockRegistry.SHIELD.get().defaultBlockState(), 2);
                 Shield.Tile tile = (Shield.Tile) this.level.getBlockEntity(shieldPos);
                 assert tile != null;
                 tile.setOwner(generatorPos);
@@ -203,7 +203,7 @@ public class ShieldGenerator {
                     BlockPos pos = pioneerQueue.poll();
                     generationQueue.add(pos);
                     assert pos != null;
-                    this.level.setBlock(pos, BlockRegistry.SHIELD_BLOCK.get().defaultBlockState().setValue(Shield.Block.POWERED, true), 2);
+                    this.level.setBlock(pos, BlockRegistry.SHIELD.get().defaultBlockState().setValue(Shield.Block.POWERED, true), 2);
 
                     if (!generatedPos.contains(pos.above()) && isShieldPos(pos.above())) {
                         this.generatedPos.add(pos.above());
@@ -233,7 +233,7 @@ public class ShieldGenerator {
                 }
             } else {
                 energyPos = energyPos.relative(direction);
-                this.level.setBlock(energyPos, BlockRegistry.SHIELD_BLOCK.get().defaultBlockState(), 2);
+                this.level.setBlock(energyPos, BlockRegistry.SHIELD.get().defaultBlockState(), 2);
                 Shield.Tile tile = (Shield.Tile) this.level.getBlockEntity(energyPos);
                 assert tile != null;
                 tile.setOwner(generatorPos);

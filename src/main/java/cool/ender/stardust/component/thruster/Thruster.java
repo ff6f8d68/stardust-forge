@@ -66,7 +66,7 @@ public class Thruster {
     public static class Tile extends BlockEntity implements IAnimatable {
         public AnimationFactory factory = GeckoLibUtil.createFactory(this);
         public Tile(BlockPos p_155229_, BlockState p_155230_) {
-            super(TileRegistry.THRUSTER_TILE.get(), p_155229_, p_155230_);
+            super(TileRegistry.THRUSTER.get(), p_155229_, p_155230_);
         }
         @Override
         public void registerControllers(AnimationData data) {
@@ -112,7 +112,7 @@ public class Thruster {
         public abstract static class ClientListener {
             @SubscribeEvent
             public static void registerRenderers ( final EntityRenderersEvent.RegisterRenderers event ) {
-                event.registerBlockEntityRenderer(TileRegistry.THRUSTER_TILE.get(), Thruster.Renderer::new);
+                event.registerBlockEntityRenderer(TileRegistry.THRUSTER.get(), Thruster.Renderer::new);
             }
         }
     }

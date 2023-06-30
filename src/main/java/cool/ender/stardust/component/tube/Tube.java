@@ -130,7 +130,7 @@ public class Tube {
         public AnimationFactory factory = GeckoLibUtil.createFactory(this);
 
         public Tile ( BlockPos p_155229_, BlockState p_155232_ ) {
-            super(TileRegistry.TUBE_TILE.get(), p_155229_, p_155232_);
+            super(TileRegistry.TUBE.get(), p_155229_, p_155232_);
         }
 
         public void registerControllers ( AnimationData data ) {
@@ -226,7 +226,7 @@ public class Tube {
         public abstract static class ClientListener {
             @SubscribeEvent
             public static void registerRenderers ( final EntityRenderersEvent.RegisterRenderers event ) {
-                event.registerBlockEntityRenderer(TileRegistry.TUBE_TILE.get(), Renderer::new);
+                event.registerBlockEntityRenderer(TileRegistry.TUBE.get(), Renderer::new);
             }
         }
     }

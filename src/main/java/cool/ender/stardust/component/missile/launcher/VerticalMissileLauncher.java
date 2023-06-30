@@ -197,7 +197,7 @@ public class VerticalMissileLauncher {
 
         @Override
         public VoxelShape getShape(BlockState blockState, @NotNull BlockGetter blockGetter, @NotNull BlockPos blockPos, @NotNull CollisionContext collisionContext) {
-            if (blockState.getBlock() == BlockRegistry.VERTICAL_MISSILE_LAUNCHER_BLOCK.get()) {
+            if (blockState.getBlock() == BlockRegistry.VERTICAL_MISSILE_LAUNCHER.get()) {
                 if (blockState.getValue(ASSEMBLED)) {
                     if (blockState.getValue(SHAPE_TYPE) == ShapeType.FULL) {
                         return box(0, 0, 0, 16, 16, 16);
@@ -205,7 +205,7 @@ public class VerticalMissileLauncher {
 
                     if (blockState.getValue(SHAPE_TYPE) == ShapeType.TOP) {
                         BlockState centerState = blockGetter.getBlockState(blockPos.offset(0, -4, 0));
-                        if (centerState.getBlock() == BlockRegistry.VERTICAL_MISSILE_LAUNCHER_BLOCK.get()) {
+                        if (centerState.getBlock() == BlockRegistry.VERTICAL_MISSILE_LAUNCHER.get()) {
                             if (centerState.getValue(OPEN)) {
                                 return box(0, 0, 0, 0, 0, 0);
                             } else {
@@ -252,7 +252,7 @@ public class VerticalMissileLauncher {
         public AnimationFactory factory = GeckoLibUtil.createFactory(this);
 
         public Tile(BlockPos p_155229_, BlockState p_155230_) {
-            super(TileRegistry.VERTICAL_MISSILE_LAUNCHER_TILE.get(), p_155229_, p_155230_);
+            super(TileRegistry.VERTICAL_MISSILE_LAUNCHER.get(), p_155229_, p_155230_);
         }
 
         @Override
@@ -576,7 +576,7 @@ public class VerticalMissileLauncher {
         public abstract static class ClientListener extends AbstractTurret.Listener.ClientListener {
             @SubscribeEvent
             public static void registerRenderers(final EntityRenderersEvent.RegisterRenderers event) {
-                event.registerBlockEntityRenderer(TileRegistry.VERTICAL_MISSILE_LAUNCHER_TILE.get(), VerticalMissileLauncher.Renderer::new);
+                event.registerBlockEntityRenderer(TileRegistry.VERTICAL_MISSILE_LAUNCHER.get(), VerticalMissileLauncher.Renderer::new);
             }
         }
     }

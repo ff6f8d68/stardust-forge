@@ -140,7 +140,7 @@ public class Computer {
         }
 
         public Tile(BlockPos p_155229_, BlockState p_155230_) {
-            this(TileRegistry.COMPUTER_TILE.get(), p_155229_, p_155230_);
+            this(TileRegistry.COMPUTER.get(), p_155229_, p_155230_);
         }
 
         @Override
@@ -204,7 +204,7 @@ public class Computer {
         public abstract static class ClientListener extends AbstractTurret.Listener.ClientListener {
             @SubscribeEvent
             public static void registerRenderers(final EntityRenderersEvent.RegisterRenderers event) {
-                event.registerBlockEntityRenderer(TileRegistry.COMPUTER_TILE.get(), Computer.Renderer::new);
+                event.registerBlockEntityRenderer(TileRegistry.COMPUTER.get(), Computer.Renderer::new);
             }
         }
     }
