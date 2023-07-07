@@ -4,15 +4,18 @@ import cool.ender.stardust.ship.algorithm.ControlAlgorithm;
 import cool.ender.stardust.ship.algorithm.TestAlgorithm;
 import cool.ender.stardust.component.thruster.Thruster;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3d;
+import org.joml.Vector3dc;
 import org.valkyrienskies.core.api.ships.PhysShip;
 import org.valkyrienskies.core.api.ships.ServerShip;
 import org.valkyrienskies.core.impl.api.ServerShipUser;
 import org.valkyrienskies.core.impl.api.ShipForcesInducer;
 import org.valkyrienskies.core.impl.api.Ticked;
 import org.valkyrienskies.core.impl.game.ships.PhysShipImpl;
+import org.valkyrienskies.mod.common.util.VectorConversionsMCKt;
 
 import java.util.HashSet;
 
@@ -32,6 +35,7 @@ public class StardustShipControl implements ShipForcesInducer, ServerShipUser, T
     public static StardustShipControl getOrCreate(ServerShip ship) {
         StardustShipControl control = ship.getAttachment(StardustShipControl.class);
         if (control != null) return control;
+
         control = new StardustShipControl(ship);
         ship.saveAttachment(StardustShipControl.class, control);
         return control;
@@ -58,10 +62,14 @@ public class StardustShipControl implements ShipForcesInducer, ServerShipUser, T
         if (!this.algorithm.isPhysShipExists()) {
             algorithm.setPhysShip(impl);
         }
+
+        Vector3dc shipCoords = ship.getTransform().getPositionInShip();
         if (algorithm != null) {
             for (Thruster.Tile tile : thrusters) {
                 BlockPos blockPos = tile.getBlockPos();
-                physShip.applyInvariantForceToPos(impl.getTransform().getShipToWorldRotation().transform(tile.getMaxForceVec().mul(algorithm.getThrustingPercentage(tile))), new Vector3d(blockPos.getX() + 0.5, blockPos.getY() + 0.5, blockPos.getZ() + 0.5).sub(impl.getPoseVel().getPos()));
+                physShip.applyInvariantForceToPos(
+                        impl.getTransform().getShipToWorldRotation().transform(tile.getMaxForceVec().mul(algorithm.getThrustingPercentage(tile))),
+                        VectorConversionsMCKt.toJOML(Vec3.atCenterOf(blockPos)).sub(shipCoords));
             }
         }
     }
