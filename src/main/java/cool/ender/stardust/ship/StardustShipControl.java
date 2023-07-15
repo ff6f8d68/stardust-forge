@@ -1,5 +1,9 @@
 package cool.ender.stardust.ship;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import cool.ender.stardust.ship.algorithm.ControlAlgorithm;
 import cool.ender.stardust.ship.algorithm.TestAlgorithm;
 import cool.ender.stardust.component.thruster.Thruster;
@@ -19,24 +23,43 @@ import org.valkyrienskies.mod.common.util.VectorConversionsMCKt;
 
 import java.util.HashSet;
 
+
+@JsonAutoDetect(
+        fieldVisibility = JsonAutoDetect.Visibility.ANY,
+        getterVisibility = JsonAutoDetect.Visibility.NONE,
+        isGetterVisibility = JsonAutoDetect.Visibility.NONE,
+        setterVisibility = JsonAutoDetect.Visibility.NONE
+)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class StardustShipControl implements ShipForcesInducer, ServerShipUser, Ticked {
 
+    @JsonIgnore
     ServerShip ship;
 
+
+
+    @JsonIgnore
+    /**
+     * 记得给这玩意写序列化，然后改@JsonProperty("algorithm")
+     * **/
     ControlAlgorithm algorithm;
 
+    @JsonIgnore
+    /**
+     * 记得给这玩意写加载 建议开多个HashSet<BlockPos>来存，然后在applyForce里面判断这俩谁的的size大，大的push到小的里面，add的时候两个一起加
+     * 这东西应该是没法反序列化的
+     * **/
     public HashSet<Thruster.Tile> thrusters = new HashSet<>();
 
-    public StardustShipControl(ServerShip ship) {
-        this.ship = ship;
+    public StardustShipControl() {
         this.algorithm = new TestAlgorithm();
     }
 
     public static StardustShipControl getOrCreate(ServerShip ship) {
         StardustShipControl control = ship.getAttachment(StardustShipControl.class);
         if (control != null) return control;
-
-        control = new StardustShipControl(ship);
+        control = new StardustShipControl();
+        control.setShip(ship);
         ship.saveAttachment(StardustShipControl.class, control);
         return control;
     }
