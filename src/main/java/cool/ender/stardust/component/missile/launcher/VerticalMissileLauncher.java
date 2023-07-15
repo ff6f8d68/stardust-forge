@@ -27,6 +27,8 @@ import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
@@ -110,7 +112,6 @@ public class VerticalMissileLauncher {
     }
 
     public static class Block extends BaseEntityBlock implements ITubeConnectable {
-
         @Override
         public boolean isConnectable(Direction direction, BlockState self) {
             return true;
@@ -171,11 +172,18 @@ public class VerticalMissileLauncher {
                 if (tile != null) {
                     Tile centerTile = tile.getCenterTile();
                     if (centerTile != null) {
+                        System.out.println("screen");
                         Minecraft.getInstance().setScreen(new VerticalLauncherScreen(new TranslatableComponent("gui.stardust.vertical_launcher"), centerTile));
                     }
                 }
                 return InteractionResult.SUCCESS;
             } else {
+                if (tile != null && player.isShiftKeyDown()) {
+                    Tile centerTile = tile.getCenterTile();
+                    if (centerTile != null) {
+                        centerTile.switchState();
+                    }
+                }
                 return InteractionResult.CONSUME;
             }
         }
@@ -301,7 +309,9 @@ public class VerticalMissileLauncher {
         void shoot() {
             if (this.centerPos != null && this.centerPos.equals(this.getBlockPos()) && this.getBlockState().getValue(Block.OPEN) && this.getCoolDown() <= 0) {
                 assert this.level != null;
-                this.level.addFreshEntity(new Missile.Entity(this.centerPos.getX() + 0.5, this.centerPos.getY() + 1, this.centerPos.getZ() + 0.5, level));
+                Missile.Entity m = new Missile.Entity(this.centerPos.getX() + 0.5, this.centerPos.getY() + 1, this.centerPos.getZ() + 0.5, level);
+                this.level.addFreshEntity(m);
+                m.shoot();
             }
         }
 
