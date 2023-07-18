@@ -2,8 +2,8 @@ package cool.ender.stardust.control;
 
 import cool.ender.stardust.Stardust;
 import cool.ender.stardust.registry.TileRegistry;
-import cool.ender.stardust.tube.TubeConnectable;
-import cool.ender.stardust.turret.AbstractTurret;
+import cool.ender.stardust.component.tube.ITubeConnectable;
+import cool.ender.stardust.component.turret.AbstractTurret;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -48,13 +48,13 @@ import java.util.Objects;
 import java.util.Random;
 
 public class Computer {
-    public static class Block extends BaseEntityBlock implements TubeConnectable {
+    public static class Block extends BaseEntityBlock implements ITubeConnectable {
 
         public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
         public static final BooleanProperty OPEN = BooleanProperty.create("open");
 
         public Block() {
-            super(Properties.of(Material.GLASS));
+            super(Properties.of(Material.GLASS).noOcclusion());
             this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.SOUTH).setValue(OPEN, false));
         }
 
@@ -97,16 +97,6 @@ public class Computer {
         }
 
         @Override
-        public int getLightBlock(BlockState p_60585_, BlockGetter p_60586_, BlockPos p_60587_) {
-            return 15;
-        }
-
-        @Override
-        public int getLightEmission(BlockState state, BlockGetter level, BlockPos pos) {
-            return 15;
-        }
-
-        @Override
         public VoxelShape getShape(BlockState blockState, BlockGetter p_52808_, BlockPos p_52809_, CollisionContext p_52810_) {
 
             switch (blockState.getValue(FACING)) {
@@ -135,7 +125,7 @@ public class Computer {
         }
 
         @Override
-        public boolean getConnectable(Direction direction) {
+        public boolean isConnectable(Direction direction, BlockState self) {
             return true;
         }
     }
@@ -150,7 +140,7 @@ public class Computer {
         }
 
         public Tile(BlockPos p_155229_, BlockState p_155230_) {
-            this(TileRegistry.COMPUTER_TILE.get(), p_155229_, p_155230_);
+            this(TileRegistry.COMPUTER.get(), p_155229_, p_155230_);
         }
 
         @Override
@@ -214,7 +204,7 @@ public class Computer {
         public abstract static class ClientListener extends AbstractTurret.Listener.ClientListener {
             @SubscribeEvent
             public static void registerRenderers(final EntityRenderersEvent.RegisterRenderers event) {
-                event.registerBlockEntityRenderer(TileRegistry.COMPUTER_TILE.get(), Computer.Renderer::new);
+                event.registerBlockEntityRenderer(TileRegistry.COMPUTER.get(), Computer.Renderer::new);
             }
         }
     }

@@ -1,8 +1,8 @@
 package cool.ender.stardust.registry;
 
 import cool.ender.stardust.Stardust;
-import cool.ender.stardust.missile.Missile;
-import cool.ender.stardust.projectile.PlasmaProjectile;
+import cool.ender.stardust.component.missile.Missile;
+import cool.ender.stardust.entity.projectile.PlasmaProjectile;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.Level;
